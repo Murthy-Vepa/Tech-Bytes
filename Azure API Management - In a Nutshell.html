@@ -8,7 +8,7 @@
 <meta name="description" content="A comprehensive guide to Azure API Management." />
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-   <style>
+  <style>
     :root{
       --bg: #ffffff;
       --fg: #0f172a;
@@ -27,7 +27,7 @@
     }
     
     /* Apply theme colors to Bootstrap elements */
-    body { background-color: var(--bg); color: var(--fg); }
+    body { background-color: var(--bg); color: var(--fg); overflow: hidden; }
     .navbar { background-color: var(--fg) !important; border-bottom: none !important; box-shadow: var(--shadow-md) !important; }
     .navbar-brand { cursor: pointer; color: var(--bg) !important; font-weight: 600; letter-spacing: 0px; }
     .navbar-toggler-icon { 
@@ -41,14 +41,14 @@
     /* Sidebar - Modern Design */
     nav.sidebar { 
       background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%); 
-      border-right: none !important; 
+      border-right: 1px solid rgba(0, 0, 0, 0.05) !important;  
       overflow-y: auto; 
       box-shadow: 4px 0 16px rgba(0, 0, 0, 0.06);
       padding-top: 0;
     }
     
     .menu-header {  
-      background: linear-gradient(135deg, #b3b7bf 0%, #84878c 100%);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.1) 100%);
       font-weight: bold; 
       padding: 1.25rem 1.25rem; 
       letter-spacing: 0px; 
@@ -56,9 +56,9 @@
       position: relative;
       overflow: hidden;
       border: none;
-      border-bottom: 2px solid #6b7280;
+      border-bottom: 2px solid #a5aab3;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-      color: #1f2937;
+      color: #0c346c;
       text-shadow: none;
       margin: 0;
       text-transform: none;
@@ -218,9 +218,9 @@
     .table-striped tbody tr:hover { background-color: var(--accent-light); }
     
     /* Controls/Pagination */
-    .controls { opacity: 0.4; position: fixed; bottom: 5px; right: 30px; width: auto; z-index: 1000; background: transparent; display: flex; align-items: center; justify-content: center; gap: 0rem; padding: 0; min-height: 40px; }
+    .controls { opacity: 0.5; position: fixed; bottom: 0.25rem; right: 1rem; width: auto; z-index: 1000; background: transparent; display: flex; align-items: center; justify-content: center; gap: 0rem; padding: 0; min-height: 40px; }
     @media (max-width: 991px) {
-      .controls { bottom: 5px; right: 30px; }
+      .controls { bottom: 0.25rem; right: 1rem; }
       .menu-header { color: var(--focus); }
     }
     .controls:hover { opacity: 1; }
@@ -239,7 +239,7 @@
     /* Scrollbar */
     nav.sidebar::-webkit-scrollbar { width: 6px; }
     nav.sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
-    nav.sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 3px; }
+    nav.sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 0px; }
     nav.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
     
     /* Mermaid Diagrams */
@@ -442,12 +442,12 @@
     
     /* Layout - prevent unnecessary scrolling */
     html, body { height: 100%; margin: 0; }
-    #appContainer { display: flex; flex-direction: column; height: calc(100vh - 60px); }
+    #appContainer { display: flex; flex-direction: column; height: calc(100vh - 50px); }
     #mainRow { flex: 1; overflow: hidden; display: flex; }
     nav.sidebar { overflow-y: auto; max-height: 100%; position: relative; padding-bottom: 0px; }
     #main { overflow: hidden; display: flex; flex-direction: column; height: 100%; -webkit-tap-highlight-color: transparent; outline: none; border: none; }
     #main:focus { outline: none; }
-    .content { overflow-y: auto; flex: 1; width: 100%; min-height: 0; padding: 0rem 1rem 0rem 1.5rem; }
+    .content { overflow-y: auto; flex: 1; width: 100%; min-height: 0; padding: 0rem 1.5rem 0rem 1.5rem; }
     
     /* Contact Info */
     .contact-info {
@@ -862,19 +862,19 @@
           <div class="mermaid">
 %%{ init: { "theme": "base", "fontFamily": "Segoe UI", "flowchart": { "useMaxWidth": true, "htmlLabels": true, "curve": "basis" } } }%%
 graph TB
-    subgraph "API Consumers"
+    subgraph "`**API Consumers**`"
         APP[Mobile/Web Apps]
         DEV[Developers]
         PARTNER[Partners]
     end
     
-    subgraph "API Management Components"
+    subgraph "`**API Management Components**`"
         GATEWAY[API Gateway<br/>Data Plane]
         MGMT[Management Plane<br/>Control Plane]
         PORTAL[Developer Portal]
     end
     
-    subgraph "Backend Services"
+    subgraph "`**Backend Services**`"
         AZURE[Azure Services]
         ONPREM[On-Premises APIs]
         CLOUD[Multi-Cloud APIs]
@@ -2235,9 +2235,10 @@ graph LR
           <p>Workspaces provide isolated environments within a single API Management instance for different teams or business units.</p>
 
           <div class="mermaid">
-%%{ init: { "theme": "base", "fontFamily": "Segoe UI Semibold", "fontSize": 14, "flowchart": { "useMaxWidth": true, "htmlLabels": true, "curve": "basis", "nodeSpacing": 20 } } }%%
+%%{ init: { "theme": "base", "fontFamily": "Segoe UI", "fontSize": 14, "flowchart": { "useMaxWidth": true, "htmlLabels": true, "curve": "basis", "nodeSpacing": 20 } } }%%
 graph TB
-    subgraph "API Management Service (Premium)"
+    subgraph APIM["`**API Management Service (Premium)**`"]
+        
         PLATFORM[Platform Team<br/>Central Governance]
         
         subgraph "Workspace A"
@@ -2257,7 +2258,7 @@ graph TB
         
         PORTAL[Unified Developer Portal]
     end
-    
+
     PLATFORM -.Governs.-> WKS_A
     PLATFORM -.Governs.-> WKS_B
     PLATFORM -.Manages.-> GLOBAL
@@ -2276,6 +2277,7 @@ graph TB
     style PLATFORM fill:#10b981,color:#fff
     style WKS_A fill:#3b82f6,color:#fff
     style WKS_B fill:#8b5cf6,color:#fff
+
           </div>
 
           <h2>Key Benefits</h2>
