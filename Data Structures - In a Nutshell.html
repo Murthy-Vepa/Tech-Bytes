@@ -4091,7 +4091,7 @@ graph TD
 
         <!-- Binary Tree Section -->
         <section id="binary-tree" role="article">
-          <h1>Binary Tree</h1>
+          <h1>🌲 Binary Tree</h1>
           <span class="badge">two-children</span>
           <span class="badge">hierarchical</span>
           
@@ -5511,10 +5511,50 @@ for val in values:
             </tbody>
           </table>
 
+          <h2>AVL Tree vs Red-Black Tree</h2>
+          <p>Both are self-balancing BSTs but differ in balancing strictness and use case:</p>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Aspect</th>
+                <th>AVL Tree</th>
+                <th>Red-Black Tree</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Balance Guarantee</strong></td>
+                <td>Strict (|BF| ≤ 1)</td>
+                <td>Relaxed (longest path ≤ 2× shortest)</td>
+              </tr>
+              <tr>
+                <td><strong>Search</strong></td>
+                <td>Faster (more balanced)</td>
+                <td>Slightly slower</td>
+              </tr>
+              <tr>
+                <td><strong>Insert / Delete</strong></td>
+                <td>More rotations, slower</td>
+                <td>Fewer rotations, faster</td>
+              </tr>
+              <tr>
+                <td><strong>Best For</strong></td>
+                <td>Read-heavy workloads</td>
+                <td>Write-heavy workloads</td>
+              </tr>
+              <tr>
+                <td><strong>Used In</strong></td>
+                <td>Database index lookups</td>
+                <td>Linux scheduler, Java TreeMap, C++ std::map</td>
+              </tr>
+            </tbody>
+          </table>
+
           <div class="callout">
-            <strong>💡 When to Use AVL:</strong> Use AVL trees when you need guaranteed O(log n) performance for search-heavy 
-            applications (more reads than writes). For write-heavy workloads, consider Red-Black trees which have less strict 
-            balancing (faster inserts/deletes but slightly slower searches).
+            <strong>💡 When to Use AVL:</strong> Choose AVL trees for search-heavy applications (more reads than writes) 
+            where tighter balance means faster lookups. Choose <strong>Red-Black Trees</strong> for write-heavy workloads — 
+            they perform fewer rotations on insertion and deletion. In practice, Java's <code>TreeMap</code> and C++'s 
+            <code>std::map</code> both use Red-Black Trees as the default balanced BST implementation.
           </div>
         </section>
 
@@ -8218,6 +8258,690 @@ print(jaccard_similarity({1, 2, 3}, {2, 3, 4}))  # 0.5</code></pre>
           </div>
         </section>
 
+        <!-- Trie Section -->
+        <section id="trie" role="article">
+          <h1>🔤 Trie (Prefix Tree)</h1>
+          <span class="badge">strings</span>
+          <span class="badge">prefix</span>
+          <span class="badge">autocomplete</span>
+
+          <h2>What is a Trie?</h2>
+          <p>
+            A <strong>Trie</strong> (pronounced "try", from re<strong>trie</strong>val) is a tree-like data structure used to 
+            store strings where each node represents a single character. Unlike hash tables, Tries allow fast prefix-based 
+            searches and naturally support operations like autocomplete, spell-checking, and IP routing.
+          </p>
+
+          <h2>Trie Structure Visualization</h2>
+          <div class="mermaid">
+graph TD
+    Root --> a1[a]
+    Root --> b1[b]
+    a1 --> a2[n]
+    a1 --> a3[r]
+    a2 --> a4[d ✓]
+    a2 --> a5[t ✓]
+    a3 --> a6[t ✓]
+    b1 --> b2[a]
+    b2 --> b3[t ✓]
+    b2 --> b4[l]
+    b4 --> b5[l ✓]
+
+    style Root fill:#3b82f6,stroke:#2563eb,stroke-width:3px,color:#fff
+    style a4 fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+    style a5 fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+    style a6 fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+    style b3 fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+    style b5 fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+          </div>
+          <p><em>Words stored: "and", "ant", "art", "bat", "ball". Nodes marked ✓ indicate end-of-word.</em></p>
+
+          <h2>Trie Operations</h2>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Time Complexity</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Insert</strong></td>
+                <td>O(m)</td>
+                <td>Insert word of length m character by character</td>
+              </tr>
+              <tr>
+                <td><strong>Search</strong></td>
+                <td>O(m)</td>
+                <td>Check if a word of length m exists</td>
+              </tr>
+              <tr>
+                <td><strong>Prefix Search</strong></td>
+                <td>O(p)</td>
+                <td>Check if any word starts with prefix of length p</td>
+              </tr>
+              <tr>
+                <td><strong>Delete</strong></td>
+                <td>O(m)</td>
+                <td>Remove a word of length m</td>
+              </tr>
+              <tr>
+                <td><strong>Autocomplete</strong></td>
+                <td>O(p + k)</td>
+                <td>List all words with given prefix; k = result count</td>
+              </tr>
+              <tr>
+                <td><strong>Space</strong></td>
+                <td>O(alphabet × n × m)</td>
+                <td>n = words, m = average length, alphabet = charset size</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Trie Implementation</h2>
+
+          <div class="code-tabs">
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="trie-csharp-tab" data-bs-toggle="tab" data-bs-target="#trie-csharp" type="button" role="tab">C#</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="trie-java-tab" data-bs-toggle="tab" data-bs-target="#trie-java" type="button" role="tab">Java</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="trie-python-tab" data-bs-toggle="tab" data-bs-target="#trie-python" type="button" role="tab">Python</button>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="trie-csharp" role="tabpanel">
+                <pre><code>public class TrieNode
+{
+    public Dictionary&lt;char, TrieNode&gt; Children { get; } = new();
+    public bool IsEndOfWord { get; set; }
+}
+
+public class Trie
+{
+    private readonly TrieNode root = new();
+
+    // Insert a word: O(m)
+    public void Insert(string word)
+    {
+        var node = root;
+        foreach (char c in word)
+        {
+            if (!node.Children.ContainsKey(c))
+                node.Children[c] = new TrieNode();
+            node = node.Children[c];
+        }
+        node.IsEndOfWord = true;
+    }
+
+    // Search for an exact word: O(m)
+    public bool Search(string word)
+    {
+        var node = GetNode(word);
+        return node != null && node.IsEndOfWord;
+    }
+
+    // Check if any word starts with prefix: O(p)
+    public bool StartsWith(string prefix)
+    {
+        return GetNode(prefix) != null;
+    }
+
+    // Autocomplete: list all words with given prefix
+    public List&lt;string&gt; Autocomplete(string prefix)
+    {
+        var results = new List&lt;string&gt;();
+        var node = GetNode(prefix);
+        if (node != null)
+            DFS(node, new System.Text.StringBuilder(prefix), results);
+        return results;
+    }
+
+    private TrieNode GetNode(string key)
+    {
+        var node = root;
+        foreach (char c in key)
+        {
+            if (!node.Children.TryGetValue(c, out node))
+                return null;
+        }
+        return node;
+    }
+
+    private void DFS(TrieNode node, System.Text.StringBuilder current, List&lt;string&gt; results)
+    {
+        if (node.IsEndOfWord) results.Add(current.ToString());
+        foreach (var (ch, child) in node.Children)
+        {
+            current.Append(ch);
+            DFS(child, current, results);
+            current.Length--;
+        }
+    }
+}
+
+// Usage
+var trie = new Trie();
+trie.Insert("apple");
+trie.Insert("app");
+trie.Insert("application");
+trie.Insert("bat");
+
+Console.WriteLine(trie.Search("app"));        // True
+Console.WriteLine(trie.Search("ap"));         // False
+Console.WriteLine(trie.StartsWith("ap"));     // True
+
+var suggestions = trie.Autocomplete("app");
+// ["app", "apple", "application"]</code></pre>
+              </div>
+              <div class="tab-pane fade" id="trie-java" role="tabpanel">
+                <pre><code>import java.util.*;
+
+class TrieNode {
+    Map&lt;Character, TrieNode&gt; children = new HashMap&lt;&gt;();
+    boolean isEndOfWord = false;
+}
+
+class Trie {
+    private TrieNode root = new TrieNode();
+
+    // Insert a word: O(m)
+    public void insert(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            node.children.putIfAbsent(c, new TrieNode());
+            node = node.children.get(c);
+        }
+        node.isEndOfWord = true;
+    }
+
+    // Search for an exact word: O(m)
+    public boolean search(String word) {
+        TrieNode node = getNode(word);
+        return node != null && node.isEndOfWord;
+    }
+
+    // Check if any word starts with prefix: O(p)
+    public boolean startsWith(String prefix) {
+        return getNode(prefix) != null;
+    }
+
+    // Autocomplete: list all words with given prefix
+    public List&lt;String&gt; autocomplete(String prefix) {
+        List&lt;String&gt; results = new ArrayList&lt;&gt;();
+        TrieNode node = getNode(prefix);
+        if (node != null) dfs(node, new StringBuilder(prefix), results);
+        return results;
+    }
+
+    private TrieNode getNode(String key) {
+        TrieNode node = root;
+        for (char c : key.toCharArray()) {
+            if (!node.children.containsKey(c)) return null;
+            node = node.children.get(c);
+        }
+        return node;
+    }
+
+    private void dfs(TrieNode node, StringBuilder current, List&lt;String&gt; results) {
+        if (node.isEndOfWord) results.add(current.toString());
+        for (Map.Entry&lt;Character, TrieNode&gt; entry : node.children.entrySet()) {
+            current.append(entry.getKey());
+            dfs(entry.getValue(), current, results);
+            current.deleteCharAt(current.length() - 1);
+        }
+    }
+}
+
+// Usage
+Trie trie = new Trie();
+trie.insert("apple");
+trie.insert("app");
+trie.insert("application");
+trie.insert("bat");
+
+System.out.println(trie.search("app"));        // true
+System.out.println(trie.search("ap"));         // false
+System.out.println(trie.startsWith("ap"));     // true
+
+System.out.println(trie.autocomplete("app"));
+// [app, apple, application]</code></pre>
+              </div>
+              <div class="tab-pane fade" id="trie-python" role="tabpanel">
+                <pre><code>class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    # Insert a word: O(m)
+    def insert(self, word: str) -> None:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end_of_word = True
+
+    # Search for an exact word: O(m)
+    def search(self, word: str) -> bool:
+        node = self._get_node(word)
+        return node is not None and node.is_end_of_word
+
+    # Check if any word starts with prefix: O(p)
+    def starts_with(self, prefix: str) -> bool:
+        return self._get_node(prefix) is not None
+
+    # Autocomplete: list all words with given prefix
+    def autocomplete(self, prefix: str) -> list:
+        results = []
+        node = self._get_node(prefix)
+        if node:
+            self._dfs(node, list(prefix), results)
+        return results
+
+    def _get_node(self, key: str):
+        node = self.root
+        for char in key:
+            if char not in node.children:
+                return None
+            node = node.children[char]
+        return node
+
+    def _dfs(self, node, current, results):
+        if node.is_end_of_word:
+            results.append("".join(current))
+        for char, child in node.children.items():
+            current.append(char)
+            self._dfs(child, current, results)
+            current.pop()
+
+# Usage
+trie = Trie()
+trie.insert("apple")
+trie.insert("app")
+trie.insert("application")
+trie.insert("bat")
+
+print(trie.search("app"))         # True
+print(trie.search("ap"))          # False
+print(trie.starts_with("ap"))     # True
+
+print(trie.autocomplete("app"))
+# ['app', 'apple', 'application']</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <h2>Trie vs Hash Table vs BST</h2>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Trie</th>
+                <th>Hash Table</th>
+                <th>BST</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Exact search</strong></td>
+                <td>O(m)</td>
+                <td>O(m) avg</td>
+                <td>O(m log n)</td>
+              </tr>
+              <tr>
+                <td><strong>Prefix search</strong></td>
+                <td>O(p)</td>
+                <td>Not supported</td>
+                <td>O(m log n)</td>
+              </tr>
+              <tr>
+                <td><strong>Autocomplete</strong></td>
+                <td>Excellent</td>
+                <td>Poor (full scan)</td>
+                <td>Feasible</td>
+              </tr>
+              <tr>
+                <td><strong>Memory</strong></td>
+                <td>Higher (node per char)</td>
+                <td>Lower</td>
+                <td>Moderate</td>
+              </tr>
+              <tr>
+                <td><strong>Sorted order</strong></td>
+                <td>Lexicographic</td>
+                <td>None</td>
+                <td>Yes</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Common Use Cases</h2>
+          <ul>
+            <li><strong>Autocomplete / Type-ahead:</strong> Search engines, IDEs, text editors</li>
+            <li><strong>Spell Checker:</strong> Detect and suggest corrections for misspelled words</li>
+            <li><strong>IP Routing:</strong> Longest prefix matching in routers (Radix Trie)</li>
+            <li><strong>Word Games:</strong> Boggle, Scrabble word validation</li>
+            <li><strong>Contact Search:</strong> Phone contact lookup by prefix</li>
+            <li><strong>DNS Resolution:</strong> Domain name hierarchies</li>
+          </ul>
+
+          <div class="callout">
+            <strong>💡 Space Optimization:</strong> For large alphabets, replace the children array/map with a 
+            <strong>Compressed Trie (Patricia Trie)</strong> or <strong>Radix Tree</strong> to merge single-child nodes and 
+            reduce memory overhead. Use array-based children (size 26) for English-only scenarios for better cache performance.
+          </div>
+        </section>
+
+        <!-- LRU Cache Section -->
+        <section id="lru-cache" role="article">
+          <h1>🔄 LRU Cache</h1>
+          <span class="badge">cache</span>
+          <span class="badge">eviction</span>
+          <span class="badge">O(1)</span>
+
+          <h2>What is an LRU Cache?</h2>
+          <p>
+            A <strong>Least Recently Used (LRU) Cache</strong> is a cache eviction policy that discards the least recently 
+            accessed item when the cache reaches its capacity limit. It combines a <strong>Hash Map</strong> (for O(1) lookup) 
+            with a <strong>Doubly Linked List</strong> (for O(1) insertion and deletion) to achieve O(1) for all operations.
+          </p>
+
+          <h2>LRU Cache Design</h2>
+          <div class="mermaid">
+graph LR
+    subgraph LinkedList [Doubly Linked List - Most to Least Recent]
+      direction LR
+      H[HEAD] <--> A[Key:C<br/>Val:3]
+      A <--> B[Key:B<br/>Val:2]
+      B <--> C[Key:A<br/>Val:1]
+      C <--> T[TAIL]
+    end
+    subgraph HashMap [Hash Map]
+      direction TB
+      MA[A → NodeA]
+      MB[B → NodeB]
+      MC[C → NodeC]
+    end
+    MA -.-> C
+    MB -.-> B
+    MC -.-> A
+
+    style H fill:#6b7280,stroke:#4b5563,stroke-width:2px,color:#fff
+    style T fill:#6b7280,stroke:#4b5563,stroke-width:2px,color:#fff
+    style A fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+    style B fill:#3b82f6,stroke:#2563eb,stroke-width:2px
+    style C fill:#3b82f6,stroke:#2563eb,stroke-width:2px
+          </div>
+          <p><em>Access order: C (most recent) → B → A (least recent). On capacity overflow, A is evicted.</em></p>
+
+          <h2>LRU Cache Operations</h2>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Time Complexity</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Get(key)</strong></td>
+                <td>O(1)</td>
+                <td>Return value and move key to most-recent position</td>
+              </tr>
+              <tr>
+                <td><strong>Put(key, value)</strong></td>
+                <td>O(1)</td>
+                <td>Insert/update; evict LRU item if at capacity</td>
+              </tr>
+              <tr>
+                <td><strong>Evict</strong></td>
+                <td>O(1)</td>
+                <td>Remove tail (least recently used) node</td>
+              </tr>
+              <tr>
+                <td><strong>Space</strong></td>
+                <td>O(capacity)</td>
+                <td>Hash map + linked list nodes up to capacity</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>LRU Cache Implementation</h2>
+
+          <div class="code-tabs">
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="lru-csharp-tab" data-bs-toggle="tab" data-bs-target="#lru-csharp" type="button" role="tab">C#</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="lru-java-tab" data-bs-toggle="tab" data-bs-target="#lru-java" type="button" role="tab">Java</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="lru-python-tab" data-bs-toggle="tab" data-bs-target="#lru-python" type="button" role="tab">Python</button>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="lru-csharp" role="tabpanel">
+                <pre><code>// LRU Cache using Dictionary + LinkedList
+public class LRUCache
+{
+    private readonly int capacity;
+    private readonly Dictionary&lt;int, LinkedListNode&lt;(int Key, int Value)&gt;&gt; map;
+    private readonly LinkedList&lt;(int Key, int Value)&gt; list;
+
+    public LRUCache(int capacity)
+    {
+        this.capacity = capacity;
+        map = new Dictionary&lt;int, LinkedListNode&lt;(int, int)&gt;&gt;(capacity);
+        list = new LinkedList&lt;(int, int)&gt;();
+    }
+
+    // Get value and mark as most recently used: O(1)
+    public int Get(int key)
+    {
+        if (!map.TryGetValue(key, out var node))
+            return -1;
+
+        list.Remove(node);
+        list.AddFirst(node);
+        return node.Value.Value;
+    }
+
+    // Put key-value pair: O(1)
+    public void Put(int key, int value)
+    {
+        if (map.TryGetValue(key, out var existing))
+        {
+            list.Remove(existing);
+            map.Remove(key);
+        }
+        else if (map.Count == capacity)
+        {
+            // Evict least recently used (tail)
+            var lru = list.Last;
+            map.Remove(lru.Value.Key);
+            list.RemoveLast();
+        }
+
+        var node = list.AddFirst((key, value));
+        map[key] = node;
+    }
+}
+
+// Usage
+var cache = new LRUCache(3);
+cache.Put(1, 10);
+cache.Put(2, 20);
+cache.Put(3, 30);
+cache.Get(1);       // 10 → moves key 1 to front
+cache.Put(4, 40);   // Evicts key 2 (least recently used)
+cache.Get(2);       // -1 (evicted)
+cache.Get(3);       // 30</code></pre>
+              </div>
+              <div class="tab-pane fade" id="lru-java" role="tabpanel">
+                <pre><code>import java.util.*;
+
+// Using LinkedHashMap (built-in LRU support via accessOrder=true)
+class LRUCacheSimple&lt;K, V&gt; extends LinkedHashMap&lt;K, V&gt; {
+    private final int capacity;
+
+    public LRUCacheSimple(int capacity) {
+        super(capacity, 0.75f, true); // accessOrder = true
+        this.capacity = capacity;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry&lt;K, V&gt; eldest) {
+        return size() > capacity;
+    }
+}
+
+// Manual LRU Cache using HashMap + Doubly Linked List
+class LRUCache {
+    private final int capacity;
+    private final Map&lt;Integer, Node&gt; map;
+    private final Node head, tail;
+
+    private static class Node {
+        int key, value;
+        Node prev, next;
+        Node(int key, int value) { this.key = key; this.value = value; }
+    }
+
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        map = new HashMap&lt;&gt;();
+        head = new Node(0, 0);     // Dummy head (most recent)
+        tail = new Node(0, 0);     // Dummy tail (least recent)
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    public int get(int key) {
+        if (!map.containsKey(key)) return -1;
+        Node node = map.get(key);
+        moveToFront(node);
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            node.value = value;
+            moveToFront(node);
+        } else {
+            if (map.size() == capacity) {
+                Node lru = tail.prev;
+                remove(lru);
+                map.remove(lru.key);
+            }
+            Node node = new Node(key, value);
+            insertFront(node);
+            map.put(key, node);
+        }
+    }
+
+    private void remove(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    private void insertFront(Node node) {
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
+    }
+
+    private void moveToFront(Node node) {
+        remove(node);
+        insertFront(node);
+    }
+}
+
+// Usage
+LRUCache cache = new LRUCache(3);
+cache.put(1, 10);
+cache.put(2, 20);
+cache.put(3, 30);
+cache.get(1);       // 10 → moves key 1 to front
+cache.put(4, 40);   // Evicts key 2 (LRU)
+System.out.println(cache.get(2)); // -1 (evicted)
+System.out.println(cache.get(3)); // 30</code></pre>
+              </div>
+              <div class="tab-pane fade" id="lru-python" role="tabpanel">
+                <pre><code># Python: Use OrderedDict for simple LRU Cache
+from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = OrderedDict()  # Maintains insertion/access order
+
+    # Get value and mark as most recently used: O(1)
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self.cache.move_to_end(key)  # Mark as most recently used
+        return self.cache[key]
+
+    # Put key-value pair: O(1)
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.capacity:
+            self.cache.popitem(last=False)  # Evict least recently used
+
+# Python 3.2+: functools.lru_cache decorator
+from functools import lru_cache
+
+@lru_cache(maxsize=128)
+def expensive_function(n):
+    """Automatically cached with LRU eviction"""
+    return n * n
+
+# Usage
+cache = LRUCache(3)
+cache.put(1, 10)
+cache.put(2, 20)
+cache.put(3, 30)
+print(cache.get(1))   # 10 → moves key 1 to front
+cache.put(4, 40)      # Evicts key 2 (LRU)
+print(cache.get(2))   # -1 (evicted)
+print(cache.get(3))   # 30</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <h2>Common Use Cases</h2>
+          <ul>
+            <li><strong>Web Browser Cache:</strong> Recently visited pages kept in memory</li>
+            <li><strong>Database Query Cache:</strong> Frequently executed query results</li>
+            <li><strong>CDN / Proxy Servers:</strong> Cache recently served content</li>
+            <li><strong>Operating System Page Cache:</strong> Recently accessed disk pages</li>
+            <li><strong>CPU L1/L2 Cache:</strong> Hardware-level caching (similar concept)</li>
+            <li><strong>API Response Cache:</strong> Cache expensive API calls</li>
+          </ul>
+
+          <div class="callout">
+            <strong>💡 Design Insight:</strong> The power of LRU Cache comes from combining two data structures: a 
+            <strong>Hash Map</strong> for O(1) key lookup and a <strong>Doubly Linked List</strong> for O(1) ordering updates. 
+            Neither structure alone achieves both goals. In Python, <code>OrderedDict</code> provides this combination natively. 
+            In Java, <code>LinkedHashMap</code> with <code>accessOrder=true</code> achieves the same effect in one line.
+          </div>
+        </section>
+
         <!-- Best Practices Section -->
         <section id="best-practices" role="article">
           <h1>✨ Best Practices</h1>
@@ -8641,7 +9365,7 @@ Console.WriteLine($"Hash lookup: {stopwatch.ElapsedMilliseconds}ms");</code></pr
           <hr />
           <div class="document-footer">
             <p>
-              <strong>Last Updated:</strong> January 2026 | 
+              <strong>Last Updated:</strong> April 2026 | 
               <strong>Curated by:</strong> Murthy Vepa with ❤️ | <strong>Powered by:</strong> GitHub Copilot
             </p>
           </div>
@@ -8689,13 +9413,15 @@ Console.WriteLine($"Hash lookup: {stopwatch.ElapsedMilliseconds}ms");</code></pr
       { id: "queue", title: "Queue", tags: ["fifo", "enqueue", "dequeue"] },
       { id: "deque", title: "Deque", tags: ["double-ended", "flexible"] },
       { id: "trees", title: "🌳 Trees", tags: ["hierarchical", "nodes", "graph"] },
-      { id: "binary-tree", title: "Binary Tree", tags: ["two-children", "hierarchical"] },
+      { id: "binary-tree", title: "🌲 Binary Tree", tags: ["two-children", "hierarchical"] },
       { id: "bst", title: "Binary Search Tree", tags: ["ordered", "search", "sorted"] },
       { id: "avl", title: "AVL Tree", tags: ["balanced", "self-balancing"] },
       { id: "heap", title: "Heap", tags: ["priority", "binary-heap", "complete"] },
       { id: "graphs", title: "🔗 Graphs", tags: ["vertices", "edges", "network"] },
       { id: "hash-tables", title: "🗂️ Hash Tables", tags: ["hash", "map", "dictionary"] },
       { id: "sets", title: "🎯 Sets", tags: ["unique", "collection", "mathematical"] },
+      { id: "trie", title: "🔤 Trie (Prefix Tree)", tags: ["strings", "prefix", "autocomplete", "search"] },
+      { id: "lru-cache", title: "🔄 LRU Cache", tags: ["cache", "eviction", "hashmap", "linked-list"] },
       { id: "best-practices", title: "✨ Best Practices", tags: ["guidelines", "tips", "patterns"] },
       { id: "resources", title: "📚 Resources", tags: ["docs", "community", "links"] }
     ];
@@ -8727,7 +9453,7 @@ Console.WriteLine($"Hash lookup: {stopwatch.ElapsedMilliseconds}ms");</code></pr
         const s = sectionConfig[idx];
         
         // Check if this is a sub-item
-        const isSubItem = ['array', 'arraylist', 'linkedlist', 'stack', 'queue', 'deque', 'binary-tree', 'bst', 'avl', 'heap'].includes(s.id);
+        const isSubItem = ['array', 'arraylist', 'linkedlist', 'stack', 'queue', 'deque', 'binary-tree', 'bst', 'avl', 'heap', 'trie', 'lru-cache'].includes(s.id);
         
         // Desktop sidebar
         const liDesktop = document.createElement('li');

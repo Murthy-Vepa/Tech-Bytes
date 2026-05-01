@@ -230,6 +230,36 @@
       box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
     
+    /* Collapsible parent items */
+    .list-group-item.has-children {
+      cursor: default;
+    }
+    .list-group-item.has-children > a {
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .list-group-item.has-children > a::after {
+      content: '▼';
+      font-size: 0.65rem;
+      opacity: 0.6;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    .list-group-item.has-children.collapsed > a::after {
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    .list-group-item.has-children > a:hover::after {
+      opacity: 1;
+    }
+    
+    /* Hide collapsed children */
+    .list-group-sub-item.collapsed {
+      display: none;
+      max-height: 0;
+      overflow: hidden;
+    }
+    
     /* Sub-items tree connectors */
     .list-group-sub-item a::before { 
       content: '├─';
@@ -828,6 +858,7 @@
         theme: 'base',
         securityLevel: 'loose',
         logLevel: 'error',
+        fontFamily: 'Segoe UI Semibold',
         flowchart: {
           useMaxWidth: true,
           htmlLabels: true,
@@ -1151,6 +1182,15 @@
           <span class="badge">setup</span>
           <span class="badge">install</span>
           <span class="badge">quickstart</span>
+          
+          <p class="lead text-center my-4">Select a topic from the menu to explore Getting Started with the GitHub Copilot SDK.</p>
+        </section>
+
+        <section id="getting-started-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
           
           <p>Getting started with the GitHub Copilot SDK is straightforward. This guide will walk you through the essential steps to set up your development environment and create your first agent.</p>
 
@@ -1683,6 +1723,15 @@ git config --global http.proxy http://proxy.company.com:8080</code></pre>
           <span class="badge">architecture</span>
           <span class="badge">design</span>
           <span class="badge">structure</span>
+          
+          <p class="lead text-center my-4">Select a topic from the menu to explore the GitHub Copilot SDK Architecture.</p>
+        </section>
+
+        <section id="architecture-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
           
           <p>The GitHub Copilot SDK follows a client-server architecture where your application uses the SDK to communicate with the Copilot CLI running in server mode. This design leverages the production-tested agent runtime from GitHub Copilot while providing a clean, language-specific API.</p>
 
@@ -2616,6 +2665,15 @@ const client = new CopilotClient({
           <span class="badge">sdks</span>
           <span class="badge">languages</span>
           <span class="badge">platforms</span>
+          
+          <p class="lead text-center my-4">Select a topic from the menu to explore Available SDKs for the GitHub Copilot SDK.</p>
+        </section>
+
+        <section id="available-sdks-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
           
           <p>The GitHub Copilot SDK is available in four major programming languages, each designed to provide idiomatic APIs and integrate seamlessly with the respective ecosystem. Choose the SDK that best fits your development environment and preferences.</p>
 
@@ -4953,6 +5011,15 @@ client, err := copilot.NewClient(&copilot.ClientOptions{
           <span class="badge">concepts</span>
           <span class="badge">fundamentals</span>
           
+          <p class="lead text-center my-4">Select a topic from the menu to explore Core Concepts of the GitHub Copilot SDK.</p>
+        </section>
+
+        <section id="core-concepts-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
+          
           <p>Understanding the core concepts of the GitHub Copilot SDK is essential for building effective AI-powered applications. This section covers the fundamental building blocks: <strong>Agents</strong>, <strong>Skills</strong>, <strong>Tools</strong>, and <strong>Lifecycle Management</strong>.</p>
 
           <h2>Conceptual Model</h2>
@@ -6915,6 +6982,15 @@ result, err := client.RunAgent(ctx, &copilot.AgentRequest{
           <span class="badge">features</span>
           <span class="badge">capabilities</span>
           
+          <p class="lead text-center my-4">Select a topic from the menu to explore Key Features of the GitHub Copilot SDK.</p>
+        </section>
+
+        <section id="key-features-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
+          
           <p>The GitHub Copilot SDK provides a rich set of features that enable developers to build powerful AI-assisted applications. From custom agent creation to advanced tool configurations, the SDK offers enterprise-grade capabilities while maintaining simplicity and developer experience.</p>
 
           <h2>Core Capabilities</h2>
@@ -8513,29 +8589,95 @@ agent.onToolCall('deploy_application', async (args) => {
           
           <p>Choosing the right AI model is critical for balancing performance, cost, and capabilities. The GitHub Copilot SDK supports multiple models, each optimized for different use cases and requirements.</p>
 
-          <h2>Available Models Overview</h2>
+          <h2>Available Models Overview (March 2026)</h2>
 
           <div class="row">
             <div class="col-md-6 mb-4">
               <div class="card h-100 border-primary">
                 <div class="card-body">
+                  <h3>🚀 GPT-4o</h3>
+                  <p class="badge bg-primary">Recommended - Best Value</p>
+                  
+                  <h5>Key Specifications:</h5>
+                  <ul>
+                    <li><strong>Context:</strong> 128K tokens (~96K words)</li>
+                    <li><strong>Output:</strong> Up to 16K tokens</li>
+                    <li><strong>Speed:</strong> Very Fast (2x faster than GPT-4 Turbo)</li>
+                    <li><strong>Cost:</strong> $0.005/1K input, $0.015/1K output</li>
+                    <li><strong>Multimodal:</strong> Text, vision, audio support</li>
+                  </ul>
+                  
+                  <h5>Best For:</h5>
+                  <ul>
+                    <li>Production applications (best quality/cost/speed)</li>
+                    <li>Large document analysis</li>
+                    <li>Complex code reviews</li>
+                    <li>Real-time interactions</li>
+                    <li>Image and vision tasks</li>
+                  </ul>
+                  
+                  <pre><code class="language-typescript">const client = new CopilotClient({
+  auth: token,
+  model: 'gpt-4o'
+});</code></pre>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+              <div class="card h-100 border-success">
+                <div class="card-body">
+                  <h3>🧠 o1-preview</h3>
+                  <p class="badge bg-success">Advanced Reasoning</p>
+                  
+                  <h5>Key Specifications:</h5>
+                  <ul>
+                    <li><strong>Context:</strong> 128K tokens (~96K words)</li>
+                    <li><strong>Output:</strong> Up to 32K tokens</li>
+                    <li><strong>Speed:</strong> Slower (extended reasoning time)</li>
+                    <li><strong>Cost:</strong> $0.015/1K input, $0.06/1K output</li>
+                    <li><strong>Reasoning:</strong> Chain-of-thought processing</li>
+                  </ul>
+                  
+                  <h5>Best For:</h5>
+                  <ul>
+                    <li>Complex problem solving</li>
+                    <li>Mathematical reasoning</li>
+                    <li>Strategic planning</li>
+                    <li>Code debugging & optimization</li>
+                    <li>Research and analysis</li>
+                  </ul>
+                  
+                  <pre><code class="language-typescript">const client = new CopilotClient({
+  auth: token,
+  model: 'o1-preview'
+});</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="card h-100 border-info">
+                <div class="card-body">
                   <h3>🎯 GPT-4 Turbo</h3>
-                  <p class="badge bg-primary">Recommended for Most Use Cases</p>
+                  <p class="badge bg-info">Proven & Reliable</p>
                   
                   <h5>Key Specifications:</h5>
                   <ul>
                     <li><strong>Context:</strong> 128K tokens (~96K words)</li>
                     <li><strong>Output:</strong> Up to 4K tokens</li>
-                    <li><strong>Speed:</strong> Fast (optimized)</li>
+                    <li><strong>Speed:</strong> Fast</li>
                     <li><strong>Cost:</strong> $0.01/1K input, $0.03/1K output</li>
                   </ul>
                   
                   <h5>Best For:</h5>
                   <ul>
-                    <li>Large document analysis</li>
-                    <li>Complex code reviews</li>
-                    <li>Multi-file context</li>
+                    <li>Legacy applications</li>
                     <li>Long conversations</li>
+                    <li>Multi-file context</li>
+                    <li>Consistent behavior</li>
                   </ul>
                   
                   <pre><code class="language-typescript">const client = new CopilotClient({
@@ -8547,42 +8689,10 @@ agent.onToolCall('deploy_application', async (args) => {
             </div>
             
             <div class="col-md-6 mb-4">
-              <div class="card h-100 border-success">
-                <div class="card-body">
-                  <h3>✨ GPT-4</h3>
-                  <p class="badge bg-success">Highest Quality</p>
-                  
-                  <h5>Key Specifications:</h5>
-                  <ul>
-                    <li><strong>Context:</strong> 8K tokens (~6K words)</li>
-                    <li><strong>Output:</strong> Up to 4K tokens</li>
-                    <li><strong>Speed:</strong> Moderate</li>
-                    <li><strong>Cost:</strong> $0.03/1K input, $0.06/1K output</li>
-                  </ul>
-                  
-                  <h5>Best For:</h5>
-                  <ul>
-                    <li>Critical decision making</li>
-                    <li>Complex reasoning tasks</li>
-                    <li>High-accuracy requirements</li>
-                    <li>Security-sensitive work</li>
-                  </ul>
-                  
-                  <pre><code class="language-typescript">const client = new CopilotClient({
-  auth: token,
-  model: 'gpt-4'
-});</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6 mb-4">
-              <div class="card h-100 border-info">
+              <div class="card h-100 border-warning">
                 <div class="card-body">
                   <h3>⚡ GPT-3.5 Turbo</h3>
-                  <p class="badge bg-info">Fast & Cost-Effective</p>
+                  <p class="badge bg-warning text-dark">Fast & Cost-Effective</p>
                   
                   <h5>Key Specifications:</h5>
                   <ul>
@@ -8598,6 +8708,7 @@ agent.onToolCall('deploy_application', async (args) => {
                     <li>Simple queries</li>
                     <li>Chatbots</li>
                     <li>Cost-sensitive applications</li>
+                    <li>Quick prototypes</li>
                   </ul>
                   
                   <pre><code class="language-typescript">const client = new CopilotClient({
@@ -8607,65 +8718,89 @@ agent.onToolCall('deploy_application', async (args) => {
                 </div>
               </div>
             </div>
-            
-            <div class="col-md-6 mb-4">
-              <div class="card h-100 border-warning">
-                <div class="card-body">
-                  <h3>🔥 GPT-3.5 Turbo 16K</h3>
-                  <p class="badge bg-warning text-dark">Extended Context</p>
-                  
-                  <h5>Key Specifications:</h5>
-                  <ul>
-                    <li><strong>Context:</strong> 16K tokens (~12K words)</li>
-                    <li><strong>Output:</strong> Up to 4K tokens</li>
-                    <li><strong>Speed:</strong> Fast</li>
-                    <li><strong>Cost:</strong> $0.003/1K input, $0.004/1K output</li>
-                  </ul>
-                  
-                  <h5>Best For:</h5>
-                  <ul>
-                    <li>Medium-sized documents</li>
-                    <li>Multi-turn conversations</li>
-                    <li>Good quality/cost balance</li>
-                    <li>General purpose tasks</li>
-                  </ul>
-                  
-                  <pre><code class="language-typescript">const client = new CopilotClient({
-  auth: token,
-  model: 'gpt-3.5-turbo-16k'
-});</code></pre>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <h2>Model Selection Decision Tree</h2>
+          <div class="alert alert-info">
+            <strong>💡 2026 Update:</strong> GPT-4o is now the recommended default for most applications, offering the best balance of quality, speed, and cost. Use o1-preview for complex reasoning tasks and GPT-3.5 Turbo for high-volume, cost-sensitive operations.
+          </div>
 
-          <pre><code class="language-mermaid">graph TD
+          <h2>Model Selection Decision Tree (2026)</h2>
+
+          <div class="mermaid">
+graph TD
     A[Start: Choose Model] --> B{What's your priority?}
     
-    B -->|Cost| C{Request volume?}
-    B -->|Quality| D{Task complexity?}
-    B -->|Speed| E[GPT-3.5 Turbo]
-    B -->|Context Size| F{How much context?}
+    B -->|Best Overall Value| C[GPT-4o]
+    B -->|Advanced Reasoning| D{Reasoning complexity?}
+    B -->|Cost| E{Request volume?}
+    B -->|Speed| F[GPT-4o Fast Mode]
     
-    C -->|High volume| E
-    C -->|Medium volume| G[GPT-3.5 Turbo 16K]
-    C -->|Low volume| H[GPT-4]
+    D -->|Complex Problem Solving| G[o1-preview]
+    D -->|Standard Reasoning| C
     
-    D -->|Simple| E
-    D -->|Moderate| G
-    D -->|Complex| H
-    D -->|Very Complex| I[GPT-4 Turbo]
+    E -->|High Volume Simple| H[GPT-3.5 Turbo]
+    E -->|Medium Volume| C
+    E -->|Low Volume Complex| G
     
-    F -->|< 4K tokens| E
-    F -->|4K-16K tokens| G
-    F -->|16K-128K tokens| I
+    C --> I[Recommended: Best quality/cost/speed balance]
+    G --> J[Best for: Math, debugging, strategy]
+    H --> K[Best for: Chat, simple queries, high volume]
+    F --> L[Best for: Real-time, interactive apps]
     
-    E --> J[Fast, cheap, good for simple tasks]
-    G --> K[Balanced speed, cost, context]
-    H --> L[High quality, accurate, reliable]
-    I --> M[Best quality, largest context]</code></pre>
+    style C fill:#dbeafe,stroke:#3b82f6,stroke-width:3px
+    style G fill:#dcfce7,stroke:#22c55e,stroke-width:2px
+    style H fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
+    style F fill:#e9d5ff,stroke:#a855f7,stroke-width:2px
+          </div>
+          
+          <h2>Model Comparison Matrix</h2>
+          
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Speed</th>
+                <th>Quality</th>
+                <th>Context</th>
+                <th>Cost (per 1M tokens)</th>
+                <th>Use When</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>GPT-4o</strong></td>
+                <td>⚡⚡⚡⚡⚡</td>
+                <td>⭐⭐⭐⭐⭐</td>
+                <td>128K</td>
+                <td>$5 in / $15 out</td>
+                <td>Default choice for production</td>
+              </tr>
+              <tr>
+                <td><strong>o1-preview</strong></td>
+                <td>⚡⚡</td>
+                <td>⭐⭐⭐⭐⭐⭐</td>
+                <td>128K</td>
+                <td>$15 in / $60 out</td>
+                <td>Complex reasoning, debugging</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4 Turbo</strong></td>
+                <td>⚡⚡⚡⚡</td>
+                <td>⭐⭐⭐⭐</td>
+                <td>128K</td>
+                <td>$10 in / $30 out</td>
+                <td>Legacy support, consistency</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-3.5 Turbo</strong></td>
+                <td>⚡⚡⚡⚡⚡</td>
+                <td>⭐⭐⭐</td>
+                <td>16K</td>
+                <td>$0.50 in / $1.50 out</td>
+                <td>High volume, simple tasks</td>
+              </tr>
+            </tbody>
+          </table>
 
           <h2>Cost Optimization Strategies</h2>
 
@@ -8967,14 +9102,14 @@ const response = await cache.sendWithCache(client, request);</code></pre>
             </div>
           </div>
 
-          <h2>Cost Calculator</h2>
+          <h2>Cost Calculator (2026 Pricing)</h2>
 
           <pre><code class="language-typescript">class ModelCostCalculator {
   private pricing = {
+    'gpt-4o': { input: 0.005, output: 0.015 },
+    'o1-preview': { input: 0.015, output: 0.060 },
     'gpt-4-turbo': { input: 0.01, output: 0.03 },
-    'gpt-4': { input: 0.03, output: 0.06 },
-    'gpt-3.5-turbo': { input: 0.0005, output: 0.0015 },
-    'gpt-3.5-turbo-16k': { input: 0.003, output: 0.004 }
+    'gpt-3.5-turbo': { input: 0.0005, output: 0.0015 }
   };
   
   calculateCost(
@@ -8996,20 +9131,20 @@ const response = await cache.sendWithCache(client, request);</code></pre>
       model,
       cost: this.calculateCost(model, inputTokens, outputTokens),
       costFormatted: `$${this.calculateCost(model, inputTokens, outputTokens).toFixed(4)}`
-    }));
+    })).sort((a, b) => a.cost - b.cost);
   }
 }
 
-// Example: Calculate cost for 1000 input, 500 output tokens
+// Example: Calculate cost for 10K input, 5K output tokens
 const calculator = new ModelCostCalculator();
-const comparison = calculator.compareCosts(1000, 500);
+const comparison = calculator.compareCosts(10000, 5000);
 
 console.log(comparison);
 // [
-//   { model: 'gpt-4-turbo', cost: 0.025, costFormatted: '$0.0250' },
-//   { model: 'gpt-4', cost: 0.060, costFormatted: '$0.0600' },
-//   { model: 'gpt-3.5-turbo', cost: 0.0013, costFormatted: '$0.0013' },
-//   { model: 'gpt-3.5-turbo-16k', cost: 0.005, costFormatted: '$0.0050' }
+//   { model: 'gpt-3.5-turbo', cost: 0.0125, costFormatted: '$0.0125' },
+//   { model: 'gpt-4o', cost: 0.1250, costFormatted: '$0.1250' },
+//   { model: 'gpt-4-turbo', cost: 0.2500, costFormatted: '$0.2500' },
+//   { model: 'o1-preview', cost: 0.4500, costFormatted: '$0.4500' }
 // ]</code></pre>
 
           <div class="card bg-light mt-4">
@@ -9084,6 +9219,35 @@ console.log(comparison);
             </div>
           </div>
 
+          <h2>BYOK Authentication Flow</h2>
+          
+          <div class="mermaid">
+sequenceDiagram
+    participant App as Your Application
+    participant SDK as Copilot SDK
+    participant AAD as Azure AD
+    participant AOAI as Azure OpenAI
+    participant Model as AI Model
+    
+    App->>SDK: Initialize with BYOK config
+    SDK->>AAD: Request access token<br/>(with Managed Identity)
+    AAD-->>SDK: Return OAuth token
+    
+    SDK->>AOAI: Connect to endpoint<br/>(with token)
+    AOAI->>AOAI: Validate token & permissions
+    AOAI-->>SDK: Connection established
+    
+    App->>SDK: Send agent request
+    SDK->>AOAI: API call with token<br/>(to your deployment)
+    AOAI->>Model: Forward to GPT-4o/o1
+    Model-->>AOAI: Model response
+    AOAI-->>SDK: Return response
+    SDK-->>App: Agent result
+    
+    Note over App,Model: All data stays in your Azure tenant
+    Note over AOAI: Your quotas, your SLA, your region
+          </div>
+
           <h2>Setting Up BYOK</h2>
 
           <h3>1. Create Azure OpenAI Resource</h3>
@@ -9097,13 +9261,24 @@ az cognitiveservices account create \
   --sku S0 \
   --custom-domain my-copilot-openai
 
-# Deploy GPT-4 model
+# Deploy GPT-4o model (recommended for 2026)
 az cognitiveservices account deployment create \
   --name my-copilot-openai \
   --resource-group my-resource-group \
-  --deployment-name gpt-4 \
-  --model-name gpt-4 \
-  --model-version "0613" \
+  --deployment-name gpt-4o \
+  --model-name gpt-4o \
+  --model-version "2024-05-13" \
+  --model-format OpenAI \
+  --sku-capacity 20 \
+  --sku-name "Standard"
+
+# Optional: Deploy o1-preview for advanced reasoning
+az cognitiveservices account deployment create \
+  --name my-copilot-openai \
+  --resource-group my-resource-group \
+  --deployment-name o1-preview \
+  --model-name o1-preview \
+  --model-version "2024-09-12" \
   --model-format OpenAI \
   --sku-capacity 10 \
   --sku-name "Standard"</code></pre>
@@ -9119,8 +9294,8 @@ const client = new CopilotClient({
   auth: new BYOKAuth({
     endpoint: 'https://my-copilot-openai.openai.azure.com',
     apiKey: process.env.AZURE_OPENAI_KEY,
-    apiVersion: '2024-02-01',
-    deployment: 'gpt-4'
+    apiVersion: '2024-10-01',  // Latest API version for 2026
+    deployment: 'gpt-4o'  // Use GPT-4o for best performance
   })
 });
 
@@ -9135,8 +9310,8 @@ client = CopilotClient(
     auth=BYOKAuth(
         endpoint='https://my-copilot-openai.openai.azure.com',
         api_key=os.environ['AZURE_OPENAI_KEY'],
-        api_version='2024-02-01',
-        deployment='gpt-4'
+        api_version='2024-10-01',  # Latest API version for 2026
+        deployment='gpt-4o'  # Use GPT-4o for best performance
     )
 )
 
@@ -9156,8 +9331,8 @@ const client = new CopilotClient({
   auth: new BYOKAuth({
     endpoint: 'https://my-copilot-openai.openai.azure.com',
     credential: credential,  // Use AAD authentication
-    apiVersion: '2024-02-01',
-    deployment: 'gpt-4'
+    apiVersion: '2024-10-01',  // Latest API version
+    deployment: 'gpt-4o'  // Recommended model for production
   })
 });</code></pre>
 
@@ -9568,6 +9743,15 @@ az consumption budget create \
           <span class="badge">patterns</span>
           <span class="badge">examples</span>
           
+          <p class="lead text-center my-4">Select a topic from the menu to explore Usage Patterns for the GitHub Copilot SDK.</p>
+        </section>
+
+        <section id="usage-patterns-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
+          
           <p>This section covers common patterns and best practices for using the GitHub Copilot SDK in real-world applications. Learn how to structure your code, handle different scenarios, and implement production-ready solutions.</p>
 
           <h2>Pattern Categories</h2>
@@ -9882,6 +10066,22 @@ graph TB
           </ul>
 
           <h2>Core Pattern</h2>
+          
+          <div class="mermaid">
+graph LR
+    A[1. Create Client] --> B[2. Configure Auth]
+    B --> C[3. Run Agent]
+    C --> D{Success?}
+    D -->|Yes| E[4. Process Result]
+    D -->|No| F[Handle Error]
+    E --> G[5. Close Client]
+    F --> G
+    
+    style A fill:#dbeafe
+    style C fill:#dcfce7
+    style E fill:#fef3c7
+    style G fill:#fee2e2
+          </div>
           
           <pre class="syntax-highlighted" data-language="typescript"><code>import { CopilotClient } from 'copilot-sdk';
 
@@ -10365,6 +10565,32 @@ describe('Copilot Integration', () => {
           </ul>
 
           <h2>Core Pattern</h2>
+          
+          <div class="mermaid">
+graph TD
+    A[Define Agent] --> B[Set System Prompt]
+    B --> C[Configure Tools]
+    C --> D[Select Model]
+    D --> E[Create Client]
+    E --> F[Execute Agent]
+    F --> G{Agent Success?}
+    G -->|Yes| H[Return Specialized Response]
+    G -->|No| I[Retry or Fallback]
+    
+    A --> A1[Name & Description]
+    B --> B1[Role & Expertise]
+    B1 --> B2[Instructions & Rules]
+    C --> C1[File Access]
+    C --> C2[API Calls]
+    C --> C3[Custom Tools]
+    
+    style A fill:#dbeafe
+    style B fill:#dcfce7
+    style C fill:#fef3c7
+    style D fill:#fce7f3
+    style F fill:#e9d5ff
+    style H fill:#d1fae5
+          </div>
           
           <pre class="syntax-highlighted" data-language="typescript"><code>import { CopilotClient, AgentConfig } from 'copilot-sdk';
 
@@ -12021,6 +12247,15 @@ const client = new CopilotClient({
           <h1>📚 API Reference</h1>
           <span class="badge">api</span>
           <span class="badge">reference</span>
+          
+          <p class="lead text-center my-4">Select a topic from the menu to explore API Reference for the GitHub Copilot SDK.</p>
+        </section>
+
+        <section id="api-reference-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
           
           <p>Complete API reference documentation for the GitHub Copilot SDK. This section covers all public APIs, interfaces, classes, and methods available across all supported languages.</p>
 
@@ -17205,37 +17440,60 @@ describe('CopilotService', () => {
     // ---- Configuration ----
     const sectionConfig = [
       { id: "introduction", title: "📖 Introduction", tags: ["intro", "overview", "about", "sdk"] },
+      
+      // Getting Started
       { id: "getting-started", title: "🚀 Getting Started", tags: ["setup", "install", "start", "quickstart"] },
+      { id: "getting-started-introduction", title: "📖 Introduction", parent: "getting-started", tags: ["overview", "introduction", "fundamentals"] },
       { id: "prerequisites", title: "📋 Prerequisites", tags: ["requirements", "prereq", "copilot"], parent: "getting-started" },
       { id: "installation", title: "⚙️ Installation", tags: ["install", "setup", "npm", "pip", "nuget"], parent: "getting-started" },
+      
+      // Architecture
       { id: "architecture", title: "🏗️ Architecture", tags: ["architecture", "design", "structure"] },
+      { id: "architecture-introduction", title: "📖 Introduction", parent: "architecture", tags: ["overview", "introduction", "fundamentals"] },
       { id: "arch-overview", title: "📐 Overview", tags: ["overview", "jsonrpc", "cli"], parent: "architecture" },
       { id: "arch-communication", title: "💬 Communication", tags: ["communication", "protocol", "server"], parent: "architecture" },
+      
+      // Available SDKs
       { id: "available-sdks", title: "💻 Available SDKs", tags: ["sdks", "languages", "platforms"] },
+      { id: "available-sdks-introduction", title: "📖 Introduction", parent: "available-sdks", tags: ["overview", "introduction", "fundamentals"] },
       { id: "sdk-nodejs", title: "🟢 Node.js/TypeScript", tags: ["nodejs", "typescript", "npm"], parent: "available-sdks" },
       { id: "sdk-python", title: "🐍 Python", tags: ["python", "pip"], parent: "available-sdks" },
       { id: "sdk-dotnet", title: "🔷 .NET", tags: ["dotnet", "csharp", "nuget"], parent: "available-sdks" },
       { id: "sdk-go", title: "🔵 Go", tags: ["go", "golang"], parent: "available-sdks" },
+      
+      // Core Concepts
       { id: "core-concepts", title: "🧠 Core Concepts", tags: ["concepts", "fundamentals", "basics"] },
+      { id: "core-concepts-introduction", title: "📖 Introduction", parent: "core-concepts", tags: ["overview", "introduction", "fundamentals"] },
       { id: "concept-agents", title: "🤖 Agents", tags: ["agents", "ai", "behavior"], parent: "core-concepts" },
       { id: "concept-skills", title: "🎯 Skills", tags: ["skills", "capabilities", "tools"], parent: "core-concepts" },
       { id: "concept-tools", title: "🛠️ Tools", tags: ["tools", "functions", "actions"], parent: "core-concepts" },
       { id: "concept-lifecycle", title: "♻️ Lifecycle Management", tags: ["lifecycle", "process", "management"], parent: "core-concepts" },
+      
+      // Key Features
       { id: "key-features", title: "✨ Key Features", tags: ["features", "capabilities", "functionality"] },
+      { id: "key-features-introduction", title: "📖 Introduction", parent: "key-features", tags: ["overview", "introduction", "fundamentals"] },
       { id: "feature-agents", title: "🤖 Custom Agents", tags: ["custom", "agents", "create"], parent: "key-features" },
       { id: "feature-tools", title: "🔧 Tool Configuration", tags: ["tools", "config", "enable"], parent: "key-features" },
       { id: "feature-models", title: "🧠 Model Selection", tags: ["models", "llm", "claude"], parent: "key-features" },
       { id: "feature-byok", title: "🔐 BYOK Support", tags: ["byok", "security", "keys"], parent: "key-features" },
+      
+      // Usage Patterns
       { id: "usage-patterns", title: "📝 Usage Patterns", tags: ["patterns", "examples", "use-cases"] },
+      { id: "usage-patterns-introduction", title: "📖 Introduction", parent: "usage-patterns", tags: ["overview", "introduction", "fundamentals"] },
       { id: "pattern-basic", title: "🎯 Basic Usage", tags: ["basic", "simple", "hello"], parent: "usage-patterns" },
       { id: "pattern-custom-agent", title: "🤖 Custom Agent", tags: ["custom", "agent", "create"], parent: "usage-patterns" },
       { id: "pattern-external-cli", title: "🔌 External CLI", tags: ["external", "cli", "server"], parent: "usage-patterns" },
       { id: "pattern-tool-config", title: "⚙️ Tool Configuration", tags: ["tools", "config", "enable"], parent: "usage-patterns" },
+      
+      // API Reference
       { id: "api-reference", title: "📚 API Reference", tags: ["api", "reference", "docs"] },
+      { id: "api-reference-introduction", title: "📖 Introduction", parent: "api-reference", tags: ["overview", "introduction", "fundamentals"] },
       { id: "api-client", title: "🔌 Client API", tags: ["client", "api", "methods"], parent: "api-reference" },
       { id: "api-agent", title: "🤖 Agent API", tags: ["agent", "api", "interface"], parent: "api-reference" },
       { id: "api-models", title: "🧠 Models API", tags: ["models", "api", "metadata"], parent: "api-reference" },
       { id: "api-auth", title: "🔐 Auth API", tags: ["auth", "authentication", "api"], parent: "api-reference" },
+      
+      // Other sections
       { id: "cookbook", title: "📖 Cookbook", tags: ["cookbook", "recipes", "examples"] },
       { id: "best-practices", title: "⭐ Best Practices", tags: ["practices", "tips", "guidelines"] },
       { id: "resources", title: "📚 Resources", tags: ["docs", "community", "learning"] }
@@ -17259,25 +17517,69 @@ describe('CopilotService', () => {
       sidebarOffcanvas: document.getElementById('sidebarOffcanvas')
     };
 
+    // Track collapsed state for each parent
+    const collapsedState = {};
+    
     function buildTOC(){
       // Clear both TOC lists
       els.toc.innerHTML = '';
       els.tocMobile.innerHTML = '';
       
+      // First pass: identify parents and their children
+      const parentMap = new Map();
       state.filtered.forEach((idx) => {
         const s = sectionConfig[idx];
+        if (s.parent) {
+          if (!parentMap.has(s.parent)) {
+            parentMap.set(s.parent, []);
+          }
+          parentMap.get(s.parent).push(s.id);
+        }
+      });
+      
+      // Initialize collapsed state for parents (default: collapsed)
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        if (!s.parent && parentMap.has(s.id)) {
+          if (collapsedState[s.id] === undefined) {
+            collapsedState[s.id] = true; // collapsed by default
+          }
+        }
+      });
+      
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        
+        // Check if this is a sub-item (has a parent section)
         const isSubItem = !!s.parent;
+        const hasChildren = parentMap.has(s.id);
         
         // Desktop sidebar
         const liDesktop = document.createElement('li');
         liDesktop.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liDesktop.classList.add('has-children');
+          if (collapsedState[s.id]) {
+            liDesktop.classList.add('collapsed');
+          }
+        }
+        if (isSubItem && collapsedState[s.parent]) {
+          liDesktop.classList.add('collapsed');
+        }
+        liDesktop.dataset.sectionId = s.id;
+        
         const aDesktop = document.createElement('a');
         aDesktop.href = `#${s.id}`;
         aDesktop.textContent = s.title;
         aDesktop.addEventListener('click', (e) => {
           e.preventDefault();
-          navigateToId(s.id);
-          closeSidebar();
+          if (hasChildren) {
+            // Toggle collapse/expand
+            toggleCollapse(s.id, 'desktop');
+          } else {
+            navigateToId(s.id);
+            closeSidebar();
+          }
         });
         liDesktop.appendChild(aDesktop);
         els.toc.appendChild(liDesktop);
@@ -17285,18 +17587,69 @@ describe('CopilotService', () => {
         // Mobile offcanvas
         const liMobile = document.createElement('li');
         liMobile.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liMobile.classList.add('has-children');
+          if (collapsedState[s.id]) {
+            liMobile.classList.add('collapsed');
+          }
+        }
+        if (isSubItem && collapsedState[s.parent]) {
+          liMobile.classList.add('collapsed');
+        }
+        liMobile.dataset.sectionId = s.id;
+        
         const aMobile = document.createElement('a');
         aMobile.href = `#${s.id}`;
         aMobile.textContent = s.title;
         aMobile.addEventListener('click', (e) => {
           e.preventDefault();
-          navigateToId(s.id);
-          closeSidebar();
+          if (hasChildren) {
+            // Toggle collapse/expand
+            toggleCollapse(s.id, 'mobile');
+          } else {
+            navigateToId(s.id);
+            closeSidebar();
+          }
         });
         liMobile.appendChild(aMobile);
         els.tocMobile.appendChild(liMobile);
       });
       highlightActiveTOC();
+    }
+    
+    function toggleCollapse(parentId, context) {
+      // Toggle the collapsed state
+      collapsedState[parentId] = !collapsedState[parentId];
+      const isCollapsed = collapsedState[parentId];
+      
+      // Update both desktop and mobile TOCs
+      const containers = context === 'desktop' ? [els.toc] : context === 'mobile' ? [els.tocMobile] : [els.toc, els.tocMobile];
+      
+      containers.forEach(container => {
+        // Update parent item
+        const parentItem = container.querySelector(`li[data-section-id="${parentId}"]`);
+        if (parentItem) {
+          if (isCollapsed) {
+            parentItem.classList.add('collapsed');
+          } else {
+            parentItem.classList.remove('collapsed');
+          }
+        }
+        
+        // Update child items
+        const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+        childItems.forEach(child => {
+          const childId = child.dataset.sectionId;
+          const childSection = sectionConfig.find(s => s.id === childId);
+          if (childSection && childSection.parent === parentId) {
+            if (isCollapsed) {
+              child.classList.add('collapsed');
+            } else {
+              child.classList.remove('collapsed');
+            }
+          }
+        });
+      });
     }
 
     function setActiveByIndex(i){
@@ -17368,16 +17721,41 @@ describe('CopilotService', () => {
     function highlightActiveTOC(){
       const ids = state.filtered.map(idx => sectionConfig[idx].id);
       const activeId = ids[state.index];
+      const activeSection = sectionConfig.find(s => s.id === activeId);
+      
+      // Auto-expand parent if active section is a child
+      if (activeSection && activeSection.parent) {
+        collapsedState[activeSection.parent] = false;
+        // Update parent and children visibility in both TOCs
+        [els.toc, els.tocMobile].forEach(container => {
+          const parentItem = container.querySelector(`li[data-section-id="${activeSection.parent}"]`);
+          if (parentItem) {
+            parentItem.classList.remove('collapsed');
+          }
+          // Show all children of this parent
+          const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+          childItems.forEach(child => {
+            const childId = child.dataset.sectionId;
+            const childSection = sectionConfig.find(s => s.id === childId);
+            if (childSection && childSection.parent === activeSection.parent) {
+              child.classList.remove('collapsed');
+            }
+          });
+        });
+      }
+      
       // Highlight desktop sidebar
       els.toc.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
       // Highlight mobile offcanvas
       els.tocMobile.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
       
-      // Scroll active item into view in sidebar
-      const activeLink = els.toc.querySelector('a.active');
-      if (activeLink) {
-        activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-      }
+      // Scroll active item into view in desktop sidebar with a small delay
+      setTimeout(() => {
+        const activeDesktopLink = els.toc.querySelector('a.active');
+        if (activeDesktopLink && activeDesktopLink.offsetParent !== null) {
+          activeDesktopLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        }
+      }, 150);
     }
 
     function openSidebar(){

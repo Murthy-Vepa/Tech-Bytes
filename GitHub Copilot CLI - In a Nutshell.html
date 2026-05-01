@@ -230,6 +230,35 @@
       box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
     
+    /* Collapsible parent items */
+    .list-group-item.has-children {
+      cursor: default;
+    }
+    .list-group-item.has-children > a {
+      cursor: pointer;
+      user-select: none;
+    }
+    .list-group-item.has-children > a::after {
+      content: '▼';
+      font-size: 0.65rem;
+      opacity: 0.6;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    .list-group-item.has-children.collapsed > a::after {
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    .list-group-item.has-children > a:hover::after {
+      opacity: 1;
+    }
+    
+    /* Hide collapsed children */
+    .list-group-sub-item.collapsed {
+      display: none;
+      max-height: 0;
+      overflow: hidden;
+    }
+    
     /* Sub-items tree connectors */
     .list-group-sub-item a::before { 
       content: '├─';
@@ -1055,17 +1084,46 @@
           </ul>
 
           <h2>Who Can Use This Feature?</h2>
-          <p>GitHub Copilot CLI is available with the following plans:</p>
-          <ul>
-            <li>✅ <strong>GitHub Copilot Pro</strong></li>
-            <li>✅ <strong>GitHub Copilot Pro+</strong></li>
-            <li>✅ <strong>GitHub Copilot Business</strong></li>
-            <li>✅ <strong>GitHub Copilot Enterprise</strong></li>
-          </ul>
+          <p>GitHub Copilot CLI is available with the following subscription plans:</p>
+          
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Plan</th>
+                <th>Access</th>
+                <th>Key Features</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Copilot Individual</strong></td>
+                <td>✅ Full Access</td>
+                <td>All features, personal use</td>
+              </tr>
+              <tr>
+                <td><strong>Copilot Business</strong></td>
+                <td>✅ Full Access</td>
+                <td>Organization features, policy controls</td>
+              </tr>
+              <tr>
+                <td><strong>Copilot Enterprise</strong></td>
+                <td>✅ Full Access</td>
+                <td>Advanced features, custom models, personalization</td>
+              </tr>
+              <tr>
+                <td><strong>Copilot Free</strong></td>
+                <td>⚠️ Limited</td>
+                <td>May have usage restrictions or limited features</td>
+              </tr>
+            </tbody>
+          </table>
           
           <div class="callout">
-            <strong>⚠️ Note for Organizations:</strong><br />
-            If you receive Copilot from an organization, the Copilot CLI policy must be enabled in the organization's settings.
+            <strong>⚠️ Important Notes:</strong><br />
+            • <strong>For Organization Members:</strong> The Copilot CLI policy must be enabled in your organization's settings<br />
+            • <strong>Model Availability:</strong> Some advanced models (like o1-preview) may only be available on Enterprise plans<br />
+            • <strong>Rate Limits:</strong> May vary by plan - check your subscription details<br />
+            • <strong>Verification:</strong> Check your access at <a href="https://github.com/settings/copilot" target="_blank">GitHub Copilot Settings</a>
           </div>
 
           <h2>Key Benefits</h2>
@@ -1110,6 +1168,22 @@
           <span class="badge">setup</span>
           <span class="badge">install</span>
           <span class="badge">quickstart</span>
+          
+          <p>This section covers everything you need to start using GitHub Copilot CLI, from system requirements to installation steps.</p>
+          
+          <div class="callout">
+            <strong>📋 Section Contents</strong><br />
+            • Introduction - Quick start guide and prerequisites<br />
+            • Supported OS - Platform compatibility and requirements<br />
+            • Installation - Step-by-step setup instructions
+          </div>
+        </section>
+
+        <section id="getting-started-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">quickstart</span>
+          <span class="badge">prerequisites</span>
           
           <p>Getting started with GitHub Copilot CLI is straightforward. This section will guide you through checking system requirements, installing the CLI, and running your first commands.</p>
           
@@ -1419,6 +1493,22 @@ gh auth login</code></pre>
           <span class="badge">interactive</span>
           <span class="badge">programmatic</span>
           
+          <p>GitHub Copilot CLI supports two distinct modes of operation, each optimized for different workflows and use cases.</p>
+          
+          <div class="callout">
+            <strong>📋 Section Contents</strong><br />
+            • Introduction - Understanding mode differences and choosing the right approach<br />
+            • Interactive Mode - Conversational development with iterative refinement<br />
+            • Programmatic Mode - Automated execution for scripting and CI/CD
+          </div>
+        </section>
+
+        <section id="modes-of-use-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">comparison</span>
+          <span class="badge">decision-guide</span>
+          
           <p>GitHub Copilot CLI can be used in two primary modes, each designed for different workflows and use cases. Understanding these modes will help you choose the right approach for your tasks.</p>
 
           <div class="callout">
@@ -1544,10 +1634,18 @@ copilot</code></pre>
           <p>When you start an interactive session, you'll see:</p>
           <ul>
             <li>Welcome message and version information</li>
-            <li>Current model being used (e.g., Claude Sonnet 4.5)</li>
+            <li>Current AI model being used (GPT-4o, Claude 3.5 Sonnet, o1-preview, or o1-mini)</li>
             <li>Trusted directory confirmation prompt</li>
             <li>Input prompt ready for your first question</li>
           </ul>
+
+          <div class="callout">
+            <strong>💡 Choosing the Right Model</strong><br />
+            • <strong>GPT-4o:</strong> Best for general tasks, fast responses<br />
+            • <strong>Claude 3.5 Sonnet:</strong> Excellent for code analysis and detailed explanations<br />
+            • <strong>o1-preview:</strong> Advanced reasoning for complex architectural decisions<br />
+            • <strong>o1-mini:</strong> Faster variant of o1 for quicker turnaround
+          </div>
 
           <h3>Conversational Flow</h3>
           <p>Interactive mode maintains context across your conversation:</p>
@@ -1575,37 +1673,68 @@ copilot</code></pre>
               <tr>
                 <th>Command</th>
                 <th>Purpose</th>
-                <th>Example</th>
+                <th>Details</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><code>/model</code></td>
                 <td>Change the AI model</td>
-                <td>Select from available models</td>
+                <td>Choose between GPT-4o, Claude 3.5 Sonnet, o1-preview, o1-mini</td>
               </tr>
               <tr>
                 <td><code>/mcp</code></td>
                 <td>Manage MCP servers</td>
-                <td>View and configure MCP servers</td>
+                <td>View, enable, disable MCP servers and their tools</td>
               </tr>
               <tr>
                 <td><code>/feedback</code></td>
                 <td>Provide feedback</td>
-                <td>Submit survey, bug report, or feature request</td>
+                <td>Submit survey, bug report, feature request, or rate response</td>
+              </tr>
+              <tr>
+                <td><code>/new</code></td>
+                <td>Start new session</td>
+                <td>Clear context and begin fresh conversation</td>
+              </tr>
+              <tr>
+                <td><code>/clear</code></td>
+                <td>Clear screen</td>
+                <td>Clear terminal output while maintaining session</td>
+              </tr>
+              <tr>
+                <td><code>/history</code></td>
+                <td>View session history</td>
+                <td>Show previous prompts and responses in current session</td>
               </tr>
               <tr>
                 <td><code>/help</code></td>
                 <td>Show available commands</td>
-                <td>Display help information</td>
+                <td>Display all slash commands and their usage</td>
+              </tr>
+              <tr>
+                <td><code>/version</code></td>
+                <td>Show version info</td>
+                <td>Display Copilot CLI version and current model</td>
               </tr>
               <tr>
                 <td><code>/exit</code> or <code>/quit</code></td>
                 <td>End the session</td>
-                <td>Exit interactive mode</td>
+                <td>Save and exit interactive mode (also: Ctrl+D)</td>
               </tr>
             </tbody>
           </table>
+
+          <h3>Model Selection</h3>
+          <p>When you type <code>/model</code>, you'll see an interactive menu:</p>
+          <pre><code>Select a model:
+1. GPT-4o (Fast, general-purpose) [Current]
+2. Claude 3.5 Sonnet (Excellent for code analysis)
+3. o1-preview (Advanced reasoning)
+4. o1-mini (Faster reasoning variant)
+
+Enter number (1-4): </code></pre>
+          <p>The selected model persists for your current session and is saved for future sessions in that project directory.</p>
 
           <h2>Tool Approval in Interactive Mode</h2>
           
@@ -1999,7 +2128,172 @@ copilot -p "List files" --allow-tool 'shell'</code></pre>
           <span class="badge">features</span>
           <span class="badge">capabilities</span>
           
-         
+          <p>GitHub Copilot CLI offers a comprehensive set of features that make it a powerful AI assistant for terminal-based development workflows.</p>
+
+          <h2>Core Capabilities</h2>
+          
+          <h3>🤖 Multiple AI Models</h3>
+          <p>Access to state-of-the-art AI models for different use cases:</p>
+          <ul>
+            <li><strong>GPT-4o:</strong> Fast, general-purpose model for most tasks</li>
+            <li><strong>Claude 3.5 Sonnet:</strong> Excellent for code analysis and explanations</li>
+            <li><strong>o1-preview:</strong> Advanced reasoning for complex problems</li>
+            <li><strong>o1-mini:</strong> Optimized for speed while maintaining quality</li>
+          </ul>
+          <p>Switch models anytime using the <code>/model</code> command in interactive mode.</p>
+
+          <h3>💬 Dual Interaction Modes</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Best For</th>
+                <th>Key Benefit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Interactive</strong></td>
+                <td>Exploration, debugging, iterative development</td>
+                <td>Multi-turn conversations with context</td>
+              </tr>
+              <tr>
+                <td><strong>Programmatic</strong></td>
+                <td>Automation, scripting, CI/CD</td>
+                <td>Single command execution, scriptable</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>🔧 Tool Execution</h3>
+          <p>Copilot can execute commands and tools on your behalf:</p>
+          <ul>
+            <li><strong>Shell commands:</strong> Run terminal commands</li>
+            <li><strong>File operations:</strong> Read, write, and modify files</li>
+            <li><strong>Git operations:</strong> Commit, branch, merge, and more</li>
+            <li><strong>GitHub integration:</strong> Manage PRs, issues, repos</li>
+            <li><strong>Custom tools:</strong> Extend with MCP servers</li>
+          </ul>
+
+          <h3>🔌 Model Context Protocol (MCP)</h3>
+          <p>Connect to external data sources and services:</p>
+          <ul>
+            <li>Built-in GitHub MCP server for GitHub.com integration</li>
+            <li>Database connectivity (PostgreSQL, MySQL, MongoDB)</li>
+            <li>API integrations (REST, GraphQL)</li>
+            <li>Custom MCP servers for specialized tools</li>
+          </ul>
+
+          <h3>🎨 Customization Options</h3>
+          <ul>
+            <li><strong>Custom Instructions:</strong> Project-specific guidelines in <code>.copilot/instructions.md</code></li>
+            <li><strong>Custom Agents:</strong> Specialized AI assistants for specific domains</li>
+            <li><strong>Hooks:</strong> Execute custom scripts at key execution points</li>
+            <li><strong>Skills:</strong> Reusable task packages with scripts and templates</li>
+          </ul>
+
+          <h3>🔒 Security & Safety</h3>
+          <ul>
+            <li><strong>Trusted Directories:</strong> Restrict where Copilot can operate</li>
+            <li><strong>Tool Approval:</strong> Review and approve before execution</li>
+            <li><strong>Session-wide or one-time permissions</strong></li>
+            <li><strong>Deny patterns:</strong> Block specific dangerous operations</li>
+            <li><strong>Audit capability:</strong> Track all actions via hooks</li>
+          </ul>
+
+          <h3>💼 GitHub Integration</h3>
+          <p>Native integration with GitHub.com:</p>
+          <ul>
+            <li>Create and manage pull requests</li>
+            <li>Search and manage issues</li>
+            <li>Trigger GitHub Actions workflows</li>
+            <li>Code search across repositories</li>
+            <li>Team collaboration features</li>
+          </ul>
+
+          <h3>🔄 Session Management</h3>
+          <ul>
+            <li><strong>Persistent sessions:</strong> Resume where you left off</li>
+            <li><strong>Context retention:</strong> Maintains conversation history</li>
+            <li><strong>Session save/restore:</strong> Automatic session storage</li>
+            <li><strong>Multi-project support:</strong> Different sessions per project</li>
+          </ul>
+
+          <h3>📝 Code Understanding</h3>
+          <ul>
+            <li>Workspace-aware: Understands project structure</li>
+            <li>Multi-file context: Analyzes related files</li>
+            <li>Language detection: Supports 100+ programming languages</li>
+            <li>Framework awareness: Recognizes React, Vue, Express, etc.</li>
+          </ul>
+
+          <h3>⚡ Performance & Efficiency</h3>
+          <ul>
+            <li>Fast response times with model selection</li>
+            <li>Streaming responses for immediate feedback</li>
+            <li>Efficient token usage</li>
+            <li>Batch operations support</li>
+          </ul>
+
+          <h2>Advanced Features</h2>
+
+          <h3>Multi-Step Workflows</h3>
+          <p>Copilot can execute complex multi-step workflows:</p>
+          <pre><code>copilot -p "Create a new React component, add it to the app, write tests for it, and create a PR on GitHub"</code></pre>
+          <p>Copilot breaks this down into steps, executing each while maintaining context.</p>
+
+          <h3>Intelligent Delegation</h3>
+          <p>Automatically delegates tasks to specialized agents:</p>
+          <ul>
+            <li>Frontend tasks → Frontend Agent</li>
+            <li>API development → Backend Agent</li>
+            <li>Deployment → DevOps Agent</li>
+            <li>Test generation → Testing Agent</li>
+          </ul>
+
+          <h3>Context-Aware Suggestions</h3>
+          <ul>
+            <li>Understands project conventions from existing code</li>
+            <li>Follows patterns established in your codebase</li>
+            <li>Respects custom instructions and team guidelines</li>
+            <li>Adapts to programming style and preferences</li>
+          </ul>
+
+          <h3>Error Recovery</h3>
+          <ul>
+            <li>Handles execution failures gracefully</li>
+            <li>Suggests alternative approaches when tools fail</li>
+            <li>Provides detailed error explanations</li>
+            <li>Offers debugging assistance</li>
+          </ul>
+
+          <h2>Platform Support</h2>
+          <ul>
+            <li>✅ Linux (all major distributions)</li>
+            <li>✅ macOS (Intel and Apple Silicon)</li>
+            <li>✅ Windows (via WSL2 - recommended)</li>
+            <li>✅ Windows native (PowerShell - experimental)</li>
+            <li>✅ Cloud shells (Azure, AWS, Google Cloud)</li>
+            <li>✅ Remote development environments</li>
+          </ul>
+
+          <h2>Integration Ecosystem</h2>
+          <ul>
+            <li><strong>GitHub CLI:</strong> Seamless integration with gh commands</li>
+            <li><strong>Git:</strong> Native Git workflow support</li>
+            <li><strong>VS Code:</strong> Works alongside VS Code Copilot</li>
+            <li><strong>CI/CD:</strong> Integrable into automated pipelines</li>
+            <li><strong>Docker:</strong> Works in containerized environments</li>
+          </ul>
+
+          <h2>Developer Experience</h2>
+          <ul>
+            <li><strong>Natural language interface:</strong> No need to remember commands</li>
+            <li><strong>Progressive disclosure:</strong> Simple for basics, powerful for advanced</li>
+            <li><strong>Fast feedback:</strong> Quick responses and explanations</li>
+            <li><strong>Learning tool:</strong> Explains what it does and why</li>
+            <li><strong>Undo-friendly:</strong> Preview changes before applying</li>
+          </ul>
         </section>
 
         <!-- Use Cases Section -->
@@ -2008,6 +2302,22 @@ copilot -p "List files" --allow-tool 'shell'</code></pre>
           <span class="badge">examples</span>
           <span class="badge">scenarios</span>
           <span class="badge">applications</span>
+          
+          <p>Discover practical applications and real-world scenarios where GitHub Copilot CLI excels, from local development to GitHub integration.</p>
+          
+          <div class="callout">
+            <strong>📋 Section Contents</strong><br />
+            • Introduction - Overview of use case categories and scenarios<br />
+            • Local Tasks - Code generation, Git operations, and file management<br />
+            • GitHub Tasks - Pull requests, issues, and repository operations
+          </div>
+        </section>
+
+        <section id="use-cases-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">scenarios</span>
+          <span class="badge">categories</span>
           
           <p>GitHub Copilot CLI excels at a wide range of development tasks, from local code modifications to GitHub.com interactions. This section explores practical use cases with real-world examples to help you get the most out of Copilot CLI.</p>
 
@@ -2511,6 +2821,25 @@ copilot -p "Approve PR #789 if all checks pass"</code></pre>
           <span class="badge">custom</span>
           <span class="badge">configure</span>
           <span class="badge">personalize</span>
+          
+          <p>Tailor GitHub Copilot CLI to your specific needs, project requirements, and team workflows through powerful customization features.</p>
+          
+          <div class="callout">
+            <strong>📋 Section Contents</strong><br />
+            • Introduction - Understanding customization options and benefits<br />
+            • Custom Instructions - Project-specific context and guidelines<br />
+            • MCP Servers - External integrations and data sources<br />
+            • Custom Agents - Specialized AI assistants for specific tasks<br />
+            • Hooks - Automated workflows and command execution<br />
+            • Skills - Enhanced capabilities with specialized scripts
+          </div>
+        </section>
+
+        <section id="customization-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">benefits</span>
+          <span class="badge">options</span>
           
           <p>GitHub Copilot CLI offers several powerful customization options that allow you to tailor the AI assistant to your specific needs, project requirements, and team workflows. Customization makes Copilot more effective and aligned with your development practices.</p>
 
@@ -4001,6 +4330,23 @@ git push</code></pre>
           <span class="badge">security</span>
           <span class="badge">trust</span>
           <span class="badge">permissions</span>
+          
+          <p>Comprehensive security features to protect your systems and data when using GitHub Copilot CLI.</p>
+          
+          <div class="callout">
+            <strong>📋 Section Contents</strong><br />
+            • Introduction - Security model and best practices overview<br />
+            • Trusted Directories - Controlling where Copilot can operate<br />
+            • Allowed Tools - Managing tool permissions and approvals<br />
+            • Risk Mitigation - Protecting against common security issues
+          </div>
+        </section>
+
+        <section id="security-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">model</span>
+          <span class="badge">practices</span>
           
           <p>GitHub Copilot CLI includes comprehensive security features to protect your systems and data. Understanding and properly configuring these security mechanisms is essential for safe usage, especially when Copilot executes commands or modifies files on your behalf.</p>
 
@@ -6559,21 +6905,26 @@ copilot -p "Create a PR for this feature branch"</code></pre>
     const sectionConfig = [
       { id: "introduction", title: "📖 Introduction", tags: ["intro", "overview", "about"] },
       { id: "getting-started", title: "🚀 Getting Started", tags: ["setup", "install", "start"] },
+      { id: "getting-started-introduction", title: "📖 Introduction", parent: "getting-started", tags: ["overview", "introduction", "fundamentals"] },
       { id: "os-support", title: "💻 Supported OS", tags: ["linux", "macos", "windows", "wsl"], parent: "getting-started" },
       { id: "installation", title: "⚙️ Installation", tags: ["install", "setup", "configure"], parent: "getting-started" },
       { id: "modes-of-use", title: "🎯 Modes of Use", tags: ["modes", "interactive", "programmatic"] },
+      { id: "modes-of-use-introduction", title: "📖 Introduction", parent: "modes-of-use", tags: ["overview", "introduction", "fundamentals"] },
       { id: "mode-interactive", title: "💬 Interactive Mode", tags: ["interactive", "session", "chat"], parent: "modes-of-use" },
       { id: "mode-programmatic", title: "⚡ Programmatic Mode", tags: ["programmatic", "command", "script"], parent: "modes-of-use" },
       { id: "use-cases", title: "💼 Use Cases", tags: ["examples", "scenarios", "tasks"] },
+      { id: "use-cases-introduction", title: "📖 Introduction", parent: "use-cases", tags: ["overview", "introduction", "fundamentals"] },
       { id: "use-cases-local", title: "🏠 Local Tasks", tags: ["local", "code", "git"], parent: "use-cases" },
       { id: "use-cases-github", title: "🌐 GitHub Tasks", tags: ["github", "pr", "issues"], parent: "use-cases" },
       { id: "customization", title: "🎨 Customization", tags: ["custom", "configure", "personalize"] },
+      { id: "customization-introduction", title: "📖 Introduction", parent: "customization", tags: ["overview", "introduction", "fundamentals"] },
       { id: "custom-instructions", title: "📝 Custom Instructions", tags: ["instructions", "context", "directives"], parent: "customization" },
       { id: "custom-mcp", title: "🔌 MCP Servers", tags: ["mcp", "protocol", "servers"], parent: "customization" },
       { id: "custom-agents", title: "🤖 Custom Agents", tags: ["agents", "specialized", "delegation"], parent: "customization" },
       { id: "custom-hooks", title: "🪝 Hooks", tags: ["hooks", "validation", "automation"], parent: "customization" },
       { id: "custom-skills", title: "🎯 Skills", tags: ["skills", "scripts", "resources"], parent: "customization" },
       { id: "security", title: "🔒 Security", tags: ["security", "trust", "permissions"] },
+      { id: "security-introduction", title: "📖 Introduction", parent: "security", tags: ["overview", "introduction", "fundamentals"] },
       { id: "security-trusted", title: "📂 Trusted Directories", tags: ["trusted", "directories", "folders"], parent: "security" },
       { id: "security-tools", title: "🛠️ Allowed Tools", tags: ["tools", "approval", "permissions"], parent: "security" },
       { id: "security-risks", title: "🛡️ Risk Mitigation", tags: ["risk", "mitigation", "safety"], parent: "security" },
@@ -6600,25 +6951,69 @@ copilot -p "Create a PR for this feature branch"</code></pre>
       sidebarOffcanvas: document.getElementById('sidebarOffcanvas')
     };
 
+    // Track collapsed state for each parent
+    const collapsedState = {};
+    
     function buildTOC(){
       // Clear both TOC lists
       els.toc.innerHTML = '';
       els.tocMobile.innerHTML = '';
       
+      // First pass: identify parents and their children
+      const parentMap = new Map();
       state.filtered.forEach((idx) => {
         const s = sectionConfig[idx];
+        if (s.parent) {
+          if (!parentMap.has(s.parent)) {
+            parentMap.set(s.parent, []);
+          }
+          parentMap.get(s.parent).push(s.id);
+        }
+      });
+      
+      // Initialize collapsed state for parents (default: collapsed)
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        if (!s.parent && parentMap.has(s.id)) {
+          if (collapsedState[s.id] === undefined) {
+            collapsedState[s.id] = true; // collapsed by default
+          }
+        }
+      });
+      
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        
+        // Check if this is a sub-item (has a parent section)
         const isSubItem = !!s.parent;
+        const hasChildren = parentMap.has(s.id);
         
         // Desktop sidebar
         const liDesktop = document.createElement('li');
         liDesktop.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liDesktop.classList.add('has-children');
+          if (collapsedState[s.id]) {
+            liDesktop.classList.add('collapsed');
+          }
+        }
+        if (isSubItem && collapsedState[s.parent]) {
+          liDesktop.classList.add('collapsed');
+        }
+        liDesktop.dataset.sectionId = s.id;
+        
         const aDesktop = document.createElement('a');
         aDesktop.href = `#${s.id}`;
         aDesktop.textContent = s.title;
         aDesktop.addEventListener('click', (e) => {
           e.preventDefault();
-          navigateToId(s.id);
-          closeSidebar();
+          if (hasChildren) {
+            // Toggle collapse/expand
+            toggleCollapse(s.id, 'desktop');
+          } else {
+            navigateToId(s.id);
+            closeSidebar();
+          }
         });
         liDesktop.appendChild(aDesktop);
         els.toc.appendChild(liDesktop);
@@ -6626,18 +7021,69 @@ copilot -p "Create a PR for this feature branch"</code></pre>
         // Mobile offcanvas
         const liMobile = document.createElement('li');
         liMobile.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liMobile.classList.add('has-children');
+          if (collapsedState[s.id]) {
+            liMobile.classList.add('collapsed');
+          }
+        }
+        if (isSubItem && collapsedState[s.parent]) {
+          liMobile.classList.add('collapsed');
+        }
+        liMobile.dataset.sectionId = s.id;
+        
         const aMobile = document.createElement('a');
         aMobile.href = `#${s.id}`;
         aMobile.textContent = s.title;
         aMobile.addEventListener('click', (e) => {
           e.preventDefault();
-          navigateToId(s.id);
-          closeSidebar();
+          if (hasChildren) {
+            // Toggle collapse/expand
+            toggleCollapse(s.id, 'mobile');
+          } else {
+            navigateToId(s.id);
+            closeSidebar();
+          }
         });
         liMobile.appendChild(aMobile);
         els.tocMobile.appendChild(liMobile);
       });
       highlightActiveTOC();
+    }
+    
+    function toggleCollapse(parentId, context) {
+      // Toggle the collapsed state
+      collapsedState[parentId] = !collapsedState[parentId];
+      const isCollapsed = collapsedState[parentId];
+      
+      // Update both desktop and mobile TOCs
+      const containers = context === 'desktop' ? [els.toc] : context === 'mobile' ? [els.tocMobile] : [els.toc, els.tocMobile];
+      
+      containers.forEach(container => {
+        // Update parent item
+        const parentItem = container.querySelector(`li[data-section-id="${parentId}"]`);
+        if (parentItem) {
+          if (isCollapsed) {
+            parentItem.classList.add('collapsed');
+          } else {
+            parentItem.classList.remove('collapsed');
+          }
+        }
+        
+        // Update child items
+        const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+        childItems.forEach(child => {
+          const childId = child.dataset.sectionId;
+          const childSection = sectionConfig.find(s => s.id === childId);
+          if (childSection && childSection.parent === parentId) {
+            if (isCollapsed) {
+              child.classList.add('collapsed');
+            } else {
+              child.classList.remove('collapsed');
+            }
+          }
+        });
+      });
     }
 
     function setActiveByIndex(i){
@@ -6709,15 +7155,93 @@ copilot -p "Create a PR for this feature branch"</code></pre>
     function highlightActiveTOC(){
       const ids = state.filtered.map(idx => sectionConfig[idx].id);
       const activeId = ids[state.index];
-      // Highlight desktop sidebar
-      els.toc.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
-      // Highlight mobile offcanvas
-      els.tocMobile.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
       
-      // Scroll active item into view in sidebar
-      const activeLink = els.toc.querySelector('a.active');
-      if (activeLink) {
-        activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      // Find active section and expand parent if needed
+      const activeSection = sectionConfig.find(s => s.id === activeId);
+      if (activeSection && activeSection.parent) {
+        // Expand parent section
+        collapsedState[activeSection.parent] = false;
+        
+        // Update parent and children visibility
+        [els.toc, els.tocMobile].forEach(container => {
+          const parentItem = container.querySelector(`li[data-section-id="${activeSection.parent}"]`);
+          if (parentItem) {
+            parentItem.classList.remove('collapsed');
+          }
+          
+          // Show all siblings
+          const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+          childItems.forEach(child => {
+            const childId = child.dataset.sectionId;
+            const childSection = sectionConfig.find(s => s.id === childId);
+            if (childSection && childSection.parent === activeSection.parent) {
+              child.classList.remove('collapsed');
+            }
+          });
+        });
+      }
+      
+      // Highlight desktop sidebar
+      let activeDesktopElement = null;
+      els.toc.querySelectorAll('a').forEach(a => {
+        const isActive = a.getAttribute('href') === `#${activeId}`;
+        a.classList.toggle('active', isActive);
+        // Also toggle active on parent li for sub-items
+        if (a.parentElement.classList.contains('list-group-sub-item')) {
+          a.parentElement.classList.toggle('active', isActive);
+        }
+        // Store reference to active element
+        if (isActive) {
+          activeDesktopElement = a.parentElement;
+        }
+      });
+      
+      // Highlight mobile offcanvas
+      let activeMobileElement = null;
+      els.tocMobile.querySelectorAll('a').forEach(a => {
+        const isActive = a.getAttribute('href') === `#${activeId}`;
+        a.classList.toggle('active', isActive);
+        // Also toggle active on parent li for sub-items
+        if (a.parentElement.classList.contains('list-group-sub-item')) {
+          a.parentElement.classList.toggle('active', isActive);
+        }
+        // Store reference to active element
+        if (isActive) {
+          activeMobileElement = a.parentElement;
+        }
+      });
+      
+      // Scroll active item into view in desktop sidebar
+      if (activeDesktopElement && els.sidebar) {
+        // Use smooth scrolling with a small delay to ensure rendering is complete
+        setTimeout(() => {
+          // Check if element is visible (not collapsed)
+          const isVisible = activeDesktopElement.offsetParent !== null && 
+                           !activeDesktopElement.classList.contains('collapsed');
+          if (isVisible) {
+            activeDesktopElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'nearest'
+            });
+          }
+        }, 150);
+      }
+      
+      // Scroll active item into view in mobile offcanvas
+      if (activeMobileElement) {
+        setTimeout(() => {
+          // Check if element is visible (not collapsed)
+          const isVisible = activeMobileElement.offsetParent !== null && 
+                           !activeMobileElement.classList.contains('collapsed');
+          if (isVisible) {
+            activeMobileElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'nearest'
+            });
+          }
+        }, 150);
       }
     }
 

@@ -364,18 +364,6 @@
       box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
     
-    .list-group-item a::after {
-      content: '▶';
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%) scale(0.7);
-      font-size: 0.7rem;
-      color: #9ca3af;
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-    
     .list-group-item a:hover { 
       background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
       border-left-color: transparent;
@@ -1068,7 +1056,7 @@
 
           <h2>Introduction</h2>
           <p>System design is the craft of translating <strong>business requirements into scalable, reliable, and maintainable architectures</strong>. It sits at the intersection of computer science, software engineering, and operational excellence — and is the skill that separates senior engineers from the rest.</p>
-          <p>This guide covers <strong>25 essential system design concepts</strong> organised into five key areas, each built with practical depth: decision frameworks, trade-off tables, real-world examples, and actionable principles you can apply on the job today.</p>
+          <p>This guide covers <strong>32 essential system design concepts</strong> organised into five key areas, each built with practical depth: decision frameworks, trade-off tables, real-world examples, and actionable principles you can apply on the job today.</p>
 
           <div class="callout">
             <strong>💡 Why System Design Matters</strong>
@@ -1093,16 +1081,19 @@
             <li><strong>DB Sharding, Partitioning &amp; Replication</strong> — Range/hash/geo sharding; leader/leaderless replication; resharding challenges</li>
           </ul>
 
-          <h3>📌 Storage &amp; Databases (4 topics)</h3>
+          <h3>📌 Storage &amp; Databases (7 topics)</h3>
           <p>Choosing the right data store is the most consequential design decision. These topics give you the full decision framework.</p>
           <ul>
             <li><strong>SQL vs NoSQL</strong> — ACID vs BASE; Key-Value, Document, Wide-Column, Graph stores; when to choose what</li>
             <li><strong>CAP Theorem &amp; PACELC</strong> — CP vs AP systems; PACELC's latency vs consistency trade-off beyond partition scenarios</li>
             <li><strong>Event Sourcing &amp; CQRS</strong> — Immutable event log; read/write model separation; projections and replay</li>
             <li><strong>Search Systems</strong> — Inverted indexes; relevance scoring (TF-IDF / BM25); ElasticSearch architecture</li>
+            <li><strong>Bloom Filters &amp; Probabilistic Data Structures</strong> — Space-efficient membership testing; false positives vs false negatives; HyperLogLog, Count-Min Sketch</li>
+            <li><strong>LSM Trees</strong> — Write-optimised storage; MemTable, SSTable, compaction; how Cassandra and RocksDB achieve high write throughput</li>
+            <li><strong>Database Indexing</strong> — B-tree vs hash indexes; composite, covering, and partial indexes; query optimisation strategies</li>
           </ul>
 
-          <h3>📌 Architecture Patterns (6 topics)</h3>
+          <h3>📌 Architecture Patterns (7 topics)</h3>
           <p>The macro-structural decisions that define how your services are organised and how they communicate.</p>
           <ul>
             <li><strong>Monolith vs Microservices</strong> — The spectrum; Conway's Law; when to decompose</li>
@@ -1111,9 +1102,10 @@
             <li><strong>Distributed Transactions &amp; Sagas</strong> — Choreography vs orchestration; compensating transactions; eventual consistency</li>
             <li><strong>Idempotency &amp; Retry Patterns</strong> — Idempotency keys; exponential backoff with jitter; thundering herd prevention</li>
             <li><strong>Strangler Fig Pattern</strong> — Façade-based incremental migration; zero big-bang rewrites</li>
+            <li><strong>Real-Time Communication Patterns</strong> — WebSocket vs SSE vs Long Polling; bi-directional messaging; reconnection and scaling strategies</li>
           </ul>
 
-          <h3>📌 Cloud &amp; Platform Engineering (6 topics)</h3>
+          <h3>📌 Cloud &amp; Platform Engineering (9 topics)</h3>
           <p>Production-grade cloud systems require designing for failure, not around it. These patterns are the standard toolkit.</p>
           <ul>
             <li><strong>Fault Tolerance &amp; High Availability</strong> — Redundancy models; health probes; availability nines table</li>
@@ -1122,6 +1114,9 @@
             <li><strong>Infrastructure as Code</strong> — Declarative vs imperative; Terraform, Bicep, Pulumi; drift elimination</li>
             <li><strong>Zero-Trust Architecture</strong> — Never trust, always verify; least privilege; mTLS, identity-first security</li>
             <li><strong>Multi-Region Active-Active vs Active-Passive</strong> — RTO/RPO; geo-routing; write conflict resolution</li>
+            <li><strong>Consensus Algorithms</strong> — Paxos vs Raft; leader election; log replication; etcd and distributed coordination</li>
+            <li><strong>Deployment Strategies</strong> — Blue-Green, Canary, Rolling Update; feature flags; zero-downtime releases</li>
+            <li><strong>Service Mesh</strong> — Sidecar proxy pattern; Istio vs Linkerd; mTLS, observability, and traffic management at the infrastructure layer</li>
           </ul>
 
           <h3>📌 Performance &amp; Reliability (4 topics)</h3>
@@ -1136,7 +1131,7 @@
           <div class="callout mt-3">
             <strong>🎯 Recommended Reading Order</strong><br/>
             If you're new to system design, follow the sections top to bottom. If you're looking to quickly review specific topics, jump to the section that matches your current needs. The concepts build on each other, but each section is designed to be standalone as well.<br/><br/>
-            <em>What is System Design?</em> → <em>Scaling</em> → <em>Caching</em> → <em>SQL vs NoSQL</em> → <em>CAP Theorem</em> → <em>Monolith vs Microservices</em> → <em>API Gateway</em> → <em>Message Queues</em> → <em>SLIs/SLOs/SLAs</em>.
+            <em>What is System Design?</em> → <em>Scaling</em> → <em>Caching</em> → <em>SQL vs NoSQL</em> → <em>CAP Theorem</em> → <em>Bloom Filters</em> → <em>LSM Trees</em> → <em>DB Indexing</em> → <em>Monolith vs Microservices</em> → <em>API Gateway</em> → <em>Message Queues</em> → <em>Real-Time Communication</em> → <em>Fault Tolerance</em> → <em>Consensus Algorithms</em> → <em>Deployment Strategies</em> → <em>Service Mesh</em> → <em>SLIs/SLOs/SLAs</em>.
           </div>
 
           <h2>Who Is This For?</h2>
@@ -1287,7 +1282,7 @@
           <div class="row g-3">
             <div class="col-md-4"><div class="card border-0 bg-gradient-red p-3 rounded-3 h-100"><strong>❌ Jumping to Solutions</strong><p class="mt-1 mb-0"><small>Starting to draw components before clarifying requirements. Always pause to ask questions first — it demonstrates senior-level thinking.</small></p></div></div>
             <div class="col-md-4"><div class="card border-0 bg-gradient-red p-3 rounded-3 h-100"><strong>❌ Ignoring Scale</strong><p class="mt-1 mb-0"><small>Designing a system for 100 users that needs to serve 100 million. Estimation shapes every technology choice you make.</small></p></div></div>
-            <div class="col-md-4"><div class="card border-0 bg-gradient-red p-3 rounded-3 h-100"><strong>❌ No Trade-off Discussion</strong><p class="mt-1 mb-0"><small>Stating "Confirming Kafka" without explaining why vs SQS or a direct DB write.</small></p></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-red p-3 rounded-3 h-100"><strong>❌ No Trade-off Discussion</strong><p class="mt-1 mb-0"><small>Stating "Choosing Kafka" without explaining why vs SQS or a direct DB write.</small></p></div></div>
           </div>
 
         </section>
@@ -2282,7 +2277,7 @@ graph TB
 
           <h2>About Storage &amp; Databases</h2>
           <p>The database choice is <strong>one of the most consequential and least reversible decisions</strong> in system design. Pick the wrong store and you will be fighting it for years — through data migrations, workarounds for missing features, or performance ceilings that require expensive re-architecture.</p>
-          <p>Beyond the SQL-vs-NoSQL debate, this section covers the <em>theoretical guarantees</em> that underpin distributed databases (CAP and PACELC), advanced data patterns that unlock audit trails and independent read/write scaling (Event Sourcing and CQRS), and specialised search infrastructure that no relational database can efficiently replace.</p>
+          <p>Beyond the SQL-vs-NoSQL debate, this section covers the <em>theoretical guarantees</em> that underpin distributed databases (CAP and PACELC), advanced data patterns that unlock audit trails and independent read/write scaling (Event Sourcing and CQRS), specialised search infrastructure, space-efficient probabilistic structures (Bloom Filters), write-optimised storage engines (LSM Trees), and the indexing strategies that make queries fast.</p>
 
           <div class="callout">
             <strong>💡 Why Data Architecture Decisions Are Hard to Reverse</strong>
@@ -2308,17 +2303,28 @@ graph TB
           <h3>🔍 Search Systems</h3>
           <p>Full-text search requires a fundamentally different data structure than a B-tree index. This section covers inverted indexes, the Elasticsearch / Apache Lucene architecture, relevance scoring algorithms (TF-IDF, BM25), and the integration pattern for keeping a primary database as the source of truth while syncing to a search index for query capabilities.</p>
 
+          <h3>🎯 Bloom Filters &amp; Probabilistic Data Structures</h3>
+          <p>Bloom filters answer "is this element in the set?" using a fraction of the memory required to store the actual set. This section covers the bit-array mechanism, the false-positive / false-negative trade-off, tuning (bits per element, hash count), and related structures — HyperLogLog for cardinality estimation and Count-Min Sketch for frequency counting.</p>
+
+          <h3>🌳 LSM Trees — Write-Optimised Storage</h3>
+          <p>Log-Structured Merge trees power Cassandra, RocksDB, LevelDB, and HBase. This section explains how buffering writes in-memory (MemTable) and flushing to immutable sorted files (SSTables) converts random writes to sequential I/O — yielding 100k+ writes/sec/node. Covers compaction strategies and the read/write amplification trade-off.</p>
+
+          <h3>📇 Database Indexing</h3>
+          <p>The right index can reduce a 10-second query to 1 millisecond; the wrong index silently degrades write throughput. Covers B-tree vs hash indexes, composite and covering indexes, partial and expression indexes, and how query planners choose execution paths.</p>
+
           <div class="callout mt-3">
             <strong>🔗 How These Topics Connect</strong><br/>
-            Your <em>SQL vs NoSQL</em> choice is constrained by <em>CAP/PACELC</em> guarantees you can live with → domains with complex audit or write/read asymmetry benefit from <em>Event Sourcing + CQRS</em> → regardless of primary store, add a dedicated <em>Search System</em> for full-text query capabilities rather than trying to force your primary DB to serve search use cases.
+            Your <em>SQL vs NoSQL</em> choice is constrained by <em>CAP/PACELC</em> guarantees you can live with → domains with complex audit or write/read asymmetry benefit from <em>Event Sourcing + CQRS</em> → regardless of primary store, add a dedicated <em>Search System</em> for full-text query capabilities → use <em>Bloom Filters</em> to eliminate unnecessary disk reads → understand <em>LSM Trees</em> for write-heavy storage choices → design effective <em>Indexes</em> to make every query fast.
           </div>
 
           <h2>Topics at a Glance</h2>
           <div class="row g-3 mt-1">
-            <div class="col-md-6"><div class="card border-0 bg-gradient-blue p-3 rounded-3 h-100"><h6 class="fw-bold">🗃️ SQL vs NoSQL</h6><ul class="mb-0 ps-3"><li>ACID vs BASE consistency models</li><li>Schema-first vs schema-flexible</li><li>4 NoSQL sub-families with trade-offs</li><li>Decision guide for real-world scenarios</li></ul></div></div>
-            <div class="col-md-6"><div class="card border-0 bg-gradient-green p-3 rounded-3 h-100"><h6 class="fw-bold">🔺 CAP Theorem &amp; PACELC</h6><ul class="mb-0 ps-3"><li>CP vs AP trade-off under partitions</li><li>PACELC: latency vs consistency normally</li><li>Practical DB classification (etcd, Cassandra, DynamoDB)</li><li>How to choose given your SLA</li></ul></div></div>
-            <div class="col-md-6"><div class="card border-0 bg-gradient-yellow p-3 rounded-3 h-100"><h6 class="fw-bold">📜 Event Sourcing &amp; CQRS</h6><ul class="mb-0 ps-3"><li>Append-only event log as source of truth</li><li>State reconstruction via event replay</li><li>Separate read/write models for independent scale</li><li>Projections, sagas, and when to apply</li></ul></div></div>
-            <div class="col-md-6"><div class="card border-0 bg-gradient-purple p-3 rounded-3 h-100"><h6 class="fw-bold">🔍 Search Systems</h6><ul class="mb-0 ps-3"><li>Inverted index structure and tokenisation</li><li>Elasticsearch shards, replicas, and NRT indexing</li><li>TF-IDF and BM25 relevance scoring</li><li>Sync pattern: primary DB → search index via CDC</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-blue p-3 rounded-3 h-100"><h6 class="fw-bold">🗃️ SQL vs NoSQL</h6><ul class="mb-0 ps-3"><li>ACID vs BASE consistency models</li><li>Schema-first vs schema-flexible</li><li>4 NoSQL sub-families with trade-offs</li><li>Decision guide for real-world scenarios</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-green p-3 rounded-3 h-100"><h6 class="fw-bold">🔺 CAP Theorem &amp; PACELC</h6><ul class="mb-0 ps-3"><li>CP vs AP trade-off under partitions</li><li>PACELC: latency vs consistency normally</li><li>Practical DB classification (etcd, Cassandra, DynamoDB)</li><li>How to choose given your SLA</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-yellow p-3 rounded-3 h-100"><h6 class="fw-bold">📜 Event Sourcing &amp; CQRS</h6><ul class="mb-0 ps-3"><li>Append-only event log as source of truth</li><li>State reconstruction via event replay</li><li>Separate read/write models for independent scale</li><li>Projections, sagas, and when to apply</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-purple p-3 rounded-3 h-100"><h6 class="fw-bold">🔍 Search Systems</h6><ul class="mb-0 ps-3"><li>Inverted index structure and tokenisation</li><li>Elasticsearch shards, replicas, and NRT indexing</li><li>TF-IDF and BM25 relevance scoring</li><li>Sync pattern: primary DB → search index via CDC</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-teal p-3 rounded-3 h-100"><h6 class="fw-bold">🎯 Bloom Filters</h6><ul class="mb-0 ps-3"><li>Bit-array membership testing — no false negatives</li><li>Tuning: bits per element, hash count, false positive rate</li><li>Cassandra, Chrome, web crawlers use cases</li><li>HyperLogLog and Count-Min Sketch variants</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-pink p-3 rounded-3 h-100"><h6 class="fw-bold">🌳 LSM Trees &amp; DB Indexing</h6><ul class="mb-0 ps-3"><li>MemTable → SSTable → compaction pipeline</li><li>Sequential writes vs random I/O trade-off</li><li>B-tree vs hash vs covering indexes</li><li>Query planner and index selection</li></ul></div></div>
           </div>
         </section>
 
@@ -3213,9 +3219,12 @@ graph TB
           <h3>🌿 Strangler Fig Pattern</h3>
           <p>The recommended approach for incrementally replacing a legacy system without a big-bang rewrite. Route traffic through a façade, migrate capability by capability to the new system, and retire the legacy only when 100% of routes are migrated — with easy rollback at every step.</p>
 
+          <h3>⚡ Real-Time Communication Patterns</h3>
+          <p>Traditional HTTP request-response breaks down when the server needs to push data to clients instantly. Covers Short Polling, Long Polling, Server-Sent Events (SSE), and WebSocket — with a decision guide, scalability considerations, and the hybrid approach (SignalR / Socket.IO) that provides automatic transport fallback.</p>
+
           <div class="callout mt-3">
             <strong>🔗 How These Patterns Layer Together</strong><br/>
-            <em>Monolith vs Microservices</em> governs decomposition → <em>API Gateway / BFF</em> provides unified client access → <em>Message Queues</em> decouple inter-service communication → <em>Sagas</em> coordinate multi-service transactions → <em>Idempotency + Retry</em> make every operation safe under failure → <em>Strangler Fig</em> enables evolution of all of the above over time.
+            <em>Monolith vs Microservices</em> governs decomposition → <em>API Gateway / BFF</em> provides unified client access → <em>Message Queues</em> decouple inter-service communication → <em>Sagas</em> coordinate multi-service transactions → <em>Idempotency + Retry</em> make every operation safe under failure → <em>Strangler Fig</em> enables evolution of all of the above over time → <em>Real-Time Communication</em> patterns deliver live data to clients efficiently.
           </div>
 
           <h2>Topics at a Glance</h2>
@@ -3225,7 +3234,7 @@ graph TB
             <div class="col-md-4"><div class="card border-0 bg-gradient-yellow p-3 rounded-3 h-100"><h6 class="fw-bold">📨 Message Queues &amp; Pub/Sub</h6><ul class="mb-0 ps-3"><li>Queue vs Pub/Sub: point-to-point vs fan-out</li><li>Kafka: topics, partitions, consumer groups, offsets</li><li>Kafka vs RabbitMQ vs Azure Service Bus</li><li>Backpressure and dead-letter queues</li></ul></div></div>
             <div class="col-md-4"><div class="card border-0 bg-gradient-purple p-3 rounded-3 h-100"><h6 class="fw-bold">🔗 Distributed Transactions</h6><ul class="mb-0 ps-3"><li>Why 2PC fails in microservices</li><li>Saga: choreography vs orchestration</li><li>Compensating transactions for rollback</li><li>Eventual vs strong consistency trade-offs</li></ul></div></div>
             <div class="col-md-4"><div class="card border-0 bg-gradient-teal p-3 rounded-3 h-100"><h6 class="fw-bold">🔁 Idempotency &amp; Retry</h6><ul class="mb-0 ps-3"><li>Idempotency keys for payment APIs</li><li>At-least-once vs at-most-once delivery</li><li>Exponential backoff with jitter</li><li>Dead-letter queues for persistent failures</li></ul></div></div>
-            <div class="col-md-4"><div class="card border-0 bg-gradient-pink p-3 rounded-3 h-100"><h6 class="fw-bold">🌿 Strangler Fig Pattern</h6><ul class="mb-0 ps-3"><li>Intercept → Migrate → Retire lifecycle</li><li>Façade / proxy as the routing layer</li><li>Data synchronisation during transition</li><li>Anti-corruption layer between old and new</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-pink p-3 rounded-3 h-100"><h6 class="fw-bold">🌿 Strangler Fig &amp; Real-Time</h6><ul class="mb-0 ps-3"><li>Intercept → Migrate → Retire lifecycle</li><li>Façade / proxy as the routing layer</li><li>WebSocket vs SSE vs Long Polling</li><li>SignalR / Socket.IO automatic fallback</li></ul></div></div>
           </div>
         </section>
 
@@ -3904,7 +3913,7 @@ DECOMMISSIONED ✅"]
             <div class="col-md-4"><div class="card border-0 bg-gradient-pink p-3 rounded-3 h-100"><strong>⚠️ Completion Pressure</strong><p class="mt-1 mb-0"><small>Teams may lose motivation to fully retire the legacy once the new system handles 80% of traffic. Establish a hard decommission deadline and track legacy usage metrics to maintain momentum.</small></p></div></div>
           </div>
 
-          <div class="callout mt-4">💡 This pattern is endorsed by Martin Fowler and is the <strong>recommended approach</strong> for any significant system Modernization. It was used by Amazon (moving from monolith to microservices), Netflix (data centre to cloud), and many others. Strangle, don't rewrite.</div>
+          <div class="callout mt-4">💡 This pattern is endorsed by Martin Fowler and is the <strong>recommended approach</strong> for any significant system modernization. It was used by Amazon (moving from monolith to microservices), Netflix (data centre to cloud), and many others. Strangle, don't rewrite.</div>
         </section>
 
         <!-- ─────────────────────────────── REAL-TIME COMMUNICATION PATTERNS ─────────────────────────────── -->
@@ -4109,7 +4118,7 @@ graph TB
 
           <h2>About Cloud &amp; Platform Engineering</h2>
           <p>Cloud engineering is not simply "running servers in someone else's data centre." It is a <strong>fundamentally different operational model</strong> — ephemeral compute, pay-per-use economics, global distribution, and shared responsibility for security. Success requires adopting a new mental model: design for failure, automate everything, and treat infrastructure as code.</p>
-          <p>This section covers the six pillars that separate production-grade cloud systems from hobby projects: resilience patterns, deployment automation, security architecture, and multi-region strategy.</p>
+          <p>This section covers the nine pillars that separate production-grade cloud systems from hobby projects: resilience patterns, deployment automation, security architecture, multi-region strategy, consensus algorithms, deployment strategies, and service mesh infrastructure.</p>
 
           <div class="callout">
             <strong>💡 The Cloud-Native Mental Model Shift</strong>
@@ -4142,7 +4151,16 @@ graph TB
           <h3>🌍 Multi-Region Active-Active / Active-Passive</h3>
           <p>Running across multiple geographic regions eliminates single-region outages as a business risk and reduces latency for global users. Covers the trade-offs between Active-Active (zero failover time, complex writes) and Active-Passive (simpler consistency, non-zero RTO/RPO), and the data replication strategies that make each viable.</p>
 
-          <div class="callout mt-3">🔗 <strong>How these topics interconnect:</strong> IaC provisions the infrastructure → Fault Tolerance patterns make it resilient → Circuit Breakers contain failures → Serverless + EDA make it elastic → Zero-Trust secures every call → Multi-Region ensures it survives regional disasters.</div>
+          <h3>🤝 Consensus Algorithms — Paxos &amp; Raft</h3>
+          <p>Distributed systems require nodes to agree on values even when some nodes crash or messages are lost. Covers the Raft state machine (Leader Election, Log Replication, Safety), Raft vs Paxos trade-offs, and real-world adoption — etcd (Kubernetes), Consul, CockroachDB, and Google Spanner.</p>
+
+          <h3>🚀 Deployment Strategies</h3>
+          <p>How code reaches production is as critical as the code itself. Covers Recreate, Rolling Update, Blue-Green, and Canary deployments — with their rollback time, infrastructure cost, and risk profile. Includes feature flags as a mechanism to decouple deploy from release.</p>
+
+          <h3>🕸️ Service Mesh</h3>
+          <p>As microservice counts grow, networking concerns (mTLS, retries, observability, traffic routing) need to be extracted from application code. Covers the sidecar proxy pattern, Istio vs Linkerd comparison, and what a service mesh provides: zero-code security, automatic distributed tracing, and canary routing at the infrastructure layer.</p>
+
+          <div class="callout mt-3">🔗 <strong>How these topics interconnect:</strong> IaC provisions the infrastructure → Fault Tolerance patterns make it resilient → Circuit Breakers contain failures → Serverless + EDA make it elastic → Zero-Trust secures every call → Multi-Region ensures it survives regional disasters → Consensus Algorithms provide strong consistency for coordination → Deployment Strategies make releases safe → Service Mesh enforces all networking policies uniformly.</div>
 
           <h2>Topics at a Glance</h2>
           <div class="row g-3 mt-1">
@@ -4152,6 +4170,9 @@ graph TB
             <div class="col-md-4"><div class="card border-0 bg-gradient-purple p-3 rounded-3 h-100"><h6 class="fw-bold">🏗️ Infrastructure as Code</h6><ul class="mb-0 ps-3"><li>Terraform, Bicep, Pulumi, AWS CDK</li><li>Declarative vs imperative approaches</li><li>GitOps: infra changes via pull request</li><li>Drift detection and state management</li></ul></div></div>
             <div class="col-md-4"><div class="card border-0 bg-gradient-teal p-3 rounded-3 h-100"><h6 class="fw-bold">🔒 Zero-Trust Architecture</h6><ul class="mb-0 ps-3"><li>Verify identity explicitly — MFA, short-lived tokens</li><li>Least-privilege: RBAC, ABAC, JIT access</li><li>Assume breach: mTLS, network segmentation</li><li>6 NIST pillars: identity, devices, apps, data, infra, network</li></ul></div></div>
             <div class="col-md-4"><div class="card border-0 bg-gradient-pink p-3 rounded-3 h-100"><h6 class="fw-bold">🌍 Multi-Region Strategy</h6><ul class="mb-0 ps-3"><li>Active-Active: zero RTO, complex write conflicts</li><li>Active-Passive: simple consistency, non-zero RTO</li><li>RPO and RTO targets and how to meet them</li><li>DNS geo-routing and traffic manager</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-purple p-3 rounded-3 h-100"><h6 class="fw-bold">🤝 Consensus Algorithms</h6><ul class="mb-0 ps-3"><li>Raft: Leader Election, Log Replication, Safety</li><li>Paxos vs Raft — complexity vs understandability</li><li>etcd, Consul, CockroachDB, Spanner</li><li>When consensus is necessary vs overkill</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-blue p-3 rounded-3 h-100"><h6 class="fw-bold">🚀 Deployment Strategies</h6><ul class="mb-0 ps-3"><li>Blue-Green: instant cutover, 2× infra cost</li><li>Canary: progressive rollout, real-user validation</li><li>Rolling Update: Kubernetes default, no extra cost</li><li>Feature flags: decouple deploy from release</li></ul></div></div>
+            <div class="col-md-4"><div class="card border-0 bg-gradient-green p-3 rounded-3 h-100"><h6 class="fw-bold">🕸️ Service Mesh</h6><ul class="mb-0 ps-3"><li>Sidecar proxy: Envoy intercepts all traffic</li><li>mTLS, distributed tracing, traffic splitting</li><li>Istio vs Linkerd — complexity vs simplicity</li><li>Zero-code observability and security</li></ul></div></div>
           </div>
         </section>
 

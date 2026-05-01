@@ -1,0 +1,4472 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🦜</text></svg>" />
+  <title>LangChain and LangGraph - In a Nutshell</title>
+  <meta name="description" content="A comprehensive guide to LangChain and LangGraph." />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #ffffff;
+      --fg: #0f172a;
+      --muted: #64748b;
+      --accent: #3b82f6;
+      --accent-light: #dbeafe;
+      --border: #e2e8f0;
+      --sidebar-bg: #ffffff;
+      --sidebar-fg: #0f172a;
+      --code-bg: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%);
+      --focus: #10b981;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 20px rgba(0,0,0,0.12), 0 6px 6px rgba(0,0,0,0.08);
+      --gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+    
+    /* Bootstrap Gradient Utility Classes */
+    .bg-gradient-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important; }
+    .bg-gradient-green { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important; }
+    .bg-gradient-yellow { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important; }
+    .bg-gradient-pink { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%) !important; }
+    .bg-gradient-purple { background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%) !important; }
+    .bg-gradient-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%) !important; }
+    .bg-gradient-blue-dark { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; }
+    .bg-gradient-gray { background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important; }
+    .bg-gradient-purple-dark { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important; }
+    .bg-gradient-teal-dark { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%) !important; }
+    .bg-gradient-green-dark { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+    .bg-gradient-red { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important; }
+    .bg-gradient-green-light { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important; }
+    .bg-gradient-blue-sky { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important; }
+    .bg-gradient-red-dark { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important; }
+    .bg-gradient-indigo { background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important; }
+    .bg-gradient-green-medium { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+    .bg-gradient-orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important; }
+    .bg-gradient-violet { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; }
+    .bg-gradient-lime { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%) !important; }
+    .bg-gradient-sky { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important; }
+    
+    /* Apply theme colors to Bootstrap elements */
+    body { background-color: var(--bg); color: var(--fg); overflow: hidden; }
+    .navbar { background-color: var(--fg) !important; border-bottom: none !important; box-shadow: var(--shadow-md) !important; }
+    .navbar-brand { cursor: pointer; color: var(--bg) !important; font-weight: 600; letter-spacing: 0px; }
+    .navbar-toggler-icon { 
+      filter: invert(1);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2896, 165, 250, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    
+    .btn-outline-secondary { border-color: var(--border) !important; color: var(--fg) !important; }
+    .btn-outline-secondary:hover { background-color: var(--accent-light) !important; border-color: var(--accent) !important; color: var(--accent) !important; }
+    
+    /* Sidebar - Modern Design */
+    nav.sidebar { 
+      background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%); 
+      border-right: 1px solid rgba(0, 0, 0, 0.05) !important;  
+      overflow-y: auto; 
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.06);
+      padding-top: 0;
+    }
+    
+    .menu-header {  
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.1) 100%);
+      font-weight: bold; 
+      padding: 1.25rem 1.25rem; 
+      letter-spacing: 0px; 
+      font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      border-bottom: 2px solid #a5aab3;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      color: #0c346c;
+      text-shadow: none;
+      margin: 0;
+      text-transform: none;
+    }
+    .menu-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: left 0.6s ease;
+    }
+    .menu-header:hover::before {
+      left: 100%;
+    }
+    .menu-header::after {
+      content: '🏗️';
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.3rem;
+      opacity: 0.9;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+    }
+    
+    .toc { 
+      list-style: none; 
+      padding: 0rem 0; 
+      margin: 0; 
+      background: transparent;
+    }
+    .toc li { 
+      margin: 0; 
+    }
+    
+    /* Section grouping */
+    .toc li[data-group="overview"] { margin-bottom: 0.75rem; }
+    .toc li[data-group="solid"]:first-of-type { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(59, 130, 246, 0.15);
+      padding-top: 1rem;
+    }
+    .toc li[data-group="other-principles"]:first-of-type { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(16, 185, 129, 0.15);
+      padding-top: 1rem;
+    }
+    .toc li[data-group="resources"] { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(100, 116, 139, 0.15);
+      padding-top: 1rem;
+    }
+    
+    .list-group-item { 
+      background: transparent; 
+      border-color: transparent; 
+      padding: 0; 
+      margin: 0.25rem 0.75rem; 
+      border-radius: 0rem;
+      transition: all 0.2s ease;
+    }
+    .list-group-item a { 
+      color: #1f2937; 
+      text-decoration: none; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-start; 
+      gap: 0.4rem; 
+      border-left: 3px solid transparent; 
+      padding: 0.85rem 1.25rem; 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      font-weight: 500; 
+      border-radius: 0rem;
+      font-size: 0.95rem;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    .list-group-item a::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+      border-radius: 0 0px 0px 0;
+    }
+    .list-group-item a::after {
+      content: '▶';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .list-group-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-item a:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    .list-group-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-item a.active::before {
+      transform: scaleY(1);
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      width: 5px;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+    .list-group-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Collapsible parent items */
+    .list-group-item.has-children {
+      cursor: default;
+    }
+    .list-group-item.has-children > a {
+      cursor: pointer;
+      user-select: none;
+    }
+    .list-group-item.has-children > a::after {
+      content: '▼';
+      font-size: 0.65rem;
+      opacity: 0.6;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    .list-group-item.has-children.collapsed > a::after {
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    .list-group-item.has-children > a:hover::after {
+      opacity: 1;
+    }
+    
+    /* Hide collapsed children */
+    .list-group-sub-item.collapsed {
+      display: none;
+      max-height: 0;
+      overflow: hidden;
+    }
+    
+    /* Sub-items tree connectors */
+    .list-group-sub-item a::before { 
+      content: '├─';
+      font-size: 0.85rem;
+      margin-right: 0.5rem;
+      color: #6b7280;
+      z-index: 1;
+      position: relative;
+    }
+    
+    /* Sub-items styling - similar to main items but smaller and indented */
+    .list-group-sub-item {
+      background: transparent; 
+      border-color: transparent; 
+      padding: 0px; 
+      margin: 0.2rem 0.75rem 0.2rem 1.5rem;
+      border-radius: 0rem;
+      transition: all 0.2s ease;
+      position: relative;
+      list-style-type: none;
+    }
+    .list-group-sub-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+      border-radius: 0 0px 0px 0;
+      z-index: 1;
+    }
+    .list-group-sub-item a {
+      color: #1f2937; 
+      text-decoration: none; 
+      display: block;
+      border-left: 3px solid transparent; 
+      padding: 0.65rem 1rem 0.65rem 2.00rem;
+      transition: all 0.2s ease; 
+      font-weight: 500; 
+      border-radius: 0rem;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Sub-items hover and active states - same as main items */
+    .list-group-sub-item a::after {
+      content: '▶';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .list-group-sub-item:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-sub-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-sub-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    
+    .list-group-sub-item.active::before {
+      transform: scaleY(1);
+      width: 5px;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+    .list-group-sub-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-sub-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-sub-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    .list-group-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-item a:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    .list-group-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Badge styling */
+    .badge { font-size: 0.8rem; padding: 0.15rem 0.4rem; background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent); font-weight: 600; border-radius: 0.25rem; font-style: normal; line-height: 1.2; opacity: 0.9; }
+    .badge { background: var(--accent); color: white; border: none; font-size: 0.6rem; padding: 0.25rem 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-top: 0.5rem; margin-right: 0.35rem; }
+    .list-group-item a:hover .badge { opacity: 1; background: var(--accent); color: white; }
+    .list-group-item a.active .badge { background: rgba(255, 255, 255, 0.3); color: white; border-color: rgba(255, 255, 255, 0.6); font-weight: 600; opacity: 1; }
+        
+    /* Content */
+    .content { width: 100%; max-width: 100%; margin: 0 auto; background: #ffffff; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+    section { display: none !important; margin-bottom: 2rem; }
+    section.active { display: block !important; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    h1 { font-size: 2rem; font-weight: 700; margin: 1rem 0 0.25rem 0; letter-spacing: -0.5px; color: var(--fg); display: block; border: none; }
+    h2 { font-size: 1.5rem; font-weight: 600; margin: 1.5rem 0 0.75rem 0; color: var(--fg); border-bottom: 2px solid var(--accent-light); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.1rem; color: var(--accent); font-weight: 600; margin: 1rem 0 0.5rem 0; }
+    h4 { font-size: 0.8rem; color: var(--fg); font-weight: 600; margin: 0.75rem 0 0.4rem 0; }
+    p { margin: 1rem 0; line-height: 1.65; color: var(--fg); }
+    ul, ol { margin: 1rem 0; padding-left: 2rem; }
+    li { margin: 0.5rem 0; color: var(--fg); }
+    
+    code { background: var(--code-bg); border: 1px solid var(--border); padding: 0.2rem 0.5rem; font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace; font-size: 0.9em; color: var(--accent); border-radius: 0.5rem; }
+    pre { background: var(--code-bg); border: 0px solid var(--border); padding: 1rem; border-radius: 0.5rem; overflow: auto; box-shadow: var(--shadow-sm); margin: 1rem 0; }
+    pre code { padding: 0; background: transparent; border: none; color: var(--fg); }
+    
+    .callout { border-left: 5px solid var(--accent); background: var(--accent-light); padding: 1rem 1.2rem; margin: 1.5rem 0; border-radius: 0.5rem; box-shadow: var(--shadow-sm); font-weight: 500; color: var(--fg); }
+    
+    /* Table styling */
+    .table { color: var(--fg); }
+    .table thead th { background: var(--accent-light); color: var(--accent); border-color: var(--border); font-weight: 600; }
+    .table tbody td { border-color: var(--border); }
+    .table-striped tbody tr:nth-of-type(odd) { background-color: rgba(0,0,0,0.02); }
+    .table-striped tbody tr:hover { background-color: var(--accent-light); }
+    
+    /* Controls/Pagination */
+    .controls { opacity: 0.5; position: fixed; bottom: 0.25rem; right: 1rem; width: auto; z-index: 1000; background: transparent; display: flex; align-items: center; justify-content: center; gap: 0rem; padding: 0; min-height: 40px; }
+    @media (max-width: 991px) {
+      .controls { bottom: 0.25rem; right: 1rem; }
+      .menu-header { color: var(--focus); }
+    }
+    .controls:hover { opacity: 1; }
+    
+    .page-indicator { color: var(--accent); font-weight: 600; font-size: 0.875rem; }
+    .btn-group .btn { margin: 0px 2px; padding: 0.2rem 0.5rem; background: var(--accent); color: white; border-color: var(--accent); font-size: 1rem; font-weight: bold; }
+    .btn-group .btn:hover { background: var(--accent); }
+    .btn-group .btn + .btn { margin-left: -1px; }
+    
+    /* Mobile/Offcanvas */
+    .offcanvas { background: var(--bg) !important; }
+    .offcanvas-header { border-bottom: 1px solid var(--border); }
+    .offcanvas-title { color: var(--fg); font-weight: 600; }
+    .btn-close { color: var(--fg); }
+    
+    /* Scrollbar */
+    nav.sidebar::-webkit-scrollbar { width: 6px; }
+    nav.sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+    nav.sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 0px; }
+    nav.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
+    
+    /* Mermaid Diagrams */
+    .mermaid {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      position: relative;
+    }
+    .mermaid.rendered {
+      min-height: 0;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+      min-height: 300px;
+      transition: transform 0.3s ease;
+      transform-origin: center center;
+    }
+    .mermaid.zoomed {
+      overflow: auto;
+      cursor: grab;
+    }
+    .mermaid.zoomed:active {
+      cursor: grabbing;
+    }
+    .mermaid svg text {
+      font-size: 14px !important;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    }
+    
+    /* Mermaid title styling */
+    .mermaid svg text, .diagram-modal-content svg text {
+      font-size: 1rem !important;
+      font-weight: bold !important;
+      fill: var(--fg) !important;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    }
+
+    .mermaid svg *
+    {
+        color: #333;
+    }
+
+    .mermaid[data-processed="true"] {
+      min-height: 0;
+    }
+    
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+    
+    /* Zoom controls */
+    .zoom-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+    .mermaid:hover .zoom-controls {
+      opacity: 1;
+    }
+    .zoom-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+    }
+    .zoom-btn:hover {
+      background: #2563eb;
+      transform: scale(1.1);
+    }
+
+    /* Modal for diagram zoom */
+    .diagram-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .diagram-modal.active {
+      display: flex;
+    }
+    .diagram-modal-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border-radius: 0;
+      padding: 3rem 3rem 3rem 3rem;
+      overflow: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .diagram-modal-content svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .modal-close {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+      z-index: 10000;
+    }
+    .modal-close:hover {
+      background: #dc2626;
+      transform: scale(1.1);
+    }
+    .modal-zoom-controls {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10000;
+      padding: 0rem;
+      border-radius: 0.4rem;
+    }
+    .modal-zoom-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+    }
+    .modal-zoom-btn:hover {
+      background: #2563eb;
+      transform: scale(1.1);
+    }
+    
+    /* Utilities */
+    .search { height: 0; overflow: hidden; padding: 0 !important; }
+    .search input { display: none; }
+    .min-vh-100 { min-height: 100vh; }
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { position: static; width: auto; height: auto; padding: 0.4rem 0.6rem; background: var(--accent); color: white; border-radius: 0.4rem; }
+    
+    /* Override Bootstrap defaults for theme */
+    a { color: var(--accent); }
+    a:hover { color: var(--accent); text-decoration: underline; }
+    
+    /* Responsive - keep sidebar visible on desktop, offcanvas on mobile */
+    @media (max-width: 991px) {
+      nav.sidebar { display: none; }
+      #main { width: 100%; }
+      .row { --bs-gutter-x: 0; }
+    }
+    
+    /* Layout - prevent unnecessary scrolling */
+    html, body { height: 100%; margin: 0; }
+    #appContainer { display: flex; flex-direction: column; height: calc(100vh - 50px); }
+    #mainRow { flex: 1; overflow: hidden; display: flex; }
+    nav.sidebar { overflow-y: auto; max-height: 100%; position: relative; padding-bottom: 0px; }
+    #main { overflow: hidden; display: flex; flex-direction: column; height: 100%; -webkit-tap-highlight-color: transparent; outline: none; border: none; }
+    #main:focus { outline: none; }
+    .content { overflow-y: auto; flex: 1; width: 100%; min-height: 0; padding: 0rem 1.5rem 0rem 1.5rem; }
+    
+    /* Contact Info */
+    .contact-info {
+      font-weight: 400 !important;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--accent-light);
+      margin: 0;
+      opacity: 0.5;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .contact-info:hover {
+      opacity: 0.9;
+      text-decoration: none;
+    }
+    @media (max-width: 991px) {
+      .navbar-brand {
+        font-size: 1rem !important;
+        flex: 1;
+      }
+      .contact-info {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+    @media (max-width: 576px) {
+      .navbar-brand {
+        font-size: 0.9rem !important;
+      }
+      .contact-info {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+      }
+    }
+
+    .list-style-none {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* JSON Syntax Highlighting */
+    pre code.language-json {
+      display: block;
+      white-space: pre;
+      font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    pre code.language-json .json-key {
+      color: #0451a5;
+      font-weight: 500;
+    }
+
+    pre code.language-json .json-string {
+      color: #a31515;
+    }
+
+    pre code.language-json .json-number {
+      color: #098658;
+    }
+
+    pre code.language-json .json-boolean {
+      color: #0000ff;
+      font-weight: 600;
+    }
+
+    pre code.language-json .json-null {
+      color: #0000ff;
+      font-weight: 600;
+    }
+
+    pre code.language-json .json-punctuation {
+      color: #333;
+    }
+
+    /* SQL Syntax Highlighting */
+    pre code.language-sql {
+      display: block;
+      white-space: pre;
+      font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    pre code.language-sql .sql-keyword {
+      color: #0000ff;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    pre code.language-sql .sql-string {
+      color: #a31515;
+    }
+
+    pre code.language-sql .sql-number {
+      color: #098658;
+    }
+
+    pre code.language-sql .sql-comment {
+      color: #008000;
+      font-style: italic;
+    }
+
+    pre code.language-sql .sql-function {
+      color: #795e26;
+      font-weight: 500;
+    }
+
+    pre code.language-sql .sql-operator {
+      color: #666;
+      font-weight: 500;
+    }
+
+    /* Language Label for Code Blocks */
+    pre[data-language]::before {
+      content: attr(data-language);
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 0.75em;
+      color: #6a737d;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: var(--bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border);
+    }
+
+    /* Enhanced pre/code styling for syntax highlighted blocks */
+    pre.syntax-highlighted {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 1.5rem 1rem 1rem 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+      margin: 1rem 0;
+    }
+
+    pre.syntax-highlighted code {
+      background: transparent;
+      padding: 0;
+      border: none;
+      color: var(--fg);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    ul
+    {
+        list-style-type: none;
+    }
+  /* Document Footer */
+    .document-footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .document-footer p {
+      margin: 0;
+      font-size: 14px;
+      color: #6c757d;
+      line-height: 1.6;
+    }
+    .document-footer strong {
+      color: #495057;
+    }  
+  </style>
+  <!-- Mermaid.js for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    // Initialize Mermaid with proper configuration
+    document.addEventListener('DOMContentLoaded', function() {
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        logLevel: 'error',
+        fontFamily: 'Segoe UI Semibold',
+        fontSize: '18px',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis',
+        },
+        sequence: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          diagramMarginX: 50,
+          diagramMarginY: 10
+        }
+      });
+      
+      // Render all diagrams
+      renderMermaidDiagrams();
+    });
+    
+    async function renderMermaidDiagrams() {
+      const diagrams = document.querySelectorAll('.mermaid');
+      
+      for (let i = 0; i < diagrams.length; i++) {
+        const diagram = diagrams[i];
+        const code = diagram.textContent.trim();
+        
+        // Store original code
+        if (!diagram.hasAttribute('data-original-code')) {
+          diagram.setAttribute('data-original-code', code);
+        }
+        
+        try {
+          const { svg } = await mermaid.render('mermaid-diagram-' + i, code);
+          diagram.innerHTML = svg;
+          diagram.setAttribute('data-processed', 'true');
+          
+          // Add zoom controls
+          addZoomControls(diagram);
+        } catch (error) {
+          console.error('Mermaid rendering error for diagram ' + i + ':', error);
+          diagram.innerHTML = '<div class="alert alert-danger border border-danger rounded p-3">Error rendering diagram: ' + error.message + '</div>';
+        }
+      }
+    }
+    
+    // Add zoom controls to mermaid diagrams
+    function addZoomControls(diagram) {
+      const controls = document.createElement('div');
+      controls.className = 'zoom-controls';
+      controls.innerHTML = `
+        <button class="zoom-btn" data-action="expand" title="Expand View">⛶</button>
+      `;
+      
+      diagram.style.position = 'relative';
+      diagram.insertBefore(controls, diagram.firstChild);
+      
+      // Expand to modal
+      controls.addEventListener('click', (e) => {
+        const btn = e.target.closest('.zoom-btn');
+        if (!btn) return;
+        
+        openDiagramModal(diagram);
+      });
+    }
+
+    // Open diagram in modal
+    function openDiagramModal(diagram) {
+      // Create modal if it doesn't exist
+      let modal = document.getElementById('diagram-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'diagram-modal';
+        modal.className = 'diagram-modal';
+        modal.innerHTML = `
+          <button class="modal-close" id="modal-close">×</button>
+          <div class="diagram-modal-content" id="modal-diagram-content"></div>
+          <div class="modal-zoom-controls">
+            <button class="modal-zoom-btn" data-action="zoom-in" title="Zoom In">+</button>
+            <button class="modal-zoom-btn" data-action="zoom-out" title="Zoom Out">−</button>
+            <button class="modal-zoom-btn" data-action="reset" title="Reset Zoom">⟲</button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Close modal handlers
+        modal.querySelector('#modal-close').addEventListener('click', closeDiagramModal);
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeDiagramModal();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeDiagramModal();
+          }
+        });
+        
+        // Zoom controls in modal
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        
+        modal.querySelector('.modal-zoom-controls').addEventListener('click', (e) => {
+          const btn = e.target.closest('.modal-zoom-btn');
+          if (!btn) return;
+          
+          const action = btn.dataset.action;
+          const svg = modal.querySelector('svg');
+          if (!svg) return;
+          
+          if (action === 'zoom-in') {
+            scale = Math.min(scale + 0.1, 5);
+          } else if (action === 'zoom-out') {
+            scale = Math.max(scale - 0.1, 0.5);
+          } else if (action === 'reset') {
+            scale = 1;
+            translateX = 0;
+            translateY = 0;
+          }
+          
+          svg.style.transform = `scale(${scale}) translate(${translateX / scale}px, ${translateY / scale}px)`;
+        });
+      }
+      
+      // Clone diagram content
+      const svg = diagram.querySelector('svg');
+      if (svg) {
+        const content = modal.querySelector('#modal-diagram-content');
+        content.innerHTML = '';
+        const clonedSvg = svg.cloneNode(true);
+        clonedSvg.style.transform = 'scale(1)';
+        clonedSvg.style.maxWidth = '100%';
+        clonedSvg.style.height = 'auto';
+        content.appendChild(clonedSvg);
+      }
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDiagramModal() {
+      const modal = document.getElementById('diagram-modal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    
+    // Re-render on theme change
+    window.rerenderMermaid = async function() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: isDark ? 'base' : 'base',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis',
+        },
+        sequence: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          diagramMarginX: 50,
+          diagramMarginY: 10
+        }
+      });
+      
+      const diagrams = document.querySelectorAll('.mermaid[data-processed="true"]');
+      for (let i = 0; i < diagrams.length; i++) {
+        const diagram = diagrams[i];
+        const code = diagram.getAttribute('data-original-code');
+        
+        if (code) {
+          try {
+            const { svg } = await mermaid.render('mermaid-diagram-rerender-' + i + '-' + Date.now(), code);
+            diagram.innerHTML = svg;
+          } catch (error) {
+            console.error('Mermaid re-rendering error:', error);
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg sticky-top" aria-label="Top bar">
+    <div class="container-fluid d-flex align-items-center">
+      <button class="navbar-toggler me-2" id="toggleSidebar" type="button" aria-label="Toggle sidebar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <span class="navbar-brand mb-0 h1 me-auto">🦜 LangChain and LangGraph - In a Nutshell</span>
+      <span class="contact-info mb-0">🤝 Curated by Murthy Vepa</span>
+    </div>
+  </nav>
+
+  <div id="appContainer">
+    <div class="row g-0" id="mainRow">
+      <nav class="col-lg-3 border-end sidebar" id="sidebar" aria-label="Table of contents">
+        <div class="menu-header py-2">Contents</div>
+        <ul class="list-group list-group-flush toc" id="toc"></ul>
+      </nav>
+
+      <main id="main" class="col-lg-9 d-flex flex-column" tabindex="-1">
+        <div class="content" id="content">
+
+        <!-- ═══════════════════════════════════════ OVERVIEW ═══════════════════════════════════════ -->
+        <section id="overview" role="article">
+          <h1>📖 LangChain &amp; LangGraph — Overview</h1>
+          <span class="badge">intro</span> <span class="badge">overview</span> <span class="badge">ai sdk</span> <span class="badge">python</span>
+
+          <div class="callout">
+            <strong>💡 What are LangChain and LangGraph?</strong><br />
+            <strong>LangChain</strong> is an open-source Python/JS framework that provides a prebuilt agent architecture and 1000+ integrations for models, tools, and data sources — letting you build AI agents in under 10 lines of code.<br /><br />
+            <strong>LangGraph</strong> is a low-level orchestration runtime for building stateful, long-running agents with durable execution, human-in-the-loop, and streaming — powering LangChain agents under the hood.
+          </div>
+
+          <h2>The LangChain Ecosystem</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Product</th><th>Role</th><th>Use When</th></tr></thead>
+            <tbody>
+              <tr><td><strong>LangChain</strong></td><td>Agent framework with prebuilt architectures &amp; 1000+ integrations</td><td>You want to build agents quickly with minimal code</td></tr>
+              <tr><td><strong>LangGraph</strong></td><td>Low-level orchestration runtime for stateful, long-running agents</td><td>You need fine-grained control, complex workflows, or multi-agent systems</td></tr>
+              <tr><td><strong>Deep Agents</strong></td><td>Batteries-included agents with memory, file system, and sub-agents</td><td>You want production-ready agents out of the box</td></tr>
+              <tr><td><strong>LangSmith</strong></td><td>Observability, evaluation, and deployment platform</td><td>Debug, trace, and evaluate your agents in production</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Quick Comparison</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Feature</th><th>LangChain</th><th>LangGraph</th></tr></thead>
+            <tbody>
+              <tr><td>Abstraction level</td><td>High (prebuilt patterns)</td><td>Low (full control)</td></tr>
+              <tr><td>Learning curve</td><td>Gentle</td><td>Steeper</td></tr>
+              <tr><td>Agent patterns</td><td>ReAct, tool-calling via <code>create_agent</code></td><td>Any custom graph topology</td></tr>
+              <tr><td>State management</td><td>Managed by LangGraph runtime</td><td>Explicit TypedDict state + reducers</td></tr>
+              <tr><td>Streaming</td><td>✅ Built-in</td><td>✅ First-class</td></tr>
+              <tr><td>Human-in-the-loop</td><td>✅ Via LangGraph</td><td>✅ Native interrupts</td></tr>
+              <tr><td>Multi-agent</td><td>Basic</td><td>✅ Supervisor, sub-graphs, handoffs</td></tr>
+              <tr><td>License</td><td>MIT Open Source</td><td>MIT Open Source</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Ecosystem Architecture</h2>
+          <div class="mermaid">
+graph TD
+    A[Your Application] --> B[LangChain]
+    A --> C[LangGraph]
+    subgraph B[LangChain]
+      B1[create_agent]
+      B2[Models / Chat Models]
+      B3[Tools &amp; Toolkits]
+      B4[Prompts &amp; Templates]
+      B5[Output Parsers]
+      B6[LCEL Chains]
+    end
+    subgraph C[LangGraph]
+      C1[StateGraph]
+      C2[Nodes &amp; Edges]
+      C3[Checkpointers]
+      C4[Human-in-the-Loop]
+      C5[Streaming]
+      C6[Multi-Agent]
+    end
+    B --> C
+    C --> D[LangSmith]
+    D --> D1[Tracing &amp; Debugging]
+    D --> D2[Evaluation]
+    D --> D3[Deployment]
+    B2 --> E[OpenAI / Anthropic / Google / Ollama]
+    style B fill:#dbeafe,stroke:#3b82f6
+    style C fill:#dcfce7,stroke:#10b981
+    style D fill:#fef3c7,stroke:#f59e0b
+          </div>
+
+          <h2>Installation</h2>
+          <pre><code># Install LangChain (includes LangGraph runtime)
+pip install langchain "langchain[anthropic]"
+
+# Or install specific provider
+pip install langchain "langchain[openai]"
+
+# Install LangGraph standalone
+pip install langgraph
+
+# Common extras
+pip install langchain-community   # Community integrations
+pip install langchain-core        # Core primitives (LCEL, etc.)
+pip install langsmith             # Observability platform</code></pre>
+
+          <h2>Hello World — LangChain Agent</h2>
+          <pre><code>from langchain.agents import create_agent
+
+def get_weather(city: str) -> str:
+    """Get weather for a given city."""
+    return f"It's always sunny in {city}!"
+
+agent = create_agent(
+    model="anthropic:claude-sonnet-4-6",
+    tools=[get_weather],
+    system_prompt="You are a helpful assistant",
+)
+
+result = agent.invoke(
+    {"messages": [{"role": "user", "content": "What is the weather in NYC?"}]}
+)
+print(result["messages"][-1].content)</code></pre>
+
+          <h2>Hello World — LangGraph</h2>
+          <pre><code>from langgraph.graph import StateGraph, MessagesState, START, END
+
+def my_node(state: MessagesState):
+    return {"messages": [{"role": "ai", "content": "Hello from LangGraph!"}]}
+
+graph = StateGraph(MessagesState)
+graph.add_node("my_node", my_node)
+graph.add_edge(START, "my_node")
+graph.add_edge("my_node", END)
+app = graph.compile()
+
+result = app.invoke({"messages": [{"role": "user", "content": "Hi!"}]})
+print(result["messages"][-1].content)</code></pre>
+
+          <div class="callout">
+            <strong>🔍 Rule of Thumb</strong><br />
+            Start with <strong>LangChain</strong> if you want fast agent prototyping. Move to <strong>LangGraph</strong> when you need custom multi-step workflows, branching logic, interrupts, or fine-grained state control.
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN OVERVIEW ═══════════════════════════════════════ -->
+        <section id="langchain-overview" role="article">
+          <h1>🔗 LangChain — Overview</h1>
+          <span class="badge">langchain</span> <span class="badge">overview</span> <span class="badge">agents</span>
+
+          <div class="callout">
+            <strong>LangChain</strong> is an MIT-licensed open-source framework for building agents powered by LLMs. It provides prebuilt agent architectures, 1000+ model/tool/database integrations, and runs on LangGraph's durable runtime — giving agents built-in persistence, streaming, and human-in-the-loop support.
+          </div>
+
+          <h2>Core Benefits</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Benefit</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>🚀 Ship Fast</strong></td><td>Proven ReAct pattern via <code>create_agent</code> — build agents in minutes with templates</td></tr>
+              <tr><td><strong>🔓 Open &amp; Neutral</strong></td><td>Swap models, tools, and databases without rewriting code — 1000+ integrations, no vendor lock-in</td></tr>
+              <tr><td><strong>⚙️ Customize</strong></td><td>Extend via middleware (hooks) — add human approval, compress conversations, scrub PII</td></tr>
+              <tr><td><strong>⚡ Durable Runtime</strong></td><td>Built on LangGraph — agents get persistence, checkpointing, rewind, and HITL for free</td></tr>
+              <tr><td><strong>📡 Streaming</strong></td><td>Native token-by-token and event streaming for real-time UX</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Key Packages</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Package</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>langchain</code></td><td>Main framework — agents, chains, memory, callbacks</td></tr>
+              <tr><td><code>langchain-core</code></td><td>Core abstractions — LCEL, runnables, messages, base classes</td></tr>
+              <tr><td><code>langchain-community</code></td><td>Community integrations — hundreds of tools, loaders, vector stores</td></tr>
+              <tr><td><code>langchain-openai</code></td><td>OpenAI / Azure OpenAI chat and embeddings</td></tr>
+              <tr><td><code>langchain-anthropic</code></td><td>Anthropic Claude chat models</td></tr>
+              <tr><td><code>langchain-google-genai</code></td><td>Google Gemini models</td></tr>
+              <tr><td><code>langchain-ollama</code></td><td>Local models via Ollama</td></tr>
+              <tr><td><code>langgraph</code></td><td>Low-level agent runtime (used by LangChain internally)</td></tr>
+              <tr><td><code>langsmith</code></td><td>Tracing, debugging, evaluation platform</td></tr>
+            </tbody>
+          </table>
+
+          <h2>LangSmith Integration</h2>
+          <pre><code># Set environment variables to enable LangSmith tracing
+import os
+os.environ["LANGSMITH_TRACING"] = "true"
+os.environ["LANGSMITH_API_KEY"] = "your-langsmith-api-key"
+os.environ["LANGSMITH_PROJECT"] = "my-agent-project"
+
+# All LangChain/LangGraph calls are now traced automatically!</code></pre>
+
+          <h2>When to Choose LangChain vs LangGraph</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Scenario</th><th>LangChain</th><th>LangGraph</th></tr></thead>
+            <tbody>
+              <tr><td>Q&amp;A chatbot / simple RAG</td><td>✅ Preferred</td><td>Also works</td></tr>
+              <tr><td>Standard tool-calling agent</td><td>✅ <code>create_agent</code></td><td>✅ <code>create_react_agent</code></td></tr>
+              <tr><td>Multi-step workflow with branching logic</td><td>Limited</td><td>✅ Preferred</td></tr>
+              <tr><td>Human-in-the-loop approvals / interrupts</td><td>Via LangGraph</td><td>✅ Native</td></tr>
+              <tr><td>Long-running / durable execution</td><td>Via LangGraph</td><td>✅ Native checkpointing</td></tr>
+              <tr><td>Multi-agent supervisor pattern</td><td>Basic</td><td>✅ Preferred</td></tr>
+              <tr><td>Time-travel / state rewind / rollback</td><td>—</td><td>✅ Only option</td></tr>
+              <tr><td>Parallel graph fan-out execution</td><td><code>RunnableParallel</code></td><td>✅ Native fan-out</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Agent Middleware (Hooks)</h2>
+          <pre><code>from langchain.agents import create_agent
+from langchain_core.messages import trim_messages
+from langchain_core.tools import tool
+
+@tool
+def search(query: str) -> str:
+    """Search the web for information."""
+    return f"Results for: {query}"
+
+# pre_model_hook: runs before every LLM call — trim conversation to last 4k tokens
+def trim_history(state: dict) -> dict:
+    state["messages"] = trim_messages(
+        state["messages"],
+        strategy="last",
+        max_tokens=4096,
+        token_counter=len,
+        include_system=True,
+    )
+    return state
+
+agent = create_agent(
+    model="anthropic:claude-sonnet-4-6",
+    tools=[search],
+    pre_model_hook=trim_history,
+)
+
+# post_model_hook: runs after every LLM response — audit / log
+def log_step(state: dict) -> dict:
+    last = state["messages"][-1]
+    print(f"[Audit] Agent step: {last.content[:120]}")
+    return state
+
+agent_with_logging = create_agent(
+    model="openai:gpt-4o",
+    tools=[search],
+    post_model_hook=log_step,
+)</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN CORE CONCEPTS ═══════════════════════════════════════ -->
+        <section id="langchain-core-concepts" role="article">
+          <h1>🧩 LangChain — Core Concepts</h1>
+          <span class="badge">langchain</span> <span class="badge">concepts</span> <span class="badge">components</span>
+
+          <h2>Component Map</h2>
+          <div class="mermaid">
+graph LR
+    A[LangChain Components]
+    A --> B[Models]
+    A --> C[Prompts]
+    A --> D[Chains / LCEL]
+    A --> E[Agents]
+    A --> F[Tools]
+    A --> G[Memory]
+    A --> H[Retrievers]
+    A --> I[Output Parsers]
+    B --> B1[Chat Models]
+    B --> B2[LLMs]
+    B --> B3[Embeddings]
+    E --> E1[create_agent]
+    E --> E2[AgentExecutor]
+    H --> H1[Document Loaders]
+    H --> H2[Text Splitters]
+    H --> H3[Vector Stores]
+    style A fill:#3b82f6,color:#fff
+          </div>
+
+          <h2>Core Abstractions</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Concept</th><th>Description</th><th>Key Classes</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Chat Models</strong></td><td>LLMs that accept messages and return messages</td><td><code>ChatOpenAI</code>, <code>ChatAnthropic</code>, <code>ChatGoogleGenerativeAI</code></td></tr>
+              <tr><td><strong>Prompts</strong></td><td>Templates for structuring inputs to models</td><td><code>PromptTemplate</code>, <code>ChatPromptTemplate</code></td></tr>
+              <tr><td><strong>LCEL Chains</strong></td><td>Compose runnables with the <code>|</code> pipe operator</td><td><code>RunnableSequence</code>, <code>RunnableParallel</code></td></tr>
+              <tr><td><strong>Tools</strong></td><td>Functions the agent can call</td><td><code>@tool</code>, <code>StructuredTool</code></td></tr>
+              <tr><td><strong>Agents</strong></td><td>LLM + tools in a reasoning loop</td><td><code>create_agent</code>, <code>AgentExecutor</code></td></tr>
+              <tr><td><strong>Memory</strong></td><td>Store and retrieve conversation history</td><td><code>ConversationBufferMemory</code>, <code>RunnableWithMessageHistory</code></td></tr>
+              <tr><td><strong>Document Loaders</strong></td><td>Load data from various sources</td><td><code>PyPDFLoader</code>, <code>WebBaseLoader</code>, <code>CSVLoader</code></td></tr>
+              <tr><td><strong>Text Splitters</strong></td><td>Split documents into chunks for embedding</td><td><code>RecursiveCharacterTextSplitter</code></td></tr>
+              <tr><td><strong>Vector Stores</strong></td><td>Store and search embeddings</td><td><code>FAISS</code>, <code>Chroma</code>, <code>PGVector</code></td></tr>
+              <tr><td><strong>Retrievers</strong></td><td>Retrieve relevant documents</td><td><code>VectorStoreRetriever</code>, <code>MultiQueryRetriever</code></td></tr>
+              <tr><td><strong>Output Parsers</strong></td><td>Parse and structure LLM outputs</td><td><code>StrOutputParser</code>, <code>PydanticOutputParser</code></td></tr>
+            </tbody>
+          </table>
+
+          <h2>Message Types</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Message Type</th><th>Role</th><th>Usage</th></tr></thead>
+            <tbody>
+              <tr><td><code>HumanMessage</code></td><td>user</td><td>User input to the model</td></tr>
+              <tr><td><code>AIMessage</code></td><td>assistant</td><td>Model response (may include tool calls)</td></tr>
+              <tr><td><code>SystemMessage</code></td><td>system</td><td>Instructions / persona for the model</td></tr>
+              <tr><td><code>ToolMessage</code></td><td>tool</td><td>Result of a tool call returned to the model</td></tr>
+              <tr><td><code>FunctionMessage</code></td><td>function</td><td>Legacy function call result (prefer ToolMessage)</td></tr>
+            </tbody>
+          </table>
+          <pre><code>from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+
+messages = [
+    SystemMessage(content="You are a helpful assistant."),
+    HumanMessage(content="What is 2 + 2?"),
+]
+
+from langchain_openai import ChatOpenAI
+model = ChatOpenAI(model="gpt-4o-mini")
+response = model.invoke(messages)
+print(response.content)  # → AIMessage with "4"</code></pre>
+
+          <h2>The Runnable Protocol</h2>
+          <p>Every LangChain component implements the <code>Runnable</code> interface — so they all compose the same way:</p>
+          <table class="table table-striped">
+            <thead><tr><th>Method</th><th>Sync</th><th>Async</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>Single call</td><td><code>invoke(input, config)</code></td><td><code>ainvoke(input, config)</code></td><td>Process one input, return one output</td></tr>
+              <tr><td>Batch</td><td><code>batch(inputs, config)</code></td><td><code>abatch(inputs, config)</code></td><td>Process many inputs in parallel</td></tr>
+              <tr><td>Stream</td><td><code>stream(input, config)</code></td><td><code>astream(input, config)</code></td><td>Yield output chunks as they arrive</td></tr>
+              <tr><td>Event stream</td><td>—</td><td><code>astream_events(input, version="v2")</code></td><td>Yield every intermediate event (tool calls, LLM tokens, etc.)</td></tr>
+              <tr><td>Config</td><td><code>with_config(config)</code></td><td>—</td><td>Bind run name, tags, metadata, callbacks</td></tr>
+              <tr><td>Fallback</td><td><code>with_fallbacks([...])</code></td><td>—</td><td>Try primary; use backup on exception</td></tr>
+              <tr><td>Retry</td><td><code>with_retry(stop_after_attempt=3)</code></td><td>—</td><td>Auto-retry on transient errors</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Callbacks &amp; Events</h2>
+          <pre><code>from langchain_core.callbacks import BaseCallbackHandler
+from langchain_openai import ChatOpenAI
+
+class MyCallbackHandler(BaseCallbackHandler):
+    def on_llm_start(self, serialized, prompts, **kwargs):
+        print(f"LLM started with {len(prompts)} prompt(s)")
+
+    def on_llm_end(self, response, **kwargs):
+        text = response.generations[0][0].text
+        print(f"LLM finished: {text[:80]}...")
+
+    def on_tool_start(self, serialized, input_str, **kwargs):
+        print(f"Tool '{serialized['name']}' called with: {input_str}")
+
+    def on_tool_end(self, output, **kwargs):
+        print(f"Tool returned: {output}")
+
+    def on_chain_error(self, error, **kwargs):
+        print(f"Chain error: {error}")
+
+# Attach to a model (fires on every call)
+model = ChatOpenAI(callbacks=[MyCallbackHandler()])
+
+# Or per-invocation (scoped to one call)
+model.invoke("Hello!", config={"callbacks": [MyCallbackHandler()]})</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN MODELS ═══════════════════════════════════════ -->
+        <section id="langchain-models" role="article">
+          <h1>🤖 LangChain — Models &amp; Providers</h1>
+          <span class="badge">langchain</span> <span class="badge">models</span> <span class="badge">llm</span> <span class="badge">embeddings</span>
+
+          <div class="callout">
+            LangChain provides a unified interface across 50+ model providers. Swap models by changing one line — your chain/agent code stays the same.
+          </div>
+
+          <h2>Supported Providers</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Provider</th><th>Package</th><th>Chat Model Class</th><th>Embedding Class</th></tr></thead>
+            <tbody>
+              <tr><td>OpenAI</td><td><code>langchain-openai</code></td><td><code>ChatOpenAI</code></td><td><code>OpenAIEmbeddings</code></td></tr>
+              <tr><td>Azure OpenAI</td><td><code>langchain-openai</code></td><td><code>AzureChatOpenAI</code></td><td><code>AzureOpenAIEmbeddings</code></td></tr>
+              <tr><td>Anthropic</td><td><code>langchain-anthropic</code></td><td><code>ChatAnthropic</code></td><td>—</td></tr>
+              <tr><td>Google Gemini</td><td><code>langchain-google-genai</code></td><td><code>ChatGoogleGenerativeAI</code></td><td><code>GoogleGenerativeAIEmbeddings</code></td></tr>
+              <tr><td>AWS Bedrock</td><td><code>langchain-aws</code></td><td><code>ChatBedrock</code></td><td><code>BedrockEmbeddings</code></td></tr>
+              <tr><td>Ollama (local)</td><td><code>langchain-ollama</code></td><td><code>ChatOllama</code></td><td><code>OllamaEmbeddings</code></td></tr>
+              <tr><td>HuggingFace</td><td><code>langchain-huggingface</code></td><td><code>ChatHuggingFace</code></td><td><code>HuggingFaceEmbeddings</code></td></tr>
+              <tr><td>Groq</td><td><code>langchain-groq</code></td><td><code>ChatGroq</code></td><td>—</td></tr>
+              <tr><td>Mistral</td><td><code>langchain-mistralai</code></td><td><code>ChatMistralAI</code></td><td><code>MistralAIEmbeddings</code></td></tr>
+            </tbody>
+          </table>
+
+          <h2>Chat Models</h2>
+          <pre><code>from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain_ollama import ChatOllama
+
+# OpenAI
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+
+# Anthropic Claude
+llm = ChatAnthropic(model="claude-sonnet-4-6")
+
+# Local via Ollama
+llm = ChatOllama(model="llama3.2")
+
+# Azure OpenAI
+from langchain_openai import AzureChatOpenAI
+llm = AzureChatOpenAI(
+    azure_deployment="gpt-4o",
+    azure_endpoint="https://your-resource.openai.azure.com/",
+    api_version="2024-02-01",
+)
+
+# All share the same interface
+response = llm.invoke("What is the capital of France?")
+print(response.content)  # → Paris</code></pre>
+
+          <h2>Embeddings</h2>
+          <pre><code>from langchain_openai import OpenAIEmbeddings
+
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+# Embed a single text
+vector = embeddings.embed_query("Hello world")
+print(len(vector))  # → 1536
+
+# Embed multiple documents
+vectors = embeddings.embed_documents(["doc one", "doc two", "doc three"])</code></pre>
+
+          <h2>Model Configuration Options</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Parameter</th><th>Description</th><th>Typical Values</th></tr></thead>
+            <tbody>
+              <tr><td><code>temperature</code></td><td>Randomness of output (0 = deterministic)</td><td>0–2, default 0.7</td></tr>
+              <tr><td><code>max_tokens</code></td><td>Max tokens in the response</td><td>256–4096</td></tr>
+              <tr><td><code>streaming</code></td><td>Stream tokens as they are generated</td><td><code>True</code> / <code>False</code></td></tr>
+              <tr><td><code>timeout</code></td><td>Request timeout in seconds</td><td>30–120</td></tr>
+              <tr><td><code>max_retries</code></td><td>Number of retries on failure</td><td>2–5</td></tr>
+              <tr><td><code>model_kwargs</code></td><td>Pass extra provider-specific params</td><td><code>{"seed": 42}</code></td></tr>
+            </tbody>
+          </table>
+
+          <h2>Structured Output</h2>
+          <pre><code>from pydantic import BaseModel
+from langchain_openai import ChatOpenAI
+
+class CalendarEvent(BaseModel):
+    name: str
+    date: str
+    participants: list[str]
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+structured_llm = llm.with_structured_output(CalendarEvent)
+
+event = structured_llm.invoke(
+    "Alice and Bob are going to a science fair on Friday."
+)
+print(event.name)          # → "Science Fair"
+print(event.participants)  # → ["Alice", "Bob"]</code></pre>
+
+          <h2>init_chat_model — Universal Factory</h2>
+          <pre><code>from langchain.chat_models import init_chat_model
+
+# Auto-selects the right provider class from the model string
+llm = init_chat_model("gpt-4o",            model_provider="openai")
+llm = init_chat_model("claude-sonnet-4-6", model_provider="anthropic")
+llm = init_chat_model("gemini-2.0-flash",  model_provider="google_genai")
+llm = init_chat_model("llama3.2",          model_provider="ollama")
+
+# Configurable at runtime — swap model/provider per invocation
+configurable_llm = init_chat_model(
+    temperature=0,
+    configurable_fields=["model", "model_provider"],
+)
+
+# Same chain, different models at runtime
+response_gpt = configurable_llm.invoke(
+    "What is RAG?",
+    config={"configurable": {"model": "gpt-4o-mini", "model_provider": "openai"}},
+)
+response_claude = configurable_llm.invoke(
+    "What is RAG?",
+    config={"configurable": {"model": "claude-haiku-3-5", "model_provider": "anthropic"}},
+)</code></pre>
+
+          <h2>Model Fallbacks</h2>
+          <pre><code>from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+
+primary  = ChatOpenAI(model="gpt-4o",           temperature=0)
+backup   = ChatAnthropic(model="claude-haiku-3-5", temperature=0)
+
+# Try primary; on any exception (rate-limit, outage) fall back to backup
+llm = primary.with_fallbacks([backup])
+
+response = llm.invoke("Explain quantum entanglement")
+
+# Chain fallbacks — entire chains can be fallbacks
+chain_a = prompt | ChatOpenAI(model="gpt-4o-mini")
+chain_b = prompt | ChatAnthropic(model="claude-haiku-3-5")
+robust_chain = chain_a.with_fallbacks([chain_b])</code></pre>
+
+          <h2>Model Caching</h2>
+          <pre><code>from langchain_core.globals import set_llm_cache
+from langchain_community.cache import InMemoryCache, SQLiteCache
+
+# In-memory cache (same process, resets on restart)
+set_llm_cache(InMemoryCache())
+
+# SQLite cache (persists across restarts, great for development)
+set_llm_cache(SQLiteCache(database_path=".langchain_cache.db"))
+
+# Semantic cache (uses embeddings — returns cached result for similar queries)
+from langchain_community.cache import RedisSemanticCache
+from langchain_openai import OpenAIEmbeddings
+set_llm_cache(RedisSemanticCache(
+    redis_url="redis://localhost:6379",
+    embedding=OpenAIEmbeddings(),
+    score_threshold=0.1,
+))
+
+# Once cache is set, all subsequent identical calls return cached responses
+llm = ChatOpenAI(model="gpt-4o-mini")
+response1 = llm.invoke("What is the speed of light?")  # → API call
+response2 = llm.invoke("What is the speed of light?")  # → from cache (instant)</code></pre>
+
+          <h2>Async Usage</h2>
+          <pre><code>import asyncio
+from langchain_openai import ChatOpenAI
+
+async def main():
+    llm = ChatOpenAI(model="gpt-4o-mini")
+
+    # Single async call
+    response = await llm.ainvoke("What is Python?")
+    print(response.content)
+
+    # Run multiple calls concurrently
+    questions = ["What is AI?", "What is ML?", "What is DL?"]
+    results = await asyncio.gather(*[llm.ainvoke(q) for q in questions])
+    for r in results:
+        print(r.content)
+
+    # Async token streaming
+    async for chunk in llm.astream("Tell me a story about a robot"):
+        print(chunk.content, end="", flush=True)
+
+asyncio.run(main())</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN PROMPTS ═══════════════════════════════════════ -->
+        <section id="langchain-prompts" role="article">
+          <h1>📋 LangChain — Prompts &amp; Templates</h1>
+          <span class="badge">langchain</span> <span class="badge">prompts</span> <span class="badge">templates</span>
+
+          <h2>PromptTemplate</h2>
+          <pre><code>from langchain_core.prompts import PromptTemplate
+
+# String prompt with variable substitution
+prompt = PromptTemplate.from_template(
+    "Translate the following text to {language}:\n\n{text}"
+)
+
+formatted = prompt.format(language="French", text="Hello World")
+# → "Translate the following text to French:\n\nHello World"
+
+# Use in a chain (LCEL)
+from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+
+chain = prompt | ChatOpenAI() | StrOutputParser()
+result = chain.invoke({"language": "French", "text": "Good morning!"})
+print(result)  # → "Bonjour!"</code></pre>
+
+          <h2>ChatPromptTemplate</h2>
+          <pre><code>from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+# Multi-turn chat prompt with message history
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful assistant specializing in {domain}."),
+    MessagesPlaceholder(variable_name="chat_history"),
+    ("human", "{input}"),
+])
+
+formatted = prompt.format_messages(
+    domain="Python programming",
+    chat_history=[],
+    input="How do I read a CSV file?"
+)</code></pre>
+
+          <h2>FewShotPromptTemplate</h2>
+          <pre><code>from langchain_core.prompts import FewShotPromptTemplate, PromptTemplate
+
+examples = [
+    {"input": "happy", "output": "sad"},
+    {"input": "tall",  "output": "short"},
+    {"input": "sunny", "output": "gloomy"},
+]
+
+example_prompt = PromptTemplate.from_template("Input: {input}\nOutput: {output}")
+
+few_shot = FewShotPromptTemplate(
+    examples=examples,
+    example_prompt=example_prompt,
+    prefix="Give the antonym of every input word.",
+    suffix="Input: {adjective}\nOutput:",
+    input_variables=["adjective"],
+)
+
+print(few_shot.format(adjective="fast"))  # → expects "slow"</code></pre>
+
+          <h2>Prompt Best Practices</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Practice</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>Use <code>from_messages</code> for chat models</td><td><code>ChatPromptTemplate.from_messages([...])</code></td></tr>
+              <tr><td>Add <code>MessagesPlaceholder</code> for conversation history</td><td><code>MessagesPlaceholder("chat_history")</code></td></tr>
+              <tr><td>Use type tuples for roles</td><td><code>("system", "..."), ("human", "{input}")</code></td></tr>
+              <tr><td>Separate persona from task in system prompt</td><td>First sentence = role, rest = task instructions</td></tr>
+              <tr><td>Use partial prompts for fixed values</td><td><code>prompt.partial(language="French")</code></td></tr>
+            </tbody>
+          </table>
+
+          <h2>Partial Prompts — Fix Variables Ahead of Time</h2>
+          <pre><code>from langchain_core.prompts import ChatPromptTemplate
+from datetime import datetime
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are an assistant. Today is {date}. Language: {language}."),
+    ("human", "{input}"),
+])
+
+# Method 1: .partial() — fixes specific variables
+prompt_en = prompt.partial(language="English", date=datetime.now().strftime("%B %d, %Y"))
+
+# Only {input} is needed now
+chain = prompt_en | ChatOpenAI() | StrOutputParser()
+result = chain.invoke({"input": "Summarize quantum computing in one sentence."})
+
+# Method 2: partial_variables in the constructor
+prompt2 = ChatPromptTemplate.from_messages(
+    [("system", "Today is {date}."), ("human", "{input}")],
+    partial_variables={"date": lambda: datetime.now().strftime("%B %d, %Y")},  # dynamic!
+)</code></pre>
+
+          <h2>LangChain Hub — Reuse Community Prompts</h2>
+          <pre><code>from langchain import hub
+
+# Pull a pre-built, community-tested prompt
+rag_prompt    = hub.pull("rlm/rag-prompt")        # RAG Q&A prompt
+react_prompt  = hub.pull("hwchase17/react")        # ReAct agent prompt
+cot_prompt    = hub.pull("hwchase17/react-chat")   # ReAct with chat history
+
+# Inspect the prompt
+print(rag_prompt.messages)
+
+# Use it directly in a chain
+from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+
+chain = rag_prompt | ChatOpenAI() | StrOutputParser()
+result = chain.invoke({"context": "LangChain is a Python framework.", "question": "What is LangChain?"})
+
+# Push your own prompt to the hub
+hub.push("your-username/my-rag-prompt", my_custom_prompt)</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN LCEL ═══════════════════════════════════════ -->
+        <section id="langchain-lcel" role="article">
+          <h1>⛓️ LangChain — LCEL &amp; Chains</h1>
+          <span class="badge">langchain</span> <span class="badge">lcel</span> <span class="badge">chains</span> <span class="badge">pipe</span>
+
+          <div class="callout">
+            <strong>LangChain Expression Language (LCEL)</strong> lets you compose <em>Runnables</em> using the <code>|</code> pipe operator — each component takes the previous output as its input.
+          </div>
+
+          <h2>LCEL Basics — The Pipe Operator</h2>
+          <pre><code>from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+
+# Simple chain: prompt | model | parser
+chain = (
+    ChatPromptTemplate.from_template("Tell me a joke about {topic}")
+    | ChatOpenAI(model="gpt-4o-mini")
+    | StrOutputParser()
+)
+
+result = chain.invoke({"topic": "cats"})
+print(result)</code></pre>
+
+          <h2>Runnables</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Runnable</th><th>Description</th><th>Usage</th></tr></thead>
+            <tbody>
+              <tr><td><code>RunnableSequence</code></td><td>Run components in order (via <code>|</code>)</td><td><code>chain = a | b | c</code></td></tr>
+              <tr><td><code>RunnableParallel</code></td><td>Run components in parallel, merge results</td><td><code>{"key1": chain1, "key2": chain2}</code></td></tr>
+              <tr><td><code>RunnableLambda</code></td><td>Wrap any Python function as a Runnable</td><td><code>RunnableLambda(lambda x: x.upper())</code></td></tr>
+              <tr><td><code>RunnablePassthrough</code></td><td>Pass the input unchanged (useful for passing context)</td><td><code>RunnablePassthrough()</code></td></tr>
+              <tr><td><code>RunnableBranch</code></td><td>Conditional routing based on input</td><td><code>RunnableBranch((condition, chain), default)</code></td></tr>
+              <tr><td><code>RunnableWithFallbacks</code></td><td>Try primary, fall back to alternatives on error</td><td><code>chain.with_fallbacks([backup])</code></td></tr>
+            </tbody>
+          </table>
+
+          <h2>Parallel Execution</h2>
+          <pre><code>from langchain_core.runnables import RunnableParallel, RunnablePassthrough
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+
+model = ChatOpenAI()
+
+# Run two chains in parallel and merge results
+parallel = RunnableParallel({
+    "joke":   ChatPromptTemplate.from_template("Tell a joke about {topic}") | model | StrOutputParser(),
+    "poem":   ChatPromptTemplate.from_template("Write a haiku about {topic}") | model | StrOutputParser(),
+    "topic":  RunnablePassthrough(),  # pass the original input through
+})
+
+result = parallel.invoke({"topic": "Python programming"})
+print(result["joke"])
+print(result["poem"])</code></pre>
+
+          <h2>Streaming</h2>
+          <pre><code>chain = ChatPromptTemplate.from_template("Tell me about {topic}") | ChatOpenAI() | StrOutputParser()
+
+# Stream token-by-token
+for chunk in chain.stream({"topic": "black holes"}):
+    print(chunk, end="", flush=True)
+
+# Async streaming
+async for chunk in chain.astream({"topic": "black holes"}):
+    print(chunk, end="", flush=True)</code></pre>
+
+          <h2>Batch Processing</h2>
+          <pre><code># Process multiple inputs at once (parallel HTTP requests)
+results = chain.batch([
+    {"topic": "cats"},
+    {"topic": "dogs"},
+    {"topic": "birds"},
+], config={"max_concurrency": 3})
+
+for result in results:
+    print(result)</code></pre>
+
+          <h2>LCEL Methods Summary</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Method</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>chain.invoke(input)</code></td><td>Single synchronous call</td></tr>
+              <tr><td><code>chain.batch(inputs)</code></td><td>Process multiple inputs in parallel</td></tr>
+              <tr><td><code>chain.stream(input)</code></td><td>Synchronous token streaming</td></tr>
+              <tr><td><code>chain.ainvoke(input)</code></td><td>Async single call</td></tr>
+              <tr><td><code>chain.abatch(inputs)</code></td><td>Async batch processing</td></tr>
+              <tr><td><code>chain.astream(input)</code></td><td>Async token streaming</td></tr>
+              <tr><td><code>chain.with_config(config)</code></td><td>Add run name, tags, callbacks</td></tr>
+              <tr><td><code>chain.with_retry()</code></td><td>Add retry logic</td></tr>
+              <tr><td><code>chain.with_fallbacks([...])</code></td><td>Add fallback chains</td></tr>
+            </tbody>
+          </table>
+
+          <h2>@chain Decorator — Compose with Functions</h2>
+          <pre><code>from langchain_core.runnables import chain
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+
+@chain
+def classify_then_answer(question: str) -> str:
+    """Classify the question type, then use the best prompt for it."""
+    llm = ChatOpenAI(model="gpt-4o-mini")
+
+    # Step 1: classify
+    category = (ChatPromptTemplate.from_template("Classify as 'fact', 'opinion', or 'task': {q}") | llm | StrOutputParser()).invoke({"q": question})
+
+    # Step 2: use category-specific prompt
+    templates = {
+        "fact":    "Answer this factual question concisely: {q}",
+        "opinion": "Give a balanced perspective on: {q}",
+        "task":    "Provide step-by-step instructions for: {q}",
+    }
+    template = templates.get(category.strip().lower(), "Answer: {q}")
+    return (ChatPromptTemplate.from_template(template) | llm | StrOutputParser()).invoke({"q": question})
+
+# @chain makes any function a Runnable — pipe-able with | operator
+result = classify_then_answer.invoke("How do I make pasta?")</code></pre>
+
+          <h2>assign() — Enrich State as It Flows</h2>
+          <pre><code>from langchain_core.runnables import RunnablePassthrough
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+from operator import itemgetter
+
+# Assume: retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
+
+# assign() adds new keys to the flowing dict without removing existing keys
+rag_chain = (
+    RunnablePassthrough.assign(
+        context=lambda x: "\n\n".join(d.page_content for d in retriever.invoke(x["question"])),
+        question=itemgetter("question"),   # keep question accessible downstream
+    )
+    | ChatPromptTemplate.from_template(
+        "Context:\n{context}\n\nQuestion: {question}\n\nAnswer:"
+    )
+    | ChatOpenAI(model="gpt-4o")
+    | StrOutputParser()
+)
+
+answer = rag_chain.invoke({"question": "What are the benefits of RAG?"})</code></pre>
+
+          <h2>RunnableConfig — Tags, Metadata &amp; Run Names</h2>
+          <pre><code>from langchain_core.runnables import RunnableConfig
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-4o")
+
+# Attach metadata that shows up in LangSmith traces
+response = llm.invoke(
+    "Explain transformers in ML",
+    config=RunnableConfig(
+        run_name="explain-transformers",
+        tags=["production", "v2.1"],
+        metadata={"user_id": "usr-42", "experiment": "gpt4o-baseline"},
+        max_concurrency=5,
+    ),
+)</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN TOOLS ═══════════════════════════════════════ -->
+        <section id="langchain-tools" role="article">
+          <h1>🔧 LangChain — Tools</h1>
+          <span class="badge">langchain</span> <span class="badge">tools</span> <span class="badge">functions</span>
+
+          <div class="callout">
+            Tools are functions that agents can call. LangChain tools include the function itself, a name, a description, and an optional JSON schema — the model uses the description to decide when to call the tool.
+          </div>
+
+          <h2>Defining Tools with @tool</h2>
+          <pre><code>from langchain_core.tools import tool
+
+@tool
+def get_weather(city: str) -> str:
+    """Get the current weather for a given city. Use this when the user asks about weather."""
+    # Call your weather API here
+    return f"The weather in {city} is sunny and 72°F."
+
+@tool
+def calculate(expression: str) -> float:
+    """Evaluate a mathematical expression. Input should be a valid Python math expression."""
+    return eval(expression)  # Note: sanitize in production!
+
+# Tool metadata
+print(get_weather.name)         # → "get_weather"
+print(get_weather.description)  # → docstring
+print(get_weather.args)         # → {"city": {"type": "string"}}</code></pre>
+
+          <h2>Structured Tools with Pydantic</h2>
+          <pre><code>from langchain_core.tools import StructuredTool
+from pydantic import BaseModel, Field
+
+class SearchInput(BaseModel):
+    query: str = Field(description="The search query to look up")
+    max_results: int = Field(default=5, description="Maximum number of results")
+
+def search_web(query: str, max_results: int = 5) -> list[str]:
+    """Search the web for information."""
+    # Your search implementation
+    return [f"Result {i} for '{query}'" for i in range(max_results)]
+
+search_tool = StructuredTool.from_function(
+    func=search_web,
+    name="web_search",
+    description="Search the internet for current information",
+    args_schema=SearchInput,
+)</code></pre>
+
+          <h2>Binding Tools to a Model</h2>
+          <pre><code>from langchain_openai import ChatOpenAI
+
+tools = [get_weather, calculate, search_tool]
+
+# Bind tools to model (model decides when to call them)
+model_with_tools = ChatOpenAI(model="gpt-4o").bind_tools(tools)
+
+response = model_with_tools.invoke("What is the weather in Paris?")
+
+# Check if model requested a tool call
+if response.tool_calls:
+    for call in response.tool_calls:
+        print(f"Tool: {call['name']}, Args: {call['args']}")</code></pre>
+
+          <h2>Built-in Tools</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Tool</th><th>Package</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>TavilySearchResults</code></td><td><code>langchain-community</code></td><td>Web search via Tavily API</td></tr>
+              <tr><td><code>DuckDuckGoSearchRun</code></td><td><code>langchain-community</code></td><td>Free web search via DuckDuckGo</td></tr>
+              <tr><td><code>WikipediaQueryRun</code></td><td><code>langchain-community</code></td><td>Search Wikipedia</td></tr>
+              <tr><td><code>PythonREPLTool</code></td><td><code>langchain-experimental</code></td><td>Execute Python code</td></tr>
+              <tr><td><code>ShellTool</code></td><td><code>langchain-community</code></td><td>Run shell commands</td></tr>
+              <tr><td><code>SQLDatabaseToolkit</code></td><td><code>langchain-community</code></td><td>Query SQL databases</td></tr>
+              <tr><td><code>FileManagementToolkit</code></td><td><code>langchain-community</code></td><td>Read/write/list files</td></tr>
+              <tr><td><code>RequestsToolkit</code></td><td><code>langchain-community</code></td><td>Make HTTP requests</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Tool Best Practices</h2>
+          <ul>
+            <li>✅ Write clear, specific docstrings — the model uses these to decide when to call the tool</li>
+            <li>✅ Use Pydantic schemas with <code>Field(description=...)</code> for all parameters</li>
+            <li>✅ Return strings or JSON-serializable objects</li>
+            <li>✅ Handle errors gracefully and return informative error messages</li>
+            <li>✅ Keep tools focused — one tool per task</li>
+            <li>❌ Avoid side effects in retrieval tools (save destructive ops for explicit tools)</li>
+            <li>❌ Don't use more than ~20 tools per agent call (model performance degrades)</li>
+          </ul>
+
+          <h2>Async Tools</h2>
+          <pre><code>from langchain_core.tools import tool
+import httpx
+
+@tool
+async def fetch_webpage(url: str) -> str:
+    """Fetch the text content of a webpage. Use this to read live documentation or articles."""
+    async with httpx.AsyncClient(timeout=15) as client:
+        response = await client.get(url)
+        response.raise_for_status()
+        return response.text[:3000]  # return first 3k chars
+
+@tool
+async def send_slack_message(channel: str, message: str) -> str:
+    """Send a message to a Slack channel. Channel should start with #."""
+    # await your Slack API call here
+    return f"Message sent to {channel}: '{message}'"
+
+# Async tools work seamlessly with both sync and async agents
+# LangChain handles the event loop automatically</code></pre>
+
+          <h2>InjectedToolArg — Dependency Injection</h2>
+          <pre><code>from langchain_core.tools import tool, InjectedToolArg
+from typing import Annotated
+
+@tool
+def get_user_orders(
+    order_status: str,                              # LLM provides this arg
+    user_id: Annotated[str, InjectedToolArg],       # Injected programmatically
+    db_session: Annotated[object, InjectedToolArg], # Hidden from LLM schema
+) -> list[dict]:
+    """Get orders for the current user. Status can be: pending, shipped, delivered, cancelled."""
+    # user_id and db_session never appear in the tool schema sent to the LLM
+    return [{"id": "ORD-001", "status": order_status, "user": user_id}]
+
+# Inject hidden args when creating the agent
+from langchain.agents import create_agent
+from functools import partial
+
+# Create a version of the tool with user_id pre-filled
+bound_tool = get_user_orders.inject(user_id="usr-42", db_session=my_session)
+
+agent = create_agent(
+    model="openai:gpt-4o",
+    tools=[bound_tool],
+)</code></pre>
+
+          <h2>Tool Error Handling</h2>
+          <pre><code>from langchain_core.tools import tool, ToolException
+
+# handle_tool_error=True: catches exceptions and sends error message to agent
+@tool(handle_tool_error=True)
+def safe_divide(numerator: float, denominator: float) -> float:
+    """Divide numerator by denominator."""
+    if denominator == 0:
+        raise ToolException("Cannot divide by zero. Please provide a non-zero denominator.")
+    return numerator / denominator
+
+# Custom error handler function
+def handle_error(error: ToolException) -> str:
+    return f"Tool failed: {str(error)}. Please adjust your inputs and try again."
+
+@tool(handle_tool_error=handle_error)
+def query_database(sql: str) -> list[dict]:
+    """Execute a read-only SQL query against the database."""
+    if any(kw in sql.upper() for kw in ["DROP", "DELETE", "TRUNCATE", "UPDATE"]):
+        raise ToolException("Only SELECT queries are allowed.")
+    # ... execute query
+    return [{"result": "data"}]
+
+# return_direct=True: agent returns tool output directly without LLM rephrasing
+@tool(return_direct=True)
+def final_answer(answer: str) -> str:
+    """Use this when you have the final answer ready to return to the user."""
+    return answer</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN AGENTS ═══════════════════════════════════════ -->
+        <section id="langchain-agents" role="article">
+          <h1>🤖 LangChain — Agents</h1>
+          <span class="badge">langchain</span> <span class="badge">agents</span> <span class="badge">react</span>
+
+          <div class="callout">
+            An agent is an LLM in a reasoning loop: it reads the user's request, decides which tool to call, calls it, reads the result, and repeats until it has an answer. LangChain's <code>create_agent</code> provides a battle-tested ReAct pattern on LangGraph's durable runtime.
+          </div>
+
+          <h2>create_agent — Quickest Way</h2>
+          <pre><code>from langchain.agents import create_agent
+from langchain_core.tools import tool
+
+@tool
+def get_weather(city: str) -> str:
+    """Get weather for a given city."""
+    return f"Sunny, 75°F in {city}"
+
+@tool
+def get_population(city: str) -> str:
+    """Get the population of a city."""
+    return f"Population of {city}: 2.1 million"
+
+agent = create_agent(
+    model="openai:gpt-4o-mini",   # or "anthropic:claude-sonnet-4-6"
+    tools=[get_weather, get_population],
+    system_prompt="You are a knowledgeable city guide.",
+)
+
+result = agent.invoke({"messages": [{"role": "user", "content": "Tell me about Paris"}]})
+print(result["messages"][-1].content)</code></pre>
+
+          <h2>Agent with Streaming</h2>
+          <pre><code>for event in agent.stream(
+    {"messages": [{"role": "user", "content": "What's the weather in Tokyo?"}]},
+    stream_mode="values",
+):
+    last_message = event["messages"][-1]
+    last_message.pretty_print()</code></pre>
+
+          <h2>AgentExecutor (Legacy, Pre-LangGraph)</h2>
+          <pre><code>from langchain.agents import AgentExecutor, create_tool_calling_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+llm = ChatOpenAI(model="gpt-4o")
+tools = [get_weather]
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful assistant."),
+    MessagesPlaceholder("chat_history", optional=True),
+    ("human", "{input}"),
+    MessagesPlaceholder("agent_scratchpad"),
+])
+
+agent = create_tool_calling_agent(llm, tools, prompt)
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+result = agent_executor.invoke({"input": "What is the weather in NYC?"})</code></pre>
+
+          <h2>ReAct Pattern</h2>
+          <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant A as Agent (LLM)
+    participant T as Tool
+    U->>A: "What's the weather in Paris and NYC?"
+    A->>A: Thought: I need to call get_weather for Paris
+    A->>T: get_weather("Paris")
+    T->>A: "Sunny, 68°F"
+    A->>A: Thought: Now I need get_weather for NYC
+    A->>T: get_weather("NYC")
+    T->>A: "Cloudy, 55°F"
+    A->>A: Thought: I have all the info, compose answer
+    A->>U: "Paris is sunny (68°F), NYC is cloudy (55°F)"
+          </div>
+
+          <h2>Agent Configuration</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Config</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>model</code></td><td>Model string <code>"provider:model-name"</code> or model instance</td></tr>
+              <tr><td><code>tools</code></td><td>List of tools the agent can call</td></tr>
+              <tr><td><code>system_prompt</code></td><td>System instructions / persona</td></tr>
+              <tr><td><code>max_steps</code></td><td>Maximum number of tool-call steps (default: 10)</td></tr>
+              <tr><td><code>checkpointer</code></td><td>Persistence backend (<code>MemorySaver</code>, <code>SqliteSaver</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <h2>create_react_agent (LangGraph Prebuilt)</h2>
+          <pre><code>from langgraph.prebuilt import create_react_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.tools import tool
+
+@tool
+def get_weather(city: str) -> str:
+    """Get the current weather for a city."""
+    return f"Sunny, 72°F in {city}"
+
+# Lower-level LangGraph API — more control than create_agent
+agent = create_react_agent(
+    model=ChatOpenAI(model="gpt-4o"),
+    tools=[get_weather],
+    prompt="You are a helpful weather assistant.",
+)
+
+# Returns a compiled LangGraph StateGraph
+result = agent.invoke({"messages": [{"role": "user", "content": "Weather in Paris?"}]})
+print(result["messages"][-1].content)
+
+# Stream step-by-step
+for step in agent.stream(
+    {"messages": [{"role": "user", "content": "Compare weather in Paris and Tokyo"}]},
+    stream_mode="updates",
+):
+    print(step)</code></pre>
+
+          <h2>Agent with Persistent Memory</h2>
+          <pre><code>from langgraph.checkpoint.memory import MemorySaver
+from langgraph.prebuilt import create_react_agent
+from langchain_openai import ChatOpenAI
+
+# MemorySaver stores full conversation state per thread_id
+memory = MemorySaver()
+
+agent = create_react_agent(
+    model=ChatOpenAI(model="gpt-4o"),
+    tools=[get_weather],
+    checkpointer=memory,
+)
+
+# thread_id isolates conversation state per user/session
+config = {"configurable": {"thread_id": "user-session-42"}}
+
+# Turn 1
+agent.invoke(
+    {"messages": [{"role": "user", "content": "My favorite city is Paris."}]},
+    config=config,
+)
+
+# Turn 2 — agent remembers Paris from Turn 1
+result = agent.invoke(
+    {"messages": [{"role": "user", "content": "What's the weather like in my favorite city?"}]},
+    config=config,
+)
+print(result["messages"][-1].content)  # → Answers about Paris
+
+# For production, use SqliteSaver or PostgresSaver
+from langgraph.checkpoint.sqlite import SqliteSaver
+with SqliteSaver.from_conn_string(":memory:") as checkpointer:
+    prod_agent = create_react_agent(model=ChatOpenAI(), tools=[get_weather], checkpointer=checkpointer)</code></pre>
+
+          <h2>Streaming Agent Events</h2>
+          <pre><code>from langchain.agents import create_agent
+import asyncio
+
+agent = create_agent(model="openai:gpt-4o", tools=[get_weather])
+
+async def stream_agent():
+    async for event in agent.astream_events(
+        {"messages": [{"role": "user", "content": "Compare weather in Paris and Tokyo"}]},
+        version="v2",
+    ):
+        kind = event["event"]
+
+        # Stream LLM tokens
+        if kind == "on_chat_model_stream":
+            chunk = event["data"]["chunk"]
+            if chunk.content:
+                print(chunk.content, end="", flush=True)
+
+        # Log tool calls
+        elif kind == "on_tool_start":
+            print(f"\n[Calling tool: {event['name']}({event['data']['input']})]", flush=True)
+
+        # Log tool results
+        elif kind == "on_tool_end":
+            print(f"[Tool result: {event['data']['output']}]", flush=True)
+
+asyncio.run(stream_agent())</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN MEMORY ═══════════════════════════════════════ -->
+        <section id="langchain-memory" role="article">
+          <h1>🧠 LangChain — Memory</h1>
+          <span class="badge">langchain</span> <span class="badge">memory</span> <span class="badge">conversation</span>
+
+          <h2>RunnableWithMessageHistory</h2>
+          <pre><code>from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_openai import ChatOpenAI
+
+# In-memory store (use Redis/DB for production)
+store = {}
+
+def get_session_history(session_id: str) -> ChatMessageHistory:
+    if session_id not in store:
+        store[session_id] = ChatMessageHistory()
+    return store[session_id]
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful assistant."),
+    MessagesPlaceholder("history"),
+    ("human", "{input}"),
+])
+
+chain = prompt | ChatOpenAI()
+
+chain_with_history = RunnableWithMessageHistory(
+    chain,
+    get_session_history,
+    input_messages_key="input",
+    history_messages_key="history",
+)
+
+# First turn
+chain_with_history.invoke(
+    {"input": "My name is Alice"},
+    config={"configurable": {"session_id": "user-123"}}
+)
+
+# Second turn — model remembers "Alice"
+result = chain_with_history.invoke(
+    {"input": "What is my name?"},
+    config={"configurable": {"session_id": "user-123"}}
+)
+print(result.content)  # → "Your name is Alice."</code></pre>
+
+          <h2>Memory Storage Backends</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Backend</th><th>Class</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td>In-memory</td><td><code>ChatMessageHistory</code></td><td>Development and testing</td></tr>
+              <tr><td>Redis</td><td><code>RedisChatMessageHistory</code></td><td>Production, scalable sessions</td></tr>
+              <tr><td>SQLite / Postgres</td><td><code>SQLChatMessageHistory</code></td><td>Persistent relational storage</td></tr>
+              <tr><td>DynamoDB</td><td><code>DynamoDBChatMessageHistory</code></td><td>AWS environments</td></tr>
+              <tr><td>MongoDB</td><td><code>MongoDBChatMessageHistory</code></td><td>Document-based storage</td></tr>
+              <tr><td>Cosmos DB</td><td><code>CosmosDBChatMessageHistory</code></td><td>Azure environments</td></tr>
+              <tr><td>Upstash Redis</td><td><code>UpstashRedisChatMessageHistory</code></td><td>Serverless Redis</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Memory Strategies</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Strategy</th><th>Description</th><th>Use When</th></tr></thead>
+            <tbody>
+              <tr><td>Full history</td><td>Keep all messages</td><td>Short conversations, low cost models</td></tr>
+              <tr><td>Window buffer</td><td>Keep last N messages</td><td>Long conversations, cost control</td></tr>
+              <tr><td>Summary</td><td>Summarize old messages into one</td><td>Very long conversations</td></tr>
+              <tr><td>Semantic</td><td>Retrieve only relevant memories</td><td>Long-term cross-session memory</td></tr>
+              <tr><td>Token buffer</td><td>Keep messages up to token limit</td><td>Budget-sensitive applications</td></tr>
+            </tbody>
+          </table>
+
+          <h2>trim_messages — Context Window Management</h2>
+          <pre><code>from langchain_core.messages import trim_messages, SystemMessage, HumanMessage, AIMessage
+from langchain_openai import ChatOpenAI
+
+# Trim a message list to fit within a token budget
+trimmer = trim_messages(
+    max_tokens=4096,          # Max tokens to keep
+    strategy="last",          # Keep most recent messages ("first" keeps oldest)
+    token_counter=ChatOpenAI(model="gpt-4o-mini"),  # Accurate token counting
+    include_system=True,      # Always keep SystemMessage
+    allow_partial=False,      # Never split messages in half
+    start_on="human",         # First message in trimmed list must be from human
+)
+
+messages = [
+    SystemMessage(content="You are a helpful assistant."),
+    HumanMessage(content="What is Python?"),
+    AIMessage(content="Python is a high-level programming language..."),
+    # ... many more messages ...
+]
+
+trimmed = trimmer.invoke(messages)
+print(f"Kept {len(trimmed)} of {len(messages)} messages")
+
+# Use in a chain to auto-trim before every LLM call
+from langchain_core.runnables import RunnablePassthrough
+chain_with_trimmer = (
+    RunnablePassthrough.assign(messages=itemgetter("messages") | trimmer)
+    | prompt
+    | ChatOpenAI(model="gpt-4o")
+)</code></pre>
+
+          <h2>Cross-Thread Semantic Memory (InMemoryStore)</h2>
+          <pre><code>from langgraph.store.memory import InMemoryStore
+from langgraph.prebuilt import create_react_agent
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+
+# InMemoryStore enables semantic search across conversation threads
+# In production, use AsyncPostgresStore or RedisStore
+store = InMemoryStore(
+    index={
+        "embed": OpenAIEmbeddings(model="text-embedding-3-small"),
+        "dims": 1536,
+    }
+)
+
+# Store facts about users (namespace = ("scope", "user_id", "category"))
+store.put(
+    namespace=("memories", "user-alice", "facts"),
+    key="pref-1",
+    value={"content": "Alice prefers Python over JavaScript and loves concise code."},
+)
+store.put(
+    namespace=("memories", "user-alice", "facts"),
+    key="pref-2",
+    value={"content": "Alice is building a RAG chatbot for her company."},
+)
+
+# Semantic search — finds most relevant stored memories
+results = store.search(
+    namespace=("memories", "user-alice"),
+    query="what programming languages does she prefer?",
+    limit=3,
+)
+for r in results:
+    print(r.value["content"], "(score:", r.score, ")") </code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN RAG ═══════════════════════════════════════ -->
+        <section id="langchain-rag" role="article">
+          <h1>📚 LangChain — RAG (Retrieval Augmented Generation)</h1>
+          <span class="badge">langchain</span> <span class="badge">rag</span> <span class="badge">retrieval</span> <span class="badge">vectors</span>
+
+          <div class="callout">
+            RAG grounds LLM responses with your own data — preventing hallucinations by providing relevant context retrieved from a vector store.
+          </div>
+
+          <h2>RAG Pipeline</h2>
+          <div class="mermaid">
+graph LR
+    A[Documents] --> B[Document Loaders]
+    B --> C[Text Splitters]
+    C --> D[Embedding Model]
+    D --> E[Vector Store]
+    F[User Query] --> G[Retriever]
+    E --> G
+    G --> H[Relevant Chunks]
+    H --> I[Prompt + Context]
+    F --> I
+    I --> J[LLM]
+    J --> K[Answer]
+    style E fill:#dcfce7,stroke:#10b981
+    style J fill:#dbeafe,stroke:#3b82f6
+          </div>
+
+          <h2>Document Loaders</h2>
+          <pre><code>from langchain_community.document_loaders import (
+    PyPDFLoader, WebBaseLoader, CSVLoader, TextLoader, DirectoryLoader
+)
+
+# Load PDF
+loader = PyPDFLoader("company_report.pdf")
+docs = loader.load()  # List of Document objects
+
+# Load webpage
+loader = WebBaseLoader("https://docs.langchain.com/")
+docs = loader.load()
+
+# Load all PDFs in a directory
+loader = DirectoryLoader("./docs/", glob="*.pdf", loader_cls=PyPDFLoader)
+docs = loader.load()
+
+print(docs[0].page_content[:200])  # text content
+print(docs[0].metadata)            # source, page, etc.</code></pre>
+
+          <h2>Text Splitters</h2>
+          <pre><code>from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,      # Characters per chunk
+    chunk_overlap=200,    # Overlap between chunks
+    separators=["\n\n", "\n", " ", ""],  # Split priority
+)
+
+chunks = splitter.split_documents(docs)
+print(f"Split into {len(chunks)} chunks")</code></pre>
+
+          <h2>Vector Stores</h2>
+          <pre><code>from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS, Chroma
+from langchain_postgres import PGVector
+
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+# FAISS (in-memory, good for prototyping)
+vectorstore = FAISS.from_documents(chunks, embeddings)
+vectorstore.save_local("faiss_index")
+vectorstore = FAISS.load_local("faiss_index", embeddings)
+
+# Chroma (persistent local)
+vectorstore = Chroma.from_documents(chunks, embeddings, persist_directory="./chroma_db")
+
+# PostgreSQL with pgvector
+vectorstore = PGVector.from_documents(
+    chunks, embeddings,
+    connection="postgresql://user:pass@localhost/mydb",
+    collection_name="documents",
+)</code></pre>
+
+          <h2>Complete RAG Chain</h2>
+          <pre><code>from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
+from langchain_openai import ChatOpenAI
+
+retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
+
+prompt = ChatPromptTemplate.from_template("""
+Answer the question based only on the following context:
+
+{context}
+
+Question: {question}
+
+Answer:""")
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+rag_chain = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | prompt
+    | ChatOpenAI(model="gpt-4o")
+    | StrOutputParser()
+)
+
+answer = rag_chain.invoke("What are the key findings in the report?")
+print(answer)</code></pre>
+
+          <h2>Advanced Retrieval Strategies</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Strategy</th><th>Class</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>Similarity search</td><td><code>VectorStoreRetriever</code></td><td>Top-k most similar chunks by cosine distance</td></tr>
+              <tr><td>MMR</td><td><code>search_type="mmr"</code></td><td>Max Marginal Relevance — diverse results, less redundancy</td></tr>
+              <tr><td>Multi-query</td><td><code>MultiQueryRetriever</code></td><td>Generate multiple query variants to improve recall</td></tr>
+              <tr><td>Contextual compression</td><td><code>ContextualCompressionRetriever</code></td><td>Extract only relevant parts of retrieved chunks</td></tr>
+              <tr><td>Ensemble</td><td><code>EnsembleRetriever</code></td><td>Combine BM25 (keyword) + vector search (hybrid)</td></tr>
+              <tr><td>Parent-child</td><td><code>ParentDocumentRetriever</code></td><td>Search small chunks, return parent documents</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Conversational RAG with History</h2>
+          <pre><code>from langchain.chains import create_history_aware_retriever, create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import HumanMessage, AIMessage
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-4o")
+
+# Step 1: Rephrase follow-up questions using chat history
+contextualize_prompt = ChatPromptTemplate.from_messages([
+    ("system", """Given a chat history and the latest user question, \
+formulate a standalone question that is fully understandable without the history. \
+Do NOT answer the question, just rephrase it if needed."""),
+    MessagesPlaceholder("chat_history"),
+    ("human", "{input}"),
+])
+history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_prompt)
+
+# Step 2: Answer with retrieved context + history
+qa_prompt = ChatPromptTemplate.from_messages([
+    ("system", "Answer concisely using only the context below.\n\n{context}"),
+    MessagesPlaceholder("chat_history"),
+    ("human", "{input}"),
+])
+qa_chain = create_stuff_documents_chain(llm, qa_prompt)
+rag_chain = create_retrieval_chain(history_aware_retriever, qa_chain)
+
+# Multi-turn conversation
+chat_history = []
+for question in ["What is RAG?", "How does it prevent hallucinations?", "What vector stores can I use?"]:
+    result = rag_chain.invoke({"input": question, "chat_history": chat_history})
+    chat_history.extend([HumanMessage(question), AIMessage(result["answer"])])
+    print(f"Q: {question}\nA: {result['answer']}\n")</code></pre>
+
+          <h2>RAG with Source Citations</h2>
+          <pre><code>from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
+from operator import itemgetter
+
+def format_docs(docs):
+    return "\n\n".join(
+        f"[Source {i+1}: {doc.metadata.get('source', 'unknown')}]\n{doc.page_content}"
+        for i, doc in enumerate(docs)
+    )
+
+# Chain that returns both the answer and the source documents
+rag_with_sources = (
+    RunnablePassthrough.assign(
+        context=itemgetter("question") | retriever | format_docs,
+        source_docs=itemgetter("question") | retriever,
+    )
+    | RunnablePassthrough.assign(
+        answer=(
+            ChatPromptTemplate.from_template(
+                "Answer using only the context. Cite source numbers.\n\n{context}\n\nQuestion: {question}"
+            )
+            | ChatOpenAI(model="gpt-4o")
+            | StrOutputParser()
+        )
+    )
+)
+
+result = rag_with_sources.invoke({"question": "What are LangChain's main components?"})
+print(result["answer"])
+print("\nSources:")
+for doc in result["source_docs"]:
+    print(f"  - {doc.metadata.get('source')}: {doc.page_content[:100]}...")</code></pre>
+
+          <h2>Reranking Retrieved Results</h2>
+          <pre><code>from langchain.retrievers import ContextualCompressionRetriever
+from langchain_cohere import CohereRerank            # pip install langchain-cohere
+
+# Fetch 20 candidates, rerank to top 4 most relevant
+compressor = CohereRerank(model="rerank-english-v3.0", top_n=4)
+reranking_retriever = ContextualCompressionRetriever(
+    base_compressor=compressor,
+    base_retriever=vectorstore.as_retriever(search_kwargs={"k": 20}),
+)
+
+# Drop-in replacement for any retriever in your RAG chain
+results = reranking_retriever.invoke("What are best practices for production RAG?")
+for doc in results:
+    print(doc.page_content[:200])
+
+# Alternatively, use a cross-encoder reranker (no API key needed)
+from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+
+reranker = CrossEncoderReranker(
+    model=HuggingFaceCrossEncoder(model_name="cross-encoder/ms-marco-MiniLM-L-6-v2"),
+    top_n=4,
+)
+local_reranking_retriever = ContextualCompressionRetriever(
+    base_compressor=reranker,
+    base_retriever=vectorstore.as_retriever(search_kwargs={"k": 20}),
+)</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGCHAIN OUTPUT PARSERS ═══════════════════════════════════════ -->
+        <section id="langchain-output-parsers" role="article">
+          <h1>📤 LangChain — Output Parsers</h1>
+          <span class="badge">langchain</span> <span class="badge">output</span> <span class="badge">parsers</span> <span class="badge">structured</span>
+
+          <h2>String Parser</h2>
+          <pre><code>from langchain_core.output_parsers import StrOutputParser
+
+chain = prompt | model | StrOutputParser()
+result = chain.invoke({"topic": "AI"})
+print(type(result))  # → str</code></pre>
+
+          <h2>JSON Parser</h2>
+          <pre><code>from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import PromptTemplate
+
+parser = JsonOutputParser()
+
+prompt = PromptTemplate(
+    template="Answer in JSON format.\n{format_instructions}\n{query}",
+    input_variables=["query"],
+    partial_variables={"format_instructions": parser.get_format_instructions()},
+)
+
+chain = prompt | ChatOpenAI() | parser
+result = chain.invoke({"query": "Give me 3 dog breeds with their sizes"})
+print(result)  # → Python dict</code></pre>
+
+          <h2>Pydantic Output Parser</h2>
+          <pre><code>from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, Field
+from langchain_openai import ChatOpenAI
+
+class MovieReview(BaseModel):
+    title: str = Field(description="Movie title")
+    rating: float = Field(description="Rating from 1-10")
+    summary: str = Field(description="Brief summary")
+    pros: list[str] = Field(description="List of positive aspects")
+    cons: list[str] = Field(description="List of negative aspects")
+
+parser = PydanticOutputParser(pydantic_object=MovieReview)
+
+prompt = PromptTemplate(
+    template="Review this movie.\n{format_instructions}\n\nMovie: {movie}",
+    input_variables=["movie"],
+    partial_variables={"format_instructions": parser.get_format_instructions()},
+)
+
+chain = prompt | ChatOpenAI() | parser
+review = chain.invoke({"movie": "Inception"})
+print(review.title)   # → "Inception"
+print(review.rating)  # → 9.2
+print(review.pros)    # → ["Mind-bending plot", ...]</code></pre>
+
+          <h2>Structured Output (Recommended Modern Approach)</h2>
+          <pre><code># Preferred: use .with_structured_output() — no parser needed
+from langchain_openai import ChatOpenAI
+from pydantic import BaseModel
+
+class Joke(BaseModel):
+    setup: str
+    punchline: str
+    rating: int
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+structured_llm = llm.with_structured_output(Joke)
+
+joke = structured_llm.invoke("Tell me a programming joke")
+print(joke.setup)     # → "Why do programmers prefer dark mode?"
+print(joke.punchline) # → "Because light attracts bugs!"
+print(joke.rating)    # → 8</code></pre>
+
+          <h2>Parser Comparison</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Parser</th><th>Best For</th><th>Auto-Retry</th></tr></thead>
+            <tbody>
+              <tr><td><code>StrOutputParser</code></td><td>Free text responses</td><td>N/A</td></tr>
+              <tr><td><code>JsonOutputParser</code></td><td>Generic JSON objects</td><td>No</td></tr>
+              <tr><td><code>PydanticOutputParser</code></td><td>Validated structured data</td><td>No (use OutputFixingParser)</td></tr>
+              <tr><td><code>with_structured_output()</code></td><td>All structured data (modern)</td><td>Yes (function calling)</td></tr>
+              <tr><td><code>CommaSeparatedListOutputParser</code></td><td>Simple lists</td><td>No</td></tr>
+            </tbody>
+          </table>
+
+          <h2>OutputFixingParser — Auto-Retry on Parse Failure</h2>
+          <pre><code>from langchain.output_parsers import OutputFixingParser
+from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, Field
+from langchain_openai import ChatOpenAI
+
+class Recipe(BaseModel):
+    name: str = Field(description="Name of the recipe")
+    ingredients: list[str] = Field(description="List of ingredients")
+    steps: list[str] = Field(description="Step-by-step instructions")
+    prep_time_minutes: int = Field(description="Total preparation time in minutes")
+
+base_parser = PydanticOutputParser(pydantic_object=Recipe)
+
+# Wraps parser with auto-fix: if the LLM returns malformed JSON,
+# OutputFixingParser makes a second LLM call asking it to fix the output
+fixing_parser = OutputFixingParser.from_llm(
+    parser=base_parser,
+    llm=ChatOpenAI(model="gpt-4o-mini"),
+    max_retries=3,
+)
+
+chain = prompt | ChatOpenAI() | fixing_parser
+recipe = chain.invoke({"dish": "spaghetti carbonara"})
+print(recipe.name)       # → "Spaghetti Carbonara"
+print(recipe.prep_time_minutes)  # → 30</code></pre>
+
+          <h2>XMLOutputParser — Structured XML Responses</h2>
+          <pre><code>from langchain_core.output_parsers import XMLOutputParser
+from langchain_core.prompts import PromptTemplate
+from langchain_anthropic import ChatAnthropic  # Claude is great at XML
+
+parser = XMLOutputParser(tags=["product", "name", "price", "category"])
+
+prompt = PromptTemplate(
+    template="List 3 tech products.\n{format_instructions}\n",
+    input_variables=[],
+    partial_variables={"format_instructions": parser.get_format_instructions()},
+)
+
+chain = prompt | ChatAnthropic(model="claude-haiku-3-5") | parser
+result = chain.invoke({})
+for product in result.get("product", []):
+    print(product)  # → dict with name, price, category keys</code></pre>
+
+          <h2>Streaming Structured Output</h2>
+          <pre><code>from langchain_openai import ChatOpenAI
+from pydantic import BaseModel
+
+class TravelPlan(BaseModel):
+    destination: str
+    days: int
+    activities: list[str]
+    estimated_budget_usd: float
+
+llm = ChatOpenAI(model="gpt-4o")
+
+# include_raw=True returns both the parsed object and the raw AIMessage
+structured_llm = llm.with_structured_output(TravelPlan, include_raw=True)
+
+result = structured_llm.invoke("Plan a 5-day trip to Tokyo")
+print(result["parsed"])           # → TravelPlan object
+print(result["raw"])              # → AIMessage (for debugging)
+print(result["parsing_error"])    # → None if successful
+
+# Stream partial structured output as it builds
+for partial_plan in llm.with_structured_output(TravelPlan).stream(
+    "Plan a 3-day trip to Paris"
+):
+    print(partial_plan)  # TravelPlan builds field by field as tokens arrive</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH OVERVIEW ═══════════════════════════════════════ -->
+        <section id="langgraph-overview" role="article">
+          <h1>🕸️ LangGraph — Overview</h1>
+          <span class="badge">langgraph</span> <span class="badge">overview</span> <span class="badge">runtime</span>
+
+          <div class="callout">
+            <strong>LangGraph</strong> is a low-level orchestration framework and runtime for building, managing, and deploying long-running, stateful agents. Inspired by Pregel and Apache Beam, it gives you full control over agent behavior through explicit graphs of nodes and edges.
+          </div>
+
+          <h2>Core Benefits</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Benefit</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>⚡ Durable Execution</strong></td><td>Agents persist through failures and can run for extended periods, resuming from where they left off</td></tr>
+              <tr><td><strong>🧑 Human-in-the-Loop</strong></td><td>Inspect and modify agent state at any point using interrupts and breakpoints</td></tr>
+              <tr><td><strong>🧠 Comprehensive Memory</strong></td><td>Short-term working memory + long-term cross-session memory via checkpointers</td></tr>
+              <tr><td><strong>📡 First-class Streaming</strong></td><td>Native token-by-token and event streaming for real-time UX</td></tr>
+              <tr><td><strong>🤝 Multi-Agent</strong></td><td>Build supervisor, hierarchical, and peer-to-peer multi-agent systems</td></tr>
+              <tr><td><strong>🔍 Full Visibility</strong></td><td>Every state transition is visible and traceable via LangSmith</td></tr>
+            </tbody>
+          </table>
+
+          <h2>LangGraph vs Other Frameworks</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Feature</th><th>LangGraph</th><th>AutoGen</th><th>CrewAI</th></tr></thead>
+            <tbody>
+              <tr><td>Control level</td><td>Low-level (full control)</td><td>High-level abstraction</td><td>High-level abstraction</td></tr>
+              <tr><td>Custom workflows</td><td>✅ Any topology</td><td>Constrained</td><td>Constrained</td></tr>
+              <tr><td>Durable execution</td><td>✅ Built-in</td><td>Limited</td><td>Limited</td></tr>
+              <tr><td>Human-in-the-loop</td><td>✅ Native interrupts</td><td>Basic</td><td>Basic</td></tr>
+              <tr><td>Streaming</td><td>✅ First-class</td><td>Limited</td><td>Limited</td></tr>
+              <tr><td>Performance overhead</td><td>Zero overhead</td><td>Some</td><td>Some</td></tr>
+              <tr><td>License</td><td>MIT</td><td>MIT</td><td>MIT</td></tr>
+            </tbody>
+          </table>
+
+          <h2>When to Use LangGraph</h2>
+          <ul>
+            <li>✅ You need custom multi-step workflows with branching logic</li>
+            <li>✅ Your agent needs to persist state across long-running tasks</li>
+            <li>✅ You require human approval at specific steps</li>
+            <li>✅ You're building multi-agent systems with complex coordination</li>
+            <li>✅ You need fine-grained control over each step in the agent loop</li>
+            <li>✅ You want to replay and debug specific execution paths</li>
+          </ul>
+
+          <h2>LangGraph Architecture</h2>
+          <div class="mermaid">
+graph TD
+    A["StateGraph"] --> B["Nodes (Python Functions)"]
+    A --> C["Edges (Fixed / Conditional)"]
+    A --> D["State (TypedDict / Pydantic)"]
+    A --> E["Checkpointer (MemorySaver / PostgresSaver)"]
+    A --> F["Store (Long-term Memory)"]
+    B --> G["ToolNode (prebuilt)"]
+    C --> H["tools_condition (prebuilt)"]
+    D --> I["Reducers: add_messages, operator.add"]
+    E --> J["Per-thread State Snapshots"]
+    F --> K["Cross-thread Key-Value Store"]
+    style A fill:#4f46e5,color:#fff
+    style B fill:#0ea5e9,color:#fff
+    style C fill:#0ea5e9,color:#fff
+    style D fill:#0ea5e9,color:#fff
+    style E fill:#10b981,color:#fff
+    style F fill:#10b981,color:#fff
+          </div>
+
+          <h2>Installation &amp; LangSmith Setup</h2>
+          <pre><code>pip install -U langgraph langchain-openai langsmith
+
+import os
+
+# LangSmith: traces every node execution, state change, and LLM call
+os.environ["LANGSMITH_TRACING"] = "true"
+os.environ["LANGSMITH_API_KEY"] = "your-langsmith-key"
+os.environ["LANGSMITH_PROJECT"] = "my-langgraph-project"
+
+os.environ["OPENAI_API_KEY"] = "your-openai-key"
+
+# Verify version
+import langgraph
+print(langgraph.__version__)</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH CORE CONCEPTS ═══════════════════════════════════════ -->
+        <section id="langgraph-core-concepts" role="article">
+          <h1>🧩 LangGraph — Core Concepts</h1>
+          <span class="badge">langgraph</span> <span class="badge">concepts</span> <span class="badge">graph</span> <span class="badge">state</span>
+
+          <h2>Core Primitives</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Concept</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>StateGraph</strong></td><td>The graph container — defines nodes, edges, and state schema</td></tr>
+              <tr><td><strong>State</strong></td><td>A typed dictionary (TypedDict / dataclass) representing the graph's shared state</td></tr>
+              <tr><td><strong>Nodes</strong></td><td>Python functions that read state, do work, and return state updates</td></tr>
+              <tr><td><strong>Edges</strong></td><td>Connections between nodes — can be fixed or conditional (dynamic routing)</td></tr>
+              <tr><td><strong>START / END</strong></td><td>Special sentinel nodes — entry and exit points of the graph</td></tr>
+              <tr><td><strong>Reducers</strong></td><td>Functions that merge a node's partial update into the full state</td></tr>
+              <tr><td><strong>Checkpointer</strong></td><td>Persistence backend that saves/restores state snapshots</td></tr>
+              <tr><td><strong>Thread</strong></td><td>A unique execution context — identified by <code>thread_id</code></td></tr>
+            </tbody>
+          </table>
+
+          <h2>Execution Model</h2>
+          <div class="mermaid">
+graph TD
+    A[START] --> B[Node A]
+    B --> C{Conditional Edge}
+    C -- condition_true --> D[Node B]
+    C -- condition_false --> E[Node C]
+    D --> F[Node D]
+    E --> F
+    F --> G[END]
+    style A fill:#10b981,color:#fff
+    style G fill:#ef4444,color:#fff
+    style C fill:#f59e0b,color:#fff
+          </div>
+
+          <h2>MessagesState — Built-in State for Chat Agents</h2>
+          <pre><code>from langgraph.graph import MessagesState
+
+# MessagesState is pre-built TypedDict with:
+# - messages: Annotated[list[AnyMessage], add_messages]
+# The add_messages reducer appends new messages instead of replacing
+
+# All you need for most chat agents
+from langgraph.graph import StateGraph, MessagesState, START, END
+
+graph = StateGraph(MessagesState)
+# ... add nodes and edges</code></pre>
+
+          <h2>Custom State</h2>
+          <pre><code">from typing import TypedDict, Annotated
+from langgraph.graph.message import add_messages
+
+class AgentState(TypedDict):
+    messages: Annotated[list, add_messages]  # reducer: append new messages
+    user_name: str                            # simple field: last write wins
+    search_results: list[str]                 # simple field: replaced on update
+    iteration_count: int                      # simple counter</code></pre>
+
+          <h2>Input &amp; Output Schemas</h2>
+          <pre><code>from typing import TypedDict, Annotated
+from langgraph.graph import StateGraph, START, END
+from langgraph.graph.message import add_messages
+
+class State(TypedDict):
+    messages: Annotated[list, add_messages]
+    internal_scratchpad: str  # internal only
+    result: str
+
+class InputSchema(TypedDict):
+    """Only these fields are accepted as input."""
+    messages: list
+
+class OutputSchema(TypedDict):
+    """Only these fields are returned to callers."""
+    result: str
+
+# input= filters what callers provide; output= filters what they receive back
+graph = StateGraph(State, input=InputSchema, output=OutputSchema)
+
+def process_node(state: State) -> dict:
+    return {"result": "done", "internal_scratchpad": "hidden from caller"}
+
+graph.add_node("process", process_node)
+graph.add_edge(START, "process")
+graph.add_edge("process", END)
+app = graph.compile()
+
+result = app.invoke({"messages": [{"role": "user", "content": "Hello"}]})
+print(result)  # → {"result": "done"}  (internal_scratchpad excluded)</code></pre>
+
+          <h2>Graph Lifecycle</h2>
+          <div class="mermaid">
+sequenceDiagram
+    participant Dev as Developer
+    participant SG as StateGraph
+    participant CG as CompiledGraph
+    participant CP as Checkpointer
+    Dev->>SG: add_node(), add_edge()
+    Dev->>SG: compile(checkpointer=)
+    SG->>CG: Validate + optimize graph
+    Dev->>CG: invoke(input, config)
+    CG->>CP: Save initial checkpoint
+    CG->>CG: Execute node sequence
+    CG->>CP: Save checkpoint after each node
+    CG->>Dev: Return final state
+    Dev->>CG: invoke(None, config) — resume
+    CG->>CP: Load last checkpoint
+    CG->>CG: Continue from saved state
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH BUILDING ═══════════════════════════════════════ -->
+        <section id="langgraph-building" role="article">
+          <h1>🔨 LangGraph — Building a Graph</h1>
+          <span class="badge">langgraph</span> <span class="badge">stategraph</span> <span class="badge">nodes</span> <span class="badge">edges</span>
+
+          <h2>Step-by-Step: Build a Tool-Calling Agent</h2>
+          <pre><code>from typing import Annotated
+from langchain_openai import ChatOpenAI
+from langchain_core.tools import tool
+from langgraph.graph import StateGraph, MessagesState, START, END
+from langgraph.prebuilt import ToolNode, tools_condition
+
+# 1. Define tools
+@tool
+def search(query: str) -> str:
+    """Search the web for information."""
+    return f"Results for '{query}': AI is transforming industries."
+
+tools = [search]
+
+# 2. Create model with tools bound
+model = ChatOpenAI(model="gpt-4o-mini").bind_tools(tools)
+
+# 3. Define the agent node
+def call_model(state: MessagesState):
+    response = model.invoke(state["messages"])
+    return {"messages": [response]}
+
+# 4. Build the graph
+graph = StateGraph(MessagesState)
+
+# Add nodes
+graph.add_node("agent", call_model)
+graph.add_node("tools", ToolNode(tools))
+
+# Add edges
+graph.add_edge(START, "agent")
+graph.add_conditional_edges("agent", tools_condition)  # routes to "tools" or END
+graph.add_edge("tools", "agent")  # after tool execution, go back to agent
+
+# 5. Compile
+app = graph.compile()
+
+# 6. Invoke
+result = app.invoke({"messages": [{"role": "user", "content": "Search for latest AI news"}]})
+print(result["messages"][-1].content)</code></pre>
+
+          <h2>Graph Building API</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Method</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>graph.add_node(name, fn)</code></td><td>Register a node with a name and function</td></tr>
+              <tr><td><code>graph.add_edge(from, to)</code></td><td>Fixed edge — always goes from → to</td></tr>
+              <tr><td><code>graph.add_conditional_edges(from, fn, map)</code></td><td>Conditional edge — fn(state) returns a key, map routes to next node</td></tr>
+              <tr><td><code>graph.set_entry_point(name)</code></td><td>Shorthand for <code>add_edge(START, name)</code></td></tr>
+              <tr><td><code>graph.set_finish_point(name)</code></td><td>Shorthand for <code>add_edge(name, END)</code></td></tr>
+              <tr><td><code>graph.compile(checkpointer=...)</code></td><td>Compile the graph; add optional persistence</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Prebuilt Helpers</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Helper</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>ToolNode(tools)</code></td><td>Pre-built node that executes tool calls from the last AI message</td></tr>
+              <tr><td><code>tools_condition(state)</code></td><td>Routing function — returns "tools" if tool calls present, else END</td></tr>
+              <tr><td><code>create_react_agent(model, tools)</code></td><td>One-liner to create a full ReAct agent graph</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Graph Visualization</h2>
+          <pre><code># Jupyter — display as PNG
+from IPython.display import Image
+Image(app.get_graph().draw_mermaid_png())
+
+# Print Mermaid syntax (works anywhere)
+print(app.get_graph().draw_mermaid())
+
+# Save to file
+with open("agent_graph.png", "wb") as f:
+    f.write(app.get_graph().draw_mermaid_png())</code></pre>
+
+          <h2>Parallel Nodes (Fan-out / Fan-in)</h2>
+          <pre><code>from typing import TypedDict, Annotated
+from operator import add
+from langgraph.graph import StateGraph, START, END
+
+class State(TypedDict):
+    query: str
+    results: Annotated[list[str], add]  # add reducer accumulates results from branches
+
+def fetch_web(state: State) -> dict:
+    return {"results": [f"Web: {state['query']}"]}
+
+def fetch_db(state: State) -> dict:
+    return {"results": [f"DB: {state['query']}"]}
+
+def fetch_api(state: State) -> dict:
+    return {"results": [f"API: {state['query']}"]}
+
+def synthesize(state: State) -> dict:
+    combined = " | ".join(state["results"])
+    return {"results": [f"Synthesis: {combined}"]}
+
+graph = StateGraph(State)
+graph.add_node("web",        fetch_web)
+graph.add_node("db",         fetch_db)
+graph.add_node("api",        fetch_api)
+graph.add_node("synthesize", synthesize)
+
+# Fan-out: START fires all three nodes in parallel
+graph.add_edge(START, "web")
+graph.add_edge(START, "db")
+graph.add_edge(START, "api")
+
+# Fan-in: all three converge on synthesize
+graph.add_edge("web", "synthesize")
+graph.add_edge("db",  "synthesize")
+graph.add_edge("api", "synthesize")
+graph.add_edge("synthesize", END)
+
+app = graph.compile()
+result = app.invoke({"query": "AI news", "results": []})
+print(result["results"])  # All 4 entries: 3 fetched + 1 synthesized</code></pre>
+
+          <h2>Node Retry Policy</h2>
+          <pre><code>from langgraph.pregel import RetryPolicy
+from langgraph.graph import StateGraph, MessagesState, START, END
+import httpx
+
+def call_external_api(state: MessagesState) -> dict:
+    """Calls a flaky external API."""
+    response = httpx.get("https://api.example.com/data", timeout=10)
+    response.raise_for_status()
+    return {"messages": [{"role": "assistant", "content": response.text}]}
+
+graph = StateGraph(MessagesState)
+
+graph.add_node(
+    "api_call",
+    call_external_api,
+    retry=RetryPolicy(
+        max_attempts=3,       # Retry up to 3 times
+        initial_interval=1.0, # Start with 1s delay
+        backoff_factor=2.0,   # Double the wait each retry
+        max_interval=30.0,    # Never wait more than 30s
+        jitter=True,          # Randomize to avoid thundering herd
+    ),
+)
+graph.add_edge(START, "api_call")
+graph.add_edge("api_call", END)</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH STATE ═══════════════════════════════════════ -->
+        <section id="langgraph-state" role="article">
+          <h1>💾 LangGraph — State Management</h1>
+          <span class="badge">langgraph</span> <span class="badge">state</span> <span class="badge">reducers</span> <span class="badge">checkpointer</span>
+
+          <h2>State Schema Options</h2>
+          <pre><code>from typing import TypedDict, Annotated
+from operator import add
+from langgraph.graph.message import add_messages
+
+# Option 1: TypedDict (most common)
+class State(TypedDict):
+    messages: Annotated[list, add_messages]   # append reducer
+    count: Annotated[int, add]                 # sum reducer
+    name: str                                  # last-write-wins
+
+# Option 2: Pydantic BaseModel
+from pydantic import BaseModel
+class StateModel(BaseModel):
+    messages: list = []
+    count: int = 0
+
+# Option 3: dataclass
+from dataclasses import dataclass, field
+@dataclass
+class StateClass:
+    messages: list = field(default_factory=list)
+    count: int = 0</code></pre>
+
+          <h2>Reducers</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Reducer</th><th>Behavior</th><th>Example Use Case</th></tr></thead>
+            <tbody>
+              <tr><td>Default (none)</td><td>Last write wins — replaces the field entirely</td><td>Current user, status flags</td></tr>
+              <tr><td><code>add_messages</code></td><td>Appends new messages; updates by ID if same ID</td><td>Conversation history</td></tr>
+              <tr><td><code>operator.add</code></td><td>Sums numbers, concatenates lists</td><td>Token counts, accumulated results</td></tr>
+              <tr><td>Custom reducer</td><td>Any function: <code>fn(existing, update) → new</code></td><td>Deduplication, merging dicts</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Persistence with Checkpointers</h2>
+          <pre><code">from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
+
+# In-memory (development)
+memory = MemorySaver()
+app = graph.compile(checkpointer=memory)
+
+# SQLite (local production)
+with SqliteSaver.from_conn_string("checkpoints.db") as saver:
+    app = graph.compile(checkpointer=saver)
+
+# Invoke with thread_id for persistence
+config = {"configurable": {"thread_id": "user-session-42"}}
+
+# First call — agent starts fresh
+app.invoke({"messages": [{"role": "user", "content": "My name is Bob"}]}, config=config)
+
+# Second call — agent remembers Bob
+result = app.invoke({"messages": [{"role": "user", "content": "What's my name?"}]}, config=config)
+print(result["messages"][-1].content)  # → "Your name is Bob"</code></pre>
+
+          <h2>Inspecting State</h2>
+          <pre><code">config = {"configurable": {"thread_id": "user-42"}}
+
+# Get current state snapshot
+snapshot = app.get_state(config)
+print(snapshot.values)         # Current state dict
+print(snapshot.next)           # Next node to execute
+print(snapshot.metadata)       # Step number, timestamps
+
+# Get state history (all checkpoints)
+for state in app.get_state_history(config):
+    print(state.metadata["step"], state.values)</code></pre>
+
+          <h2>Updating State Manually</h2>
+          <pre><code">from langchain_core.messages import HumanMessage
+
+# Inject a message directly into the state (useful for HITL)
+app.update_state(
+    config,
+    {"messages": [HumanMessage(content="Injected message")]},
+    as_node="agent"
+)</code></pre>
+
+          <h2>Time Travel — Replay from a Past Checkpoint</h2>
+          <pre><code>from langgraph.checkpoint.memory import MemorySaver
+
+memory = MemorySaver()
+app = graph.compile(checkpointer=memory)
+config = {"configurable": {"thread_id": "time-travel-demo"}}
+
+# Run multiple steps
+for q in ["Research AI trends", "Summarize findings", "Critique the summary"]:
+    app.invoke({"messages": [{"role": "user", "content": q}]}, config)
+
+# Inspect all checkpoints (most recent first)
+history = list(app.get_state_history(config))
+print(f"Total checkpoints: {len(history)}")
+
+for i, snapshot in enumerate(history):
+    step = snapshot.metadata.get("step", "?")
+    print(f"  [{i}] step={step}  next={snapshot.next}")
+
+# Time-travel: pick an earlier checkpoint (e.g., after step 1)
+past_snapshot = history[-2]  # Second checkpoint
+print("Rewinding to:", past_snapshot.metadata)
+
+# Fork from that point — runs without changing the original thread
+result = app.invoke(
+    {"messages": [{"role": "user", "content": "Summarize differently: use bullet points"}]},
+    config=past_snapshot.config,  # Historical config with checkpoint_id
+)
+print(result["messages"][-1].content)</code></pre>
+
+          <h2>Forking — A/B Test Two Approaches</h2>
+          <pre><code>config = {"configurable": {"thread_id": "main"}}
+
+# Run shared setup steps
+app.invoke({"messages": [{"role": "user", "content": "Analyze this dataset"}]}, config)
+
+# Snapshot the current state
+baseline = app.get_state(config)
+
+# Fork A: run with approach 1
+config_a = {"configurable": {"thread_id": "fork-a"}}
+app.update_state(config_a, baseline.values)  # Seed fork-a with baseline state
+result_a = app.invoke(
+    {"messages": [{"role": "user", "content": "Use statistical analysis"}]}, config_a
+)
+
+# Fork B: run with approach 2 from the same baseline
+config_b = {"configurable": {"thread_id": "fork-b"}}
+app.update_state(config_b, baseline.values)  # Seed fork-b with same baseline
+result_b = app.invoke(
+    {"messages": [{"role": "user", "content": "Use ML clustering"}]}, config_b
+)
+
+# Compare results independently
+print("A:", result_a["messages"][-1].content)
+print("B:", result_b["messages"][-1].content)</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH CONDITIONAL EDGES ═══════════════════════════════════════ -->
+        <section id="langgraph-conditional" role="article">
+          <h1>🔀 LangGraph — Conditional Edges</h1>
+          <span class="badge">langgraph</span> <span class="badge">conditional</span> <span class="badge">routing</span>
+
+          <div class="callout">
+            Conditional edges let you dynamically route to different nodes based on the current state — enabling branching logic, retry loops, and supervisor patterns.
+          </div>
+
+          <h2>Basic Conditional Edge</h2>
+          <pre><code">from langgraph.graph import StateGraph, END
+from typing import TypedDict, Literal
+
+class State(TypedDict):
+    messages: list
+    next_action: str
+
+def router(state: State) -> Literal["search", "calculate", "__end__"]:
+    """Route based on the last message content."""
+    last_msg = state["messages"][-1].content.lower()
+    if "search" in last_msg:
+        return "search"
+    elif "calculate" in last_msg or any(c.isdigit() for c in last_msg):
+        return "calculate"
+    else:
+        return "__end__"
+
+graph = StateGraph(State)
+graph.add_node("agent", agent_node)
+graph.add_node("search", search_node)
+graph.add_node("calculate", calculate_node)
+
+graph.add_edge("__start__", "agent")
+graph.add_conditional_edges(
+    "agent",
+    router,
+    {"search": "search", "calculate": "calculate", "__end__": END}
+)
+graph.add_edge("search", "agent")
+graph.add_edge("calculate", "agent")</code></pre>
+
+          <h2>tools_condition (Built-in Router)</h2>
+          <pre><code">from langgraph.prebuilt import tools_condition, ToolNode
+
+# tools_condition checks if the last message has tool_calls
+# Returns "tools" if yes, END if no
+graph.add_conditional_edges("agent", tools_condition)
+graph.add_node("tools", ToolNode(tools))
+graph.add_edge("tools", "agent")</code></pre>
+
+          <h2>Multi-Branch Routing</h2>
+          <pre><code">def supervisor_router(state: State) -> str:
+    """Supervisor decides which specialist agent to call next."""
+    decision = state.get("next_agent", "FINISH")
+    if decision == "FINISH":
+        return END
+    return decision  # → "researcher", "writer", "reviewer"
+
+graph.add_conditional_edges(
+    "supervisor",
+    supervisor_router,
+    {"researcher": "researcher", "writer": "writer", "reviewer": "reviewer", END: END}
+)</code></pre>
+
+          <h2>Command — Dynamic goto from Inside a Node</h2>
+          <pre><code>from langgraph.types import Command
+from langgraph.graph import StateGraph, MessagesState, START, END
+from typing import Literal
+
+def agent_node(state: MessagesState) -> Command[Literal["tools", "__end__"]]:
+    """Node that controls routing via Command instead of separate conditional edges."""
+    response = model.invoke(state["messages"])
+
+    if response.tool_calls:
+        # Go to "tools" node AND update state in one return value
+        return Command(
+            goto="tools",
+            update={"messages": [response]},
+        )
+    else:
+        return Command(
+            goto=END,
+            update={"messages": [response]},
+        )
+
+# With Command, the node itself decides routing dynamically
+# No add_conditional_edges needed — graph still requires nodes to be declared
+graph = StateGraph(MessagesState)
+graph.add_node("agent", agent_node)
+graph.add_node("tools", ToolNode(tools))
+graph.add_edge(START, "agent")
+graph.add_edge("tools", "agent")</code></pre>
+
+          <h2>Send API — Dynamic Fan-out with Per-Worker Inputs</h2>
+          <pre><code>from langgraph.types import Send
+from typing import TypedDict, Annotated
+from operator import add
+
+class OverallState(TypedDict):
+    topics: list[str]
+    research_results: Annotated[list[str], add]
+
+class WorkerState(TypedDict):
+    topic: str   # Each worker receives exactly one topic
+
+def distribute(state: OverallState) -> list[Send]:
+    """Fan-out: spawn one worker node per topic, each with different input."""
+    return [
+        Send("research_topic", {"topic": topic})
+        for topic in state["topics"]
+    ]
+
+def research_topic(state: WorkerState) -> dict:
+    """Called in parallel for each topic."""
+    return {"research_results": [f"Findings on '{state['topic']}'"]}
+
+graph = StateGraph(OverallState)
+graph.add_node("research_topic", research_topic)
+# Send is used as the return of a conditional edge function
+graph.add_conditional_edges(START, distribute, ["research_topic"])
+graph.add_edge("research_topic", END)
+
+app = graph.compile()
+result = app.invoke({"topics": ["AI", "ML", "DL"], "research_results": []})
+print(result["research_results"])  # 3 results from parallel workers</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH HUMAN-IN-THE-LOOP ═══════════════════════════════════════ -->
+        <section id="langgraph-human-loop" role="article">
+          <h1>🧑 LangGraph — Human-in-the-Loop</h1>
+          <span class="badge">langgraph</span> <span class="badge">human</span> <span class="badge">interrupt</span> <span class="badge">approval</span>
+
+          <div class="callout">
+            Human-in-the-loop (HITL) lets you pause an agent mid-execution for human review, approval, or correction. LangGraph implements this via <strong>interrupts</strong> — the graph pauses, saves state, and waits for human input before continuing.
+          </div>
+
+          <h2>Interrupting Before a Node</h2>
+          <pre><code">from langgraph.checkpoint.memory import MemorySaver
+from langgraph.types import interrupt
+
+memory = MemorySaver()
+
+# Compile with interrupt_before: graph pauses before "execute_action" node
+app = graph.compile(
+    checkpointer=memory,
+    interrupt_before=["execute_action"]   # pause before these nodes
+)
+
+config = {"configurable": {"thread_id": "approval-flow-1"}}
+
+# Start the agent — it will pause before "execute_action"
+for event in app.stream({"messages": [{"role": "user", "content": "Delete old logs"}]}, config):
+    print(event)
+
+# Check what the agent wants to do
+snapshot = app.get_state(config)
+print("Pending action:", snapshot.values["messages"][-1].tool_calls)
+
+# Human approves — resume the graph (pass None to continue)
+for event in app.stream(None, config):
+    print(event)</code></pre>
+
+          <h2>Dynamic Interrupt Inside a Node</h2>
+          <pre><code">from langgraph.types import interrupt
+
+def approval_node(state):
+    """Node that pauses for human approval."""
+    proposed_action = state["proposed_action"]
+    
+    # interrupt() pauses the graph and returns control to the caller
+    # The value passed to interrupt() is returned to the human
+    human_decision = interrupt({
+        "question": "Do you approve this action?",
+        "action": proposed_action,
+    })
+    
+    # Execution resumes here after human provides input
+    if human_decision.lower() == "yes":
+        return {"approved": True}
+    else:
+        return {"approved": False, "reason": human_decision}</code></pre>
+
+          <h2>HITL Workflow Pattern</h2>
+          <div class="mermaid">
+sequenceDiagram
+    participant U as User / Operator
+    participant G as LangGraph
+    participant H as Human Reviewer
+    U->>G: Invoke agent with task
+    G->>G: Agent plans action
+    G->>H: INTERRUPT — "Approve action X?"
+    H->>G: "Yes, approved"
+    G->>G: Resume from checkpoint
+    G->>U: Task completed
+          </div>
+
+          <h2>Breakpoints Summary</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Method</th><th>When it Pauses</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td><code>interrupt_before=["node"]</code></td><td>Before the specified node executes</td><td>Review what the agent is about to do</td></tr>
+              <tr><td><code>interrupt_after=["node"]</code></td><td>After the specified node executes</td><td>Review what the agent just did</td></tr>
+              <tr><td><code>interrupt(value)</code></td><td>At any point inside a node</td><td>Dynamic, conditional approval</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Resuming with Corrections</h2>
+          <pre><code>from langgraph.checkpoint.memory import MemorySaver
+from langchain_core.messages import HumanMessage
+
+memory = MemorySaver()
+app = graph.compile(checkpointer=memory, interrupt_before=["execute_action"])
+config = {"configurable": {"thread_id": "approval-flow"}}
+
+# Step 1: Start the agent — it will pause before "execute_action"
+app.invoke({"messages": [{"role": "user", "content": "Delete all error logs"}]}, config)
+
+# Step 2: Human inspects what the agent wants to do
+snapshot = app.get_state(config)
+pending_tool_call = snapshot.values["messages"][-1].tool_calls[0]
+print("Proposed action:", pending_tool_call)
+
+# Step 3a: Approve — resume with None (no state changes)
+for event in app.stream(None, config, stream_mode="values"):
+    event["messages"][-1].pretty_print()
+
+# --- OR ---
+
+# Step 3b: Correct — modify the tool call before resuming
+last_message = snapshot.values["messages"][-1]
+corrected_message = last_message.copy()
+corrected_message.tool_calls[0]["args"]["path"] = "/var/log/app/errors_2024*.log"
+
+app.update_state(config, {"messages": [corrected_message]}, as_node="agent")
+
+# Resume with the corrected state
+for event in app.stream(None, config, stream_mode="values"):
+    event["messages"][-1].pretty_print()</code></pre>
+
+          <h2>Approve Tool Calls via interrupt()</h2>
+          <pre><code>from langgraph.types import interrupt, Command
+from langgraph.graph import StateGraph, MessagesState, START, END
+from langgraph.prebuilt import ToolNode
+from langchain_core.tools import tool
+
+@tool
+def delete_files(path: str) -> str:
+    """Delete files matching the given path pattern."""
+    import glob, os
+    files = glob.glob(path)
+    for f in files:
+        os.remove(f)
+    return f"Deleted {len(files)} files"
+
+def human_approval_node(state: MessagesState) -> Command:
+    """Pause the graph and ask a human to approve or reject the last tool call."""
+    last_msg = state["messages"][-1]
+
+    if not last_msg.tool_calls:
+        return Command(goto="agent")
+
+    tool_call = last_msg.tool_calls[0]
+
+    # interrupt() suspends execution and returns control to the caller
+    decision = interrupt({
+        "question": f"Approve '{tool_call['name']}' with args {tool_call['args']}?",
+        "options": ["yes", "no"],
+    })
+
+    if decision == "yes":
+        return Command(goto="tools")
+    else:
+        # Inject rejection message and loop back to agent
+        return Command(
+            goto="agent",
+            update={"messages": [{"role": "tool", "content": "Action rejected by human."}]},
+        )
+
+graph = StateGraph(MessagesState)
+graph.add_node("agent",    agent_fn)
+graph.add_node("approval", human_approval_node)
+graph.add_node("tools",    ToolNode([delete_files]))
+
+graph.add_edge(START, "agent")
+graph.add_edge("agent", "approval")   # Always go through approval
+graph.add_edge("tools", "agent")
+app = graph.compile(checkpointer=MemorySaver())
+
+# When interrupted, resume by passing the human's decision:
+# app.invoke(Command(resume="yes"), config)</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH MEMORY ═══════════════════════════════════════ -->
+        <section id="langgraph-memory" role="article">
+          <h1>🧠 LangGraph — Memory &amp; Persistence</h1>
+          <span class="badge">langgraph</span> <span class="badge">memory</span> <span class="badge">persistence</span> <span class="badge">checkpointer</span>
+
+          <h2>Two Types of Memory</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Type</th><th>Scope</th><th>Storage</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Short-term (in-thread)</strong></td><td>Within a single thread_id</td><td>Checkpointer (state snapshots)</td><td>Messages and state within an ongoing conversation</td></tr>
+              <tr><td><strong>Long-term (cross-thread)</strong></td><td>Across different threads</td><td>Memory Store (key-value)</td><td>User preferences, facts, and knowledge that persist across sessions</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Checkpointer Options</h2>
+          <pre><code">from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.checkpoint.postgres import PostgresSaver
+
+# In-memory (development only — lost on restart)
+checkpointer = MemorySaver()
+
+# SQLite (local, persistent)
+checkpointer = SqliteSaver.from_conn_string("agent_memory.db")
+
+# PostgreSQL (production, scalable)
+import psycopg
+conn = psycopg.connect("postgresql://user:pass@localhost/mydb")
+checkpointer = PostgresSaver(conn)
+
+app = graph.compile(checkpointer=checkpointer)</code></pre>
+
+          <h2>Long-Term Memory Store</h2>
+          <pre><code">from langgraph.store.memory import InMemoryStore
+from langgraph.store.postgres import PostgresStore
+
+# In-memory store
+store = InMemoryStore()
+
+# Define a node that writes to long-term memory
+def save_user_fact(state, store, config):
+    user_id = config["configurable"]["user_id"]
+    fact = extract_fact(state["messages"])
+    store.put(("users", user_id, "facts"), fact["id"], fact)
+    return {}
+
+# Define a node that reads from long-term memory
+def personalize_response(state, store, config):
+    user_id = config["configurable"]["user_id"]
+    facts = store.search(("users", user_id, "facts"))
+    context = " ".join(f["content"] for f in facts)
+    return {"user_context": context}
+
+# Compile with both checkpointer and store
+app = graph.compile(checkpointer=MemorySaver(), store=store)</code></pre>
+
+          <h2>Conversation History Pattern</h2>
+          <pre><code">config = {"configurable": {"thread_id": "user-alice-session-1"}}
+
+# Turn 1
+app.invoke({"messages": [{"role": "user", "content": "I love spicy food"}]}, config)
+
+# Turn 2 — state is restored from checkpoint, history preserved
+app.invoke({"messages": [{"role": "user", "content": "What should I order for dinner?"}]}, config)
+# Agent knows about "spicy food" preference</code></pre>
+
+          <h2>Memory Graph Node (Auto-Extract Facts)</h2>
+          <pre><code>from langgraph.store.memory import InMemoryStore
+from langgraph.prebuilt import create_react_agent
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_core.tools import tool
+
+# Semantic memory store
+store = InMemoryStore(
+    index={"embed": OpenAIEmbeddings(model="text-embedding-3-small"), "dims": 1536}
+)
+
+def save_memory(state, config, store):
+    """Node: extract and store important facts from the conversation."""
+    user_id = config["configurable"].get("user_id", "anonymous")
+    messages = state["messages"]
+
+    # Ask the LLM to extract memorable facts
+    llm = ChatOpenAI(model="gpt-4o-mini")
+    fact_response = llm.invoke([
+        {"role": "system", "content": "Extract 1-3 short facts worth remembering from this conversation. Be concise."},
+        *[{"role": m.type, "content": m.content} for m in messages[-6:]],
+    ])
+
+    fact_text = fact_response.content.strip()
+    if fact_text:
+        import uuid
+        store.put(
+            namespace=("memories", user_id),
+            key=str(uuid.uuid4()),
+            value={"content": fact_text, "source": "conversation"},
+        )
+    return {}  # Memory node doesn't change messages state
+
+def load_memories(state, config, store):
+    """Node: retrieve relevant past memories and inject into context."""
+    user_id = config["configurable"].get("user_id", "anonymous")
+    last_msg = state["messages"][-1].content
+
+    memories = store.search(namespace=("memories", user_id), query=last_msg, limit=5)
+    if memories:
+        memory_context = "\n".join(f"- {m.value['content']}" for m in memories)
+        return {
+            "messages": [{
+                "role": "system",
+                "content": f"Relevant memories about this user:\n{memory_context}",
+            }]
+        }
+    return {}</code></pre>
+
+          <h2>Checkpointer Backends Comparison</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Checkpointer</th><th>Package</th><th>Persistence</th><th>Best For</th></tr></thead>
+            <tbody>
+              <tr><td><code>MemorySaver</code></td><td><code>langgraph</code></td><td>RAM only</td><td>Tests, development</td></tr>
+              <tr><td><code>SqliteSaver</code></td><td><code>langgraph-checkpoint-sqlite</code></td><td>Local SQLite file</td><td>Local dev, single-user apps</td></tr>
+              <tr><td><code>PostgresSaver</code></td><td><code>langgraph-checkpoint-postgres</code></td><td>PostgreSQL</td><td>Production, multi-user</td></tr>
+              <tr><td><code>RedisSaver</code></td><td><code>langgraph-checkpoint-redis</code></td><td>Redis</td><td>High-throughput, TTL-based</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH MULTI-AGENT ═══════════════════════════════════════ -->
+        <section id="langgraph-multi-agent" role="article">
+          <h1>🤝 LangGraph — Multi-Agent Workflows</h1>
+          <span class="badge">langgraph</span> <span class="badge">multi-agent</span> <span class="badge">supervisor</span> <span class="badge">handoff</span>
+
+          <h2>Multi-Agent Architectures</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Pattern</th><th>Description</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Supervisor</strong></td><td>One orchestrator delegates tasks to specialist subagents</td><td>Research + writing + review pipelines</td></tr>
+              <tr><td><strong>Hierarchical</strong></td><td>Multi-level supervisors with nested subagents</td><td>Complex enterprise workflows</td></tr>
+              <tr><td><strong>Peer-to-peer (Handoff)</strong></td><td>Agents hand off control to each other</td><td>Sequential specialist workflows</td></tr>
+              <tr><td><strong>Network (Swarm)</strong></td><td>Any agent can call any other agent</td><td>Flexible autonomous workflows</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Supervisor Pattern</h2>
+          <pre><code">from langchain_openai import ChatOpenAI
+from langgraph.graph import StateGraph, MessagesState, START, END
+from typing import Literal
+
+members = ["researcher", "writer", "reviewer"]
+options = members + ["FINISH"]
+
+# Supervisor decides which worker to call next
+supervisor_prompt = f"""You are a supervisor managing: {members}.
+Given the conversation, decide who should act next.
+Respond with one of: {options}"""
+
+def supervisor_node(state: MessagesState):
+    messages = [{"role": "system", "content": supervisor_prompt}] + state["messages"]
+    response = ChatOpenAI(model="gpt-4o").invoke(messages)
+    return {"messages": [response], "next": response.content.strip()}
+
+def researcher_node(state: MessagesState):
+    response = ChatOpenAI().invoke([
+        {"role": "system", "content": "You are a researcher. Find facts."},
+        *state["messages"]
+    ])
+    return {"messages": [response]}
+
+def writer_node(state: MessagesState):
+    response = ChatOpenAI().invoke([
+        {"role": "system", "content": "You are a writer. Draft content."},
+        *state["messages"]
+    ])
+    return {"messages": [response]}
+
+def router(state) -> Literal["researcher", "writer", "reviewer", "__end__"]:
+    next_node = state.get("next", "FINISH")
+    return "__end__" if next_node == "FINISH" else next_node
+
+graph = StateGraph(MessagesState)
+graph.add_node("supervisor", supervisor_node)
+graph.add_node("researcher", researcher_node)
+graph.add_node("writer", writer_node)
+graph.add_edge(START, "supervisor")
+graph.add_conditional_edges("supervisor", router)
+for member in members:
+    graph.add_edge(member, "supervisor")
+
+app = graph.compile()</code></pre>
+
+          <h2>Agent Handoff with Command</h2>
+          <pre><code">from langgraph.types import Command
+
+def agent_a(state):
+    # Agent A decides to hand off to Agent B
+    return Command(
+        goto="agent_b",
+        update={"messages": [{"role": "assistant", "content": "Handing off to Agent B"}]}
+    )
+
+def agent_b(state):
+    # Agent B does its work
+    return {"messages": [{"role": "assistant", "content": "Agent B complete"}]}
+
+graph = StateGraph(MessagesState)
+graph.add_node("agent_a", agent_a)
+graph.add_node("agent_b", agent_b)
+graph.add_edge(START, "agent_a")
+graph.add_edge("agent_b", END)</code></pre>
+
+          <h2>Sub-Graph Pattern</h2>
+          <pre><code">from langgraph.graph import StateGraph, MessagesState, START, END
+
+# Define sub-graph (reusable agent)
+sub_graph = StateGraph(MessagesState)
+sub_graph.add_node("sub_agent", sub_agent_fn)
+sub_graph.add_edge(START, "sub_agent")
+sub_graph.add_edge("sub_agent", END)
+sub_app = sub_graph.compile()
+
+# Use sub-graph as a node in parent graph
+main_graph = StateGraph(MessagesState)
+main_graph.add_node("main_agent", main_agent_fn)
+main_graph.add_node("sub_workflow", sub_app)   # Sub-graph as node!
+main_graph.add_edge(START, "main_agent")
+main_graph.add_edge("main_agent", "sub_workflow")
+main_graph.add_edge("sub_workflow", END)</code></pre>
+
+          <h2>Multi-Agent Architecture Diagram</h2>
+          <div class="mermaid">
+graph TD
+    U[User] --> S[Supervisor Agent]
+    S -- delegate --> R[Researcher Agent]
+    S -- delegate --> W[Writer Agent]
+    S -- delegate --> V[Reviewer Agent]
+    R -- result --> S
+    W -- result --> S
+    V -- approved --> E[END]
+    V -- needs revision --> W
+    style S fill:#4f46e5,color:#fff
+    style R fill:#0ea5e9,color:#fff
+    style W fill:#0ea5e9,color:#fff
+    style V fill:#10b981,color:#fff
+    style E fill:#ef4444,color:#fff
+          </div>
+
+          <h2>create_handoff_tool — Prebuilt Agent Handoff</h2>
+          <pre><code>from langgraph.prebuilt import create_react_agent
+from langgraph.graph import StateGraph, MessagesState, START
+from langgraph.types import Command
+from langchain_openai import ChatOpenAI
+from langchain_core.tools import tool
+
+llm = ChatOpenAI(model="gpt-4o")
+
+# Each agent is a compiled subgraph
+def make_agent(name: str, expertise: str, tools: list = []):
+    return create_react_agent(
+        model=llm,
+        tools=tools,
+        prompt=f"You are {name}, an expert in {expertise}. When done, say HANDOFF_COMPLETE.",
+    )
+
+researcher = make_agent("Alex", "research and web search", tools=[search_tool])
+writer     = make_agent("Blake", "writing and summarization")
+reviewer   = make_agent("Casey", "quality review and critique")
+
+# Each node runs its agent and decides if FINISH or handoff
+def run_researcher(state: MessagesState):
+    result = researcher.invoke(state)
+    return {"messages": result["messages"]}
+
+def run_writer(state: MessagesState):
+    result = writer.invoke(state)
+    return {"messages": result["messages"]}
+
+def run_reviewer(state: MessagesState):
+    result = reviewer.invoke(state)
+    last = result["messages"][-1].content
+    # Reviewer decides: done or ask writer to revise
+    if "REVISE" in last.upper():
+        return Command(goto="writer", update={"messages": result["messages"]})
+    return Command(goto="__end__", update={"messages": result["messages"]})
+
+graph = StateGraph(MessagesState)
+graph.add_node("researcher", run_researcher)
+graph.add_node("writer",     run_writer)
+graph.add_node("reviewer",   run_reviewer)
+graph.add_edge(START, "researcher")
+graph.add_edge("researcher", "writer")
+graph.add_edge("writer", "reviewer")
+app = graph.compile()</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH STREAMING ═══════════════════════════════════════ -->
+        <section id="langgraph-streaming" role="article">
+          <h1>📡 LangGraph — Streaming</h1>
+          <span class="badge">langgraph</span> <span class="badge">streaming</span> <span class="badge">ux</span>
+
+          <div class="callout">
+            LangGraph provides first-class streaming support — stream state updates, messages, and individual tokens as they are generated, for a real-time user experience.
+          </div>
+
+          <h2>Stream Modes</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Mode</th><th>Description</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td><code>"values"</code></td><td>Stream the full state after each node completes</td><td>Show final state at each step</td></tr>
+              <tr><td><code>"updates"</code></td><td>Stream only the state changes (delta) from each node</td><td>Lightweight updates, logging</td></tr>
+              <tr><td><code>"messages"</code></td><td>Stream individual tokens as the LLM generates them</td><td>Real-time chat display</td></tr>
+              <tr><td><code>"events"</code></td><td>Stream all internal events (node start, end, tool calls)</td><td>Detailed monitoring, debugging</td></tr>
+              <tr><td><code>"debug"</code></td><td>Stream everything including checkpoints</td><td>Deep debugging</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Streaming Values</h2>
+          <pre><code">config = {"configurable": {"thread_id": "stream-demo"}}
+
+# Stream full state after each step
+for event in app.stream(
+    {"messages": [{"role": "user", "content": "Research AI trends"}]},
+    config,
+    stream_mode="values",
+):
+    last_msg = event["messages"][-1]
+    last_msg.pretty_print()
+    print("---")</code></pre>
+
+          <h2>Token-by-Token Streaming</h2>
+          <pre><code">from langchain_core.messages import HumanMessage
+
+# Stream individual tokens (requires messages mode)
+for msg, metadata in app.stream(
+    {"messages": [HumanMessage(content="Write a poem about AI")]},
+    config,
+    stream_mode="messages",
+):
+    if msg.content and not isinstance(msg, HumanMessage):
+        print(msg.content, end="", flush=True)</code></pre>
+
+          <h2>Async Streaming</h2>
+          <pre><code">import asyncio
+
+async def stream_agent():
+    async for event in app.astream(
+        {"messages": [{"role": "user", "content": "Hello!"}]},
+        config,
+        stream_mode="values",
+    ):
+        last_msg = event["messages"][-1]
+        print(last_msg.content)
+
+asyncio.run(stream_agent())</code></pre>
+
+          <h2>Streaming with Custom Events</h2>
+          <pre><code">from langgraph.types import StreamWriter
+
+def my_node(state, writer: StreamWriter):
+    """Node that emits custom stream events."""
+    writer({"type": "progress", "step": 1, "message": "Searching..."})
+    results = do_search(state)
+    writer({"type": "progress", "step": 2, "message": "Analyzing..."})
+    return {"results": results}
+
+# In caller
+for event in app.stream(input, config, stream_mode="custom"):
+    print(event)  # → {"type": "progress", "step": 1, ...}</code></pre>
+
+          <h2>stream_mode="updates" — Identify Which Node Ran</h2>
+          <pre><code>from langgraph.graph import StateGraph, MessagesState, START, END
+
+config = {"configurable": {"thread_id": "updates-demo"}}
+
+for update in app.stream(
+    {"messages": [{"role": "user", "content": "Research and summarize LangGraph"}]},
+    config,
+    stream_mode="updates",  # Only the delta from each node
+):
+    for node_name, state_delta in update.items():
+        print(f"\n[Node: {node_name}]")
+        if "messages" in state_delta:
+            for msg in state_delta["messages"]:
+                if hasattr(msg, "content") and msg.content:
+                    print(f"  {msg.type}: {msg.content[:200]}")</code></pre>
+
+          <h2>SSE / WebSocket Streaming Pattern</h2>
+          <pre><code>from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+import asyncio, json
+
+app_web = FastAPI()
+agent = your_compiled_langgraph  # Your compiled LangGraph
+
+@app_web.post("/chat/stream")
+async def chat_stream(body: dict):
+    """Server-Sent Events endpoint — streams agent output to the browser."""
+    user_message = body["message"]
+    session_id   = body.get("session_id", "default")
+    config = {"configurable": {"thread_id": session_id}}
+
+    async def event_generator():
+        async for msg, metadata in agent.astream(
+            {"messages": [{"role": "user", "content": user_message}]},
+            config=config,
+            stream_mode="messages",
+        ):
+            if msg.content and not hasattr(msg, "tool_calls"):
+                # SSE format: "data: ...\n\n"
+                data = json.dumps({"token": msg.content, "done": False})
+                yield f"data: {data}\n\n"
+                await asyncio.sleep(0)  # Yield control to event loop
+
+        yield f"data: {json.dumps({'done': True})}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",  # Disable nginx buffering
+        },
+    )</code></pre>
+
+          <h2>Streaming with Subgraphs</h2>
+          <pre><code># subgraphs=True includes events from nested sub-graphs
+for update in app.stream(
+    {"messages": [{"role": "user", "content": "Run the full pipeline"}]},
+    config,
+    stream_mode="updates",
+    subgraphs=True,  # Include events from sub-graphs
+):
+    # update is now a tuple: (namespace, delta)
+    # namespace identifies which subgraph emitted the event
+    namespace, delta = update if isinstance(update, tuple) else ((), update)
+    graph_path = " > ".join(namespace) if namespace else "main"
+    print(f"[{graph_path}] {delta}")</code></pre>
+        </section>
+
+        <!-- ═══════════════════════════════════════ BEST PRACTICES ═══════════════════════════════════════ -->
+        <section id="best-practices" role="article">
+          <h1>⭐ Best Practices</h1>
+          <span class="badge">best-practices</span> <span class="badge">tips</span> <span class="badge">guidelines</span>
+
+          <h2>🔗 LangChain Best Practices</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Category</th><th>Practice</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Models</strong></td><td>Use <code>with_structured_output()</code> instead of output parsers for structured data — it uses native function calling</td></tr>
+              <tr><td><strong>Models</strong></td><td>Set <code>temperature=0</code> for deterministic tasks (extraction, classification); higher for creative tasks</td></tr>
+              <tr><td><strong>Models</strong></td><td>Use <code>with_fallbacks()</code> to handle provider outages gracefully</td></tr>
+              <tr><td><strong>Prompts</strong></td><td>Separate the system persona from the task instructions — first sentence = role, rest = task</td></tr>
+              <tr><td><strong>Tools</strong></td><td>Write clear, specific docstrings — they directly influence when the model calls the tool</td></tr>
+              <tr><td><strong>Tools</strong></td><td>Keep tools focused; limit to &lt;20 tools per agent call</td></tr>
+              <tr><td><strong>LCEL</strong></td><td>Use <code>.with_retry()</code> on chains that call external APIs</td></tr>
+              <tr><td><strong>RAG</strong></td><td>Chunk size 1000 / overlap 200 is a good starting point — tune based on your content</td></tr>
+              <tr><td><strong>RAG</strong></td><td>Use MMR retrieval to reduce redundant chunks in context</td></tr>
+              <tr><td><strong>Agents</strong></td><td>Always set <code>max_steps</code> to prevent runaway loops</td></tr>
+              <tr><td><strong>Security</strong></td><td>Never <code>eval()</code> untrusted input in tools — sanitize all code execution</td></tr>
+            </tbody>
+          </table>
+
+          <h2>🕸️ LangGraph Best Practices</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Category</th><th>Practice</th></tr></thead>
+            <tbody>
+              <tr><td><strong>State Design</strong></td><td>Start with <code>MessagesState</code> for chat agents; add custom fields only when needed</td></tr>
+              <tr><td><strong>State Design</strong></td><td>Use explicit reducers (<code>add_messages</code>, <code>operator.add</code>) to avoid accidental state overwrite</td></tr>
+              <tr><td><strong>Persistence</strong></td><td>Always use a <code>checkpointer</code> in production — agents should be resumable on failures</td></tr>
+              <tr><td><strong>Persistence</strong></td><td>Use <code>PostgresSaver</code> in production; <code>MemorySaver</code> only for tests</td></tr>
+              <tr><td><strong>Nodes</strong></td><td>Keep nodes focused on a single responsibility — use the graph structure for orchestration</td></tr>
+              <tr><td><strong>Edges</strong></td><td>Use <code>tools_condition</code> for tool-calling agents — don't reinvent routing logic</td></tr>
+              <tr><td><strong>Streaming</strong></td><td>Use <code>stream_mode="messages"</code> for chat UIs, <code>"updates"</code> for backend processing</td></tr>
+              <tr><td><strong>Multi-Agent</strong></td><td>Use sub-graphs for complex reusable agent logic — they can be independently tested</td></tr>
+              <tr><td><strong>HITL</strong></td><td>Prefer <code>interrupt_before</code> over dynamic <code>interrupt()</code> for predictable pause points</td></tr>
+              <tr><td><strong>Debugging</strong></td><td>Enable LangSmith tracing (<code>LANGSMITH_TRACING=true</code>) — it visualizes every state transition</td></tr>
+            </tbody>
+          </table>
+
+          <h2>🔒 Security</h2>
+          <ul>
+            <li>Never log or expose API keys — use environment variables</li>
+            <li>Validate and sanitize all tool inputs, especially code execution tools</li>
+            <li>Use <code>interrupt_before</code> for tools with destructive side effects (delete, send, pay)</li>
+            <li>Rate-limit agent calls to prevent abuse and runaway costs</li>
+            <li>Use content safety filters (Azure Content Safety, OpenAI moderation) for user-facing agents</li>
+            <li>Isolate agent tool permissions — apply principle of least privilege</li>
+          </ul>
+        </section>
+
+        <!-- ═══════════════════════════════════════ COMPARISON ═══════════════════════════════════════ -->
+        <section id="comparison" role="article">
+          <h1>⚖️ LangChain vs LangGraph</h1>
+          <span class="badge">comparison</span> <span class="badge">when-to-use</span> <span class="badge">decision</span>
+
+          <div class="callout">
+            <strong>Short answer:</strong> Use <strong>LangChain</strong> when you want fast development. Use <strong>LangGraph</strong> when you need precise control.
+          </div>
+
+          <h2>Decision Tree</h2>
+          <div class="mermaid">
+flowchart TD
+    A[Building an AI Agent?] --> B{Simple tool-calling loop?}
+    B -- Yes --> C[Use LangChain create_agent]
+    B -- No --> D{Custom workflow needed?}
+    D -- No --> C
+    D -- Yes --> E{Multi-step with branching?}
+    E -- No --> C
+    E -- Yes --> F[Use LangGraph]
+    F --> G{Need human approval steps?}
+    G -- Yes --> H[LangGraph + interrupt]
+    G -- No --> I{Multi-agent coordination?}
+    I -- Yes --> J[LangGraph Multi-Agent]
+    I -- No --> K[LangGraph StateGraph]
+    style C fill:#dbeafe,stroke:#3b82f6
+    style F fill:#dcfce7,stroke:#10b981
+    style H fill:#fef3c7,stroke:#f59e0b
+    style J fill:#e9d5ff,stroke:#a855f7
+          </div>
+
+          <h2>Feature Comparison</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Aspect</th><th>LangChain</th><th>LangGraph</th></tr></thead>
+            <tbody>
+              <tr><td>Development speed</td><td>⚡ Fastest — <code>create_agent</code> in 5 lines</td><td>🔧 More code but full control</td></tr>
+              <tr><td>Customization</td><td>Limited to prebuilt patterns</td><td>✅ Any topology possible</td></tr>
+              <tr><td>Workflow type</td><td>Linear (think → act → observe → repeat)</td><td>Any DAG or cyclic graph</td></tr>
+              <tr><td>State management</td><td>Managed automatically</td><td>Explicit TypedDict + reducers</td></tr>
+              <tr><td>Branching logic</td><td>Limited</td><td>✅ Native conditional edges</td></tr>
+              <tr><td>Human-in-the-loop</td><td>Basic (via LangGraph internally)</td><td>✅ Native interrupt API</td></tr>
+              <tr><td>Multi-agent</td><td>Limited</td><td>✅ Supervisor, sub-graphs, handoffs</td></tr>
+              <tr><td>Parallel execution</td><td>Via LCEL RunnableParallel</td><td>✅ Native fan-out/fan-in edges</td></tr>
+              <tr><td>Debugging</td><td>LangSmith tracing</td><td>LangSmith + state inspection + replay</td></tr>
+              <tr><td>Learning curve</td><td>Low</td><td>Medium</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Common Use Cases</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Use Case</th><th>Recommended</th><th>Reason</th></tr></thead>
+            <tbody>
+              <tr><td>Simple Q&amp;A chatbot with tools</td><td>LangChain</td><td>Fast, prebuilt ReAct pattern</td></tr>
+              <tr><td>RAG pipeline</td><td>LangChain</td><td>Rich retriever ecosystem</td></tr>
+              <tr><td>Data extraction</td><td>LangChain + <code>with_structured_output</code></td><td>Simple, reliable</td></tr>
+              <tr><td>Document review workflow</td><td>LangGraph</td><td>Multi-step, human approval needed</td></tr>
+              <tr><td>Research + write + review pipeline</td><td>LangGraph Multi-Agent</td><td>Specialist agents, supervisor</td></tr>
+              <tr><td>Long-running background tasks</td><td>LangGraph</td><td>Durable execution, checkpointing</td></tr>
+              <tr><td>Customer support agent</td><td>LangGraph</td><td>Complex routing, escalation flows</td></tr>
+              <tr><td>Code generation + testing pipeline</td><td>LangGraph</td><td>Conditional retry loops</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ═══════════════════════════════════════ RESOURCES ═══════════════════════════════════════ -->
+        <section id="resources" role="article">
+          <h1>📚 Resources &amp; Further Learning</h1>
+          <span class="badge">docs</span> <span class="badge">links</span> <span class="badge">references</span>
+
+          <h2>Official Documentation</h2>
+          <ul>
+            <li><a href="https://docs.langchain.com/oss/python/langchain/overview" target="_blank">LangChain Python Overview</a></li>
+            <li><a href="https://docs.langchain.com/oss/python/langgraph/overview" target="_blank">LangGraph Python Overview</a></li>
+            <li><a href="https://docs.langchain.com/oss/python/langchain/quickstart" target="_blank">LangChain Quickstart</a></li>
+            <li><a href="https://docs.langchain.com/oss/python/langgraph/quickstart" target="_blank">LangGraph Quickstart</a></li>
+            <li><a href="https://docs.langchain.com/langsmith/home" target="_blank">LangSmith Documentation</a></li>
+            <li><a href="https://docs.langchain.com/oss/python/integrations/providers/overview" target="_blank">Integration Providers</a></li>
+            <li><a href="https://docs.langchain.com/oss/python/langgraph/workflows-agents" target="_blank">LangGraph Agent Architectures</a></li>
+            <li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts" target="_blank">LangGraph Human-in-the-Loop</a></li>
+          </ul>
+
+          <h2>Key Python Packages</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Package</th><th>Purpose</th><th>Install</th></tr></thead>
+            <tbody>
+              <tr><td><code>langchain</code></td><td>Main framework — agents, chains, memory</td><td><code>pip install langchain</code></td></tr>
+              <tr><td><code>langchain-core</code></td><td>Core abstractions, LCEL, messages</td><td><code>pip install langchain-core</code></td></tr>
+              <tr><td><code>langchain-community</code></td><td>Community integrations (loaders, tools)</td><td><code>pip install langchain-community</code></td></tr>
+              <tr><td><code>langchain-openai</code></td><td>OpenAI &amp; Azure OpenAI</td><td><code>pip install langchain-openai</code></td></tr>
+              <tr><td><code>langchain-anthropic</code></td><td>Anthropic Claude</td><td><code>pip install langchain-anthropic</code></td></tr>
+              <tr><td><code>langchain-google-genai</code></td><td>Google Gemini</td><td><code>pip install langchain-google-genai</code></td></tr>
+              <tr><td><code>langchain-ollama</code></td><td>Local models via Ollama</td><td><code>pip install langchain-ollama</code></td></tr>
+              <tr><td><code>langgraph</code></td><td>Agent orchestration runtime</td><td><code>pip install langgraph</code></td></tr>
+              <tr><td><code>langsmith</code></td><td>Observability &amp; evaluation</td><td><code>pip install langsmith</code></td></tr>
+              <tr><td><code>langchain-text-splitters</code></td><td>Text chunking for RAG</td><td><code>pip install langchain-text-splitters</code></td></tr>
+            </tbody>
+          </table>
+
+          <h2>GitHub &amp; Community</h2>
+          <ul>
+            <li><a href="https://github.com/langchain-ai/langchain" target="_blank">LangChain GitHub Repository</a></li>
+            <li><a href="https://github.com/langchain-ai/langgraph" target="_blank">LangGraph GitHub Repository</a></li>
+            <li><a href="https://github.com/langchain-ai/langchain/tree/master/cookbook" target="_blank">LangChain Cookbook — Real-world examples</a></li>
+            <li><a href="https://academy.langchain.com/courses/intro-to-langgraph" target="_blank">LangChain Academy — Intro to LangGraph (free)</a></li>
+            <li><a href="https://academy.langchain.com/courses/foundation-introduction-to-langchain-python" target="_blank">LangChain Academy — Intro to LangChain Python (free)</a></li>
+            <li><a href="https://forum.langchain.com/" target="_blank">LangChain Community Forum</a></li>
+            <li><a href="https://changelog.langchain.com/" target="_blank">LangChain Changelog</a></li>
+          </ul>
+
+          <h2>Learning Path</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Role</th><th>Start With</th><th>Then Explore</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Beginner</strong></td><td>Overview → LangChain Core Concepts → Models → Prompts</td><td>LCEL → Tools → Agents</td></tr>
+              <tr><td><strong>Chatbot Developer</strong></td><td>Chat Models → Prompts → Memory → create_agent</td><td>LangGraph HITL → Streaming</td></tr>
+              <tr><td><strong>RAG Developer</strong></td><td>Document Loaders → Text Splitters → Vector Stores → RAG Chain</td><td>Advanced Retrieval → Evaluation with LangSmith</td></tr>
+              <tr><td><strong>Agent Engineer</strong></td><td>LangChain Agents → LangGraph Core Concepts → StateGraph</td><td>Multi-Agent → HITL → Memory &amp; Persistence</td></tr>
+              <tr><td><strong>Production / Ops</strong></td><td>Best Practices → LangSmith → Checkpointers</td><td>PostgresSaver → Multi-Agent → Security</td></tr>
+            </tbody>
+          </table>
+
+          <hr />
+          <div class="document-footer">
+            <p>
+              <strong>Last Updated:</strong> April 2026 |
+              <strong>Curated by:</strong> Murthy Vepa with ❤️ |
+              <strong>Powered by:</strong> GitHub Copilot
+            </p>
+          </div>
+        </section>
+
+        </div>
+      </main>
+    </div>
+
+    <nav class="controls" role="navigation" aria-label="Pagination">
+      <div class="btn-group" role="group">
+        <button class="btn btn-outline-info btn-sm" id="prevBtn" title="Previous" aria-label="Previous concept">&nbsp;&lt;&nbsp;</button>
+        <button class="btn btn-outline-info btn-sm" id="nextBtn" title="Next" aria-label="Next concept">&nbsp;&gt;&nbsp;</button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="sidebarLabel">Contents</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <ul class="list-group list-group-flush w-100" id="tocMobile"></ul>
+    </div>
+  </div>
+
+  <script>
+    // ---- Mermaid Initialization ----
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.mermaid) {
+        window.mermaid.contentLoaded();
+      }
+    });
+
+    // ---- Configuration ----
+    const sectionConfig = [
+      // Overview
+      { id: "overview", title: "📖 Overview", tags: ["intro", "overview", "ai", "sdk"] },
+
+      // LangChain
+      { id: "langchain", title: "🔗 LangChain", tags: ["langchain", "framework", "agents"] },
+      { id: "langchain-overview",       title: "📖 LangChain Overview",   parent: "langchain", tags: ["langchain", "overview"] },
+      { id: "langchain-core-concepts",  title: "🧩 Core Concepts",        parent: "langchain", tags: ["langchain", "concepts", "components"] },
+      { id: "langchain-models",         title: "🤖 Models & Providers",   parent: "langchain", tags: ["langchain", "models", "llm", "chat"] },
+      { id: "langchain-prompts",        title: "📋 Prompts & Templates",  parent: "langchain", tags: ["langchain", "prompts", "templates"] },
+      { id: "langchain-lcel",           title: "⛓️ LCEL & Chains",        parent: "langchain", tags: ["langchain", "lcel", "chains", "pipe"] },
+      { id: "langchain-tools",          title: "🔧 Tools",                parent: "langchain", tags: ["langchain", "tools", "functions"] },
+      { id: "langchain-agents",         title: "🤖 Agents",               parent: "langchain", tags: ["langchain", "agents", "react"] },
+      { id: "langchain-memory",         title: "🧠 Memory",               parent: "langchain", tags: ["langchain", "memory", "conversation"] },
+      { id: "langchain-rag",            title: "📚 RAG",                  parent: "langchain", tags: ["langchain", "rag", "retrieval"] },
+      { id: "langchain-output-parsers", title: "📤 Output Parsers",       parent: "langchain", tags: ["langchain", "output", "parsers"] },
+
+      // LangGraph
+      { id: "langgraph", title: "🕸️ LangGraph", tags: ["langgraph", "graph", "orchestration"] },
+      { id: "langgraph-overview",       title: "📖 LangGraph Overview",   parent: "langgraph", tags: ["langgraph", "overview"] },
+      { id: "langgraph-core-concepts",  title: "🧩 Core Concepts",        parent: "langgraph", tags: ["langgraph", "concepts", "graph", "state"] },
+      { id: "langgraph-building",       title: "🔨 Building a Graph",     parent: "langgraph", tags: ["langgraph", "stategraph", "nodes", "edges"] },
+      { id: "langgraph-state",          title: "💾 State Management",     parent: "langgraph", tags: ["langgraph", "state", "reducers"] },
+      { id: "langgraph-conditional",    title: "🔀 Conditional Edges",    parent: "langgraph", tags: ["langgraph", "conditional", "routing"] },
+      { id: "langgraph-human-loop",     title: "🧑 Human-in-the-Loop",    parent: "langgraph", tags: ["langgraph", "human", "interrupt"] },
+      { id: "langgraph-memory",         title: "🧠 Memory & Persistence", parent: "langgraph", tags: ["langgraph", "memory", "persistence"] },
+      { id: "langgraph-multi-agent",    title: "🤝 Multi-Agent Workflows",parent: "langgraph", tags: ["langgraph", "multi-agent", "supervisor"] },
+      { id: "langgraph-streaming",      title: "📡 Streaming",            parent: "langgraph", tags: ["langgraph", "streaming", "ux"] },
+
+      // Standalone
+      { id: "best-practices", title: "⭐ Best Practices",          tags: ["best-practices", "tips", "guidelines"] },
+      { id: "comparison",     title: "⚖️ LangChain vs LangGraph",  tags: ["comparison", "when-to-use"] },
+      { id: "resources",      title: "📚 Resources",               tags: ["docs", "links", "references"] }
+    ];
+
+    // ---- State ----
+    const state = { current: 0, filtered: sectionConfig.map((_, i) => i) };
+    const collapsedState = {};
+
+    // ---- DOM References ----
+    const els = {
+      content: document.getElementById('content'),
+      toc: document.getElementById('toc'),
+      tocMobile: document.getElementById('tocMobile'),
+      prev: document.getElementById('prevBtn'),
+      next: document.getElementById('nextBtn'),
+      sidebar: document.getElementById('sidebar'),
+      toggleSidebar: document.getElementById('toggleSidebar'),
+      themeToggle: document.getElementById('themeToggle'),
+      search: document.getElementById('searchInput')
+    };
+
+    // ---- Build Table of Contents ----
+    function buildTOC() {
+      [els.toc, els.tocMobile].forEach(c => { if (c) c.innerHTML = ''; });
+      const parentMap = new Map();
+
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        if (s.parent) {
+          if (!parentMap.has(s.parent)) {
+            parentMap.set(s.parent, []);
+          }
+          parentMap.get(s.parent).push(s.id);
+        }
+      });
+
+      // Initialize collapsed state for parents (default: collapsed)
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        if (!s.parent && parentMap.has(s.id)) {
+          if (collapsedState[s.id] === undefined) {
+            collapsedState[s.id] = true;
+          }
+        }
+      });
+
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        const isSubItem = !!s.parent;
+        const hasChildren = parentMap.has(s.id);
+
+        // Desktop sidebar
+        const liDesktop = document.createElement('li');
+        liDesktop.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liDesktop.classList.add('has-children');
+          if (collapsedState[s.id]) liDesktop.classList.add('collapsed');
+        }
+        if (isSubItem && collapsedState[s.parent]) liDesktop.classList.add('collapsed');
+        liDesktop.dataset.sectionId = s.id;
+
+        const aDesktop = document.createElement('a');
+        aDesktop.href = `#${s.id}`;
+        aDesktop.textContent = s.title;
+        aDesktop.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (hasChildren) { toggleCollapse(s.id, 'desktop'); }
+          else { navigateToId(s.id); closeSidebar(); }
+        });
+        liDesktop.appendChild(aDesktop);
+        els.toc.appendChild(liDesktop);
+
+        // Mobile offcanvas
+        const liMobile = document.createElement('li');
+        liMobile.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liMobile.classList.add('has-children');
+          if (collapsedState[s.id]) liMobile.classList.add('collapsed');
+        }
+        if (isSubItem && collapsedState[s.parent]) liMobile.classList.add('collapsed');
+        liMobile.dataset.sectionId = s.id;
+
+        const aMobile = document.createElement('a');
+        aMobile.href = `#${s.id}`;
+        aMobile.textContent = s.title;
+        aMobile.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (hasChildren) { toggleCollapse(s.id, 'mobile'); }
+          else { navigateToId(s.id); closeSidebar(); }
+        });
+        liMobile.appendChild(aMobile);
+        els.tocMobile.appendChild(liMobile);
+      });
+      highlightActiveTOC();
+    }
+
+    function toggleCollapse(parentId, context) {
+      collapsedState[parentId] = !collapsedState[parentId];
+      const isCollapsed = collapsedState[parentId];
+      const containers = context === 'desktop' ? [els.toc] : context === 'mobile' ? [els.tocMobile] : [els.toc, els.tocMobile];
+      containers.forEach(container => {
+        const parentItem = container.querySelector(`li[data-section-id="${parentId}"]`);
+        if (parentItem) {
+          if (isCollapsed) parentItem.classList.add('collapsed');
+          else parentItem.classList.remove('collapsed');
+        }
+        const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+        childItems.forEach(child => {
+          const childSection = sectionConfig.find(s => s.id === child.dataset.sectionId);
+          if (childSection && childSection.parent === parentId) {
+            if (isCollapsed) child.classList.add('collapsed');
+            else child.classList.remove('collapsed');
+          }
+        });
+      });
+    }
+
+    function setActiveByIndex(i) {
+      const ids = state.filtered.map(idx => sectionConfig[idx].id);
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      const id = ids[i];
+      const active = document.getElementById(id);
+      if (active) {
+        active.classList.add('active');
+        active.setAttribute('tabindex', '-1');
+        active.focus({ preventScroll: true });
+      }
+      updateControls();
+      highlightActiveTOC();
+      updateURLHash(id);
+    }
+
+    function updateControls() {
+      const count = state.filtered.length;
+      els.prev.disabled = state.index <= 0;
+      els.next.disabled = state.index >= count - 1;
+    }
+
+    function filterTOC(query) {
+      const q = query.trim().toLowerCase();
+      state.filtered = sectionConfig
+        .map((s, i) => ({ s, i }))
+        .filter(({ s }) => s.title.toLowerCase().includes(q) || s.tags.some(t => t.toLowerCase().includes(q)))
+        .map(({ i }) => i);
+      state.index = Math.min(state.index, Math.max(0, state.filtered.length - 1));
+      buildTOC();
+      setActiveByIndex(state.index);
+    }
+
+    function navigate(delta) {
+      const count = state.filtered.length;
+      const nextIndex = Math.min(Math.max(state.index + delta, 0), count - 1);
+      if (nextIndex !== state.index) {
+        state.index = nextIndex;
+        setActiveByIndex(state.index);
+        const contentEl = document.querySelector('.content');
+        if (contentEl) contentEl.scrollTop = 0;
+      }
+    }
+
+    function navigateToId(id) {
+      const idxInFiltered = state.filtered.findIndex(fi => sectionConfig[fi].id === id);
+      if (idxInFiltered !== -1) {
+        state.index = idxInFiltered;
+        setActiveByIndex(state.index);
+        const contentEl = document.querySelector('.content');
+        if (contentEl) contentEl.scrollTop = 0;
+      } else {
+        state.filtered = sectionConfig.map((_, i) => i);
+        buildTOC();
+        navigateToId(id);
+      }
+    }
+
+    function updateURLHash(id) {
+      const url = new URL(window.location);
+      url.hash = id;
+      history.replaceState(null, '', url);
+    }
+
+    function highlightActiveTOC() {
+      const ids = state.filtered.map(idx => sectionConfig[idx].id);
+      const activeId = ids[state.index];
+      const activeSection = sectionConfig.find(s => s.id === activeId);
+
+      if (activeSection && activeSection.parent) {
+        if (collapsedState[activeSection.parent]) {
+          collapsedState[activeSection.parent] = false;
+          [els.toc, els.tocMobile].forEach(container => {
+            const parentItem = container.querySelector(`li[data-section-id="${activeSection.parent}"]`);
+            if (parentItem) parentItem.classList.remove('collapsed');
+            Array.from(container.querySelectorAll('li.list-group-sub-item')).forEach(child => {
+              const childSection = sectionConfig.find(s => s.id === child.dataset.sectionId);
+              if (childSection && childSection.parent === activeSection.parent) child.classList.remove('collapsed');
+            });
+          });
+        }
+      }
+
+      let activeDesktopElement = null;
+      els.toc.querySelectorAll('a').forEach(a => {
+        const isActive = a.getAttribute('href') === `#${activeId}`;
+        a.classList.toggle('active', isActive);
+        if (a.parentElement.classList.contains('list-group-sub-item')) a.parentElement.classList.toggle('active', isActive);
+        if (isActive) activeDesktopElement = a.parentElement;
+      });
+
+      let activeMobileElement = null;
+      els.tocMobile.querySelectorAll('a').forEach(a => {
+        const isActive = a.getAttribute('href') === `#${activeId}`;
+        a.classList.toggle('active', isActive);
+        if (a.parentElement.classList.contains('list-group-sub-item')) a.parentElement.classList.toggle('active', isActive);
+        if (isActive) activeMobileElement = a.parentElement;
+      });
+
+      if (activeDesktopElement && els.sidebar) {
+        setTimeout(() => {
+          if (activeDesktopElement.offsetParent !== null && !activeDesktopElement.classList.contains('collapsed')) {
+            activeDesktopElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+          }
+        }, 150);
+      }
+      if (activeMobileElement) {
+        setTimeout(() => {
+          if (activeMobileElement.offsetParent !== null && !activeMobileElement.classList.contains('collapsed')) {
+            activeMobileElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+          }
+        }, 150);
+      }
+    }
+
+    function openSidebar() {
+      const offcanvas = new bootstrap.Offcanvas(document.getElementById('sidebarOffcanvas'));
+      offcanvas.show();
+    }
+    function closeSidebar() {
+      const offcanvasElement = document.getElementById('sidebarOffcanvas');
+      const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+      if (offcanvas) offcanvas.hide();
+    }
+
+    // ---- Events ----
+    if (els.prev) els.prev.addEventListener('click', () => navigate(-1));
+    if (els.next) els.next.addEventListener('click', () => navigate(1));
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') navigate(-1);
+      else if (e.key === 'ArrowRight') navigate(1);
+      else if (e.key === 'Escape') closeSidebar();
+    });
+
+    window.addEventListener('hashchange', () => {
+      const id = location.hash.replace('#', '');
+      if (id) navigateToId(id);
+    });
+
+    if (els.toggleSidebar) els.toggleSidebar.addEventListener('click', () => openSidebar());
+
+    (function () {
+      try {
+        const saved = localStorage.getItem('concepts-theme');
+        if (saved) {
+          document.documentElement.setAttribute('data-theme', saved);
+          if (els.themeToggle) els.themeToggle.textContent = saved === 'light' ? '🌗' : '🌙';
+        }
+      } catch {}
+    })();
+
+    // Search
+    if (els.search) {
+      els.search.addEventListener('input', (e) => filterTOC(e.target.value));
+    }
+
+    // Initial render
+    buildTOC();
+    const initialId = location.hash.replace('#', '');
+    if (initialId) {
+      navigateToId(initialId);
+    } else {
+      setActiveByIndex(0);
+      const contentEl = document.querySelector('.content');
+      if (contentEl) contentEl.scrollTop = 0;
+    }
+
+  </script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

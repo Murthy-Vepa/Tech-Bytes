@@ -386,6 +386,30 @@
     .badge { background: var(--accent); color: white; border: none; font-size: 0.6rem; padding: 0.25rem 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-top: 0.5rem; margin-right: 0.35rem; }
     .list-group-item a:hover .badge { opacity: 1; background: var(--accent); color: white; }
     .list-group-item a.active .badge { background: rgba(255, 255, 255, 0.3); color: white; border-color: rgba(255, 255, 255, 0.6); font-weight: 600; opacity: 1; }
+    
+    /* Collapsible menu styles */
+    .list-group-item.has-children > a::after {
+      content: '▼';
+      position: absolute;
+      right: 1rem;
+      font-size: 0.65rem;
+      opacity: 0.6;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    .list-group-item.has-children.collapsed > a::after {
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    .list-group-item.has-children > a:hover::after {
+      opacity: 1;
+    }
+    .list-group-item.has-children > a {
+      cursor: pointer;
+      user-select: none;
+    }
+    .list-group-sub-item.collapsed {
+      display: none;
+    }
         
     /* Content */
     .content { width: 100%; max-width: 100%; margin: 0 auto; background: #ffffff; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
@@ -1430,6 +1454,13 @@
           <h1>🎯 Copilot Modes</h1>
           <span class="badge">modes</span>
           <span class="badge">interaction</span>
+        </section>
+
+        <section id="copilot-modes-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
           
           <p>GitHub Copilot offers multiple interaction modes to suit different development workflows and tasks. Each mode is optimized for specific scenarios, from quick questions to complex multi-file edits.</p>
 
@@ -2503,6 +2534,13 @@ Agent Actions:
           <span class="badge">metrics</span>
           <span class="badge">productivity</span>
           <span class="badge">measurement</span>
+        </section>
+
+        <section id="copilot-metrics-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
           
           <p>GitHub Copilot provides comprehensive metrics to measure developer productivity, code quality, and AI adoption. These metrics help organizations understand ROI and optimize their development workflows.</p>
 
@@ -4019,6 +4057,13 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
           <span class="badge">models</span>
           <span class="badge">AI</span>
           <span class="badge">language-models</span>
+        </section>
+
+        <section id="llm-models-introduction" role="article">
+          <h1>📖 Introduction</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">fundamentals</span>
           
           <p>GitHub Copilot leverages multiple Large Language Models (LLMs) from leading AI providers. Understanding these models helps you choose the right one for your tasks and optimize your development workflow.</p>
 
@@ -4148,6 +4193,233 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
             <li><strong>Multi-Modal:</strong> Understanding images, diagrams, and UI mockups</li>
             <li><strong>Safety & Alignment:</strong> Better refusal of harmful requests</li>
           </ul>
+
+          <h2>📋 Comprehensive Model Comparison Table</h2>
+          
+          <p>A complete overview of all available models with their capabilities, context sizes, and key features. This table provides quick access to essential model information for informed decision-making.</p>
+          
+          <div style="overflow-x: auto;">
+            <table class="table table-bordered table-hover" style="font-size: 0.9rem;">
+              <thead style="background-color: #f8f9fa; position: sticky; top: 0;">
+                <tr>
+                  <th style="min-width: 180px;">Model Name</th>
+                  <th style="min-width: 120px;">Provider</th>
+                  <th style="min-width: 120px;">Context Size</th>
+                  <th style="min-width: 120px;">Output Size</th>
+                  <th style="min-width: 100px;">Tools</th>
+                  <th style="min-width: 100px;">Vision</th>
+                  <th style="min-width: 150px;">Best For</th>
+                  <th style="min-width: 100px;">Speed</th>
+                  <th style="min-width: 100px;">Released</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Claude Models -->
+                <tr style="background-color: #f0e8ff;">
+                  <td><strong>Claude Haiku 4.5</strong></td>
+                  <td>Anthropic</td>
+                  <td>500K tokens</td>
+                  <td>32K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>High-speed development, real-time assistance</td>
+                  <td>⚡⚡⚡ Very Fast</td>
+                  <td>Jan 2026</td>
+                </tr>
+                <tr style="background-color: #f0e8ff;">
+                  <td><strong>Claude Opus 4.5</strong></td>
+                  <td>Anthropic</td>
+                  <td>500K tokens</td>
+                  <td>32K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Maximum quality, complex reasoning, critical code</td>
+                  <td>⚡ Slower (Quality)</td>
+                  <td>Jan 2026</td>
+                </tr>
+                <tr style="background-color: #f0e8ff;">
+                  <td><strong>Claude Opus 4.6</strong></td>
+                  <td>Anthropic</td>
+                  <td>500K tokens</td>
+                  <td>64K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Enhanced output, long-form generation, enterprise</td>
+                  <td>⚡ Slower (Quality)</td>
+                  <td>Feb 2026</td>
+                </tr>
+                <tr style="background-color: #f0e8ff;">
+                  <td><strong>Claude Sonnet 4.5</strong></td>
+                  <td>Anthropic</td>
+                  <td>1M tokens</td>
+                  <td>32K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Repository-wide analysis, balanced excellence</td>
+                  <td>⚡⚡ Fast</td>
+                  <td>Jan 2026</td>
+                </tr>
+                <tr style="background-color: #f0e8ff;">
+                  <td><strong>Claude Sonnet 4.6</strong></td>
+                  <td>Anthropic</td>
+                  <td>1M tokens</td>
+                  <td>32K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Enhanced performance, latest generation</td>
+                  <td>⚡⚡ Fast</td>
+                  <td>Feb 2026</td>
+                </tr>
+                
+                <!-- OpenAI GPT Models -->
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-4.1</strong></td>
+                  <td>OpenAI</td>
+                  <td>111K tokens</td>
+                  <td>16K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Enhanced GPT-4, improved reasoning</td>
+                  <td>⚡⚡ Medium</td>
+                  <td>Oct 2024</td>
+                </tr>
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-4o</strong></td>
+                  <td>OpenAI</td>
+                  <td>64K tokens</td>
+                  <td>4K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Multi-modal, UI/UX, real-time</td>
+                  <td>⚡⚡⚡ Very Fast</td>
+                  <td>May 2024</td>
+                </tr>
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-5</strong></td>
+                  <td>OpenAI</td>
+                  <td>256K tokens</td>
+                  <td>64K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Enterprise-scale, advanced reasoning</td>
+                  <td>⚡⚡ Medium</td>
+                  <td>Sep 2025</td>
+                </tr>
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-5 mini</strong></td>
+                  <td>OpenAI</td>
+                  <td>128K tokens</td>
+                  <td>64K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Cost-effective, fast, routine tasks</td>
+                  <td>⚡⚡⚡ Very Fast</td>
+                  <td>Sep 2025</td>
+                </tr>
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-5.1</strong></td>
+                  <td>OpenAI</td>
+                  <td>512K tokens</td>
+                  <td>64K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Repository-wide analysis, large refactors</td>
+                  <td>⚡⚡ Medium</td>
+                  <td>Dec 2025</td>
+                </tr>
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-5.1-Codex-Max</strong></td>
+                  <td>OpenAI</td>
+                  <td>1M tokens</td>
+                  <td>128K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Entire repositories, multi-repo projects</td>
+                  <td>⚡⚡ Medium</td>
+                  <td>Dec 2025</td>
+                </tr>
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-5.2</strong></td>
+                  <td>OpenAI</td>
+                  <td>512K tokens</td>
+                  <td>64K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Balanced excellence, modern frameworks</td>
+                  <td>⚡⚡⚡ Very Fast</td>
+                  <td>Jan 2026</td>
+                </tr>
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-5.2-Codex</strong></td>
+                  <td>OpenAI</td>
+                  <td>512K tokens</td>
+                  <td>128K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Code specialization, algorithm optimization</td>
+                  <td>⚡⚡ Medium</td>
+                  <td>Jan 2026</td>
+                </tr>
+                <tr style="background-color: #e6f7ff;">
+                  <td><strong>GPT-5.3-Codex</strong></td>
+                  <td>OpenAI</td>
+                  <td>512K tokens</td>
+                  <td>128K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Latest code generation, enhanced accuracy</td>
+                  <td>⚡⚡ Medium</td>
+                  <td>Feb 2026</td>
+                </tr>
+                
+                <!-- Google Gemini Models -->
+                <tr style="background-color: #fff3e0;">
+                  <td><strong>Gemini 2.5 Pro</strong></td>
+                  <td>Google</td>
+                  <td>2M tokens (10M exp)</td>
+                  <td>64K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Advanced reasoning, multi-modal, massive context</td>
+                  <td>⚡⚡ Fast</td>
+                  <td>Dec 2024</td>
+                </tr>
+                <tr style="background-color: #fff3e0;">
+                  <td><strong>Gemini 1.5 Pro</strong></td>
+                  <td>Google</td>
+                  <td>2M tokens</td>
+                  <td>64K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Massive codebases, multi-modal development</td>
+                  <td>⚡⚡ Fast</td>
+                  <td>Feb 2024</td>
+                </tr>
+                <tr style="background-color: #fff3e0;">
+                  <td><strong>Gemini 1.5 Flash</strong></td>
+                  <td>Google</td>
+                  <td>1M tokens</td>
+                  <td>64K tokens</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                  <td>Real-time completions, cost-effective</td>
+                  <td>⚡⚡⚡ Very Fast</td>
+                  <td>May 2024</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout" style="background-color: #e7f3ff; border-left: 4px solid #0078d4; margin-top: 1rem;">
+            <strong>📊 Reading This Table</strong>
+            <ul>
+              <li><strong>Context Size:</strong> Maximum input tokens the model can process</li>
+              <li><strong>Output Size:</strong> Maximum tokens the model can generate in response</li>
+              <li><strong>Tools:</strong> Supports function calling and tool use</li>
+              <li><strong>Vision:</strong> Can analyze images, diagrams, and UI mockups</li>
+              <li><strong>Speed Ratings:</strong> ⚡⚡⚡ = Very Fast | ⚡⚡ = Fast/Medium | ⚡ = Slower (Quality Focus)</li>
+            </ul>
+          </div>
 
           <h2>Choosing Your Model</h2>
           
@@ -4969,6 +5241,34 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
             </li>
           </ul>
 
+          <h4>GPT-4.1</h4>
+          <ul>
+            <li><strong>Released:</strong> October 2024</li>
+            <li><strong>Context Window:</strong> 111K tokens</li>
+            <li><strong>Output Size:</strong> 16K tokens</li>
+            <li><strong>Best For:</strong> Enhanced reasoning over GPT-4, improved instruction following</li>
+            <li><strong>Tier:</strong> Enhanced GPT-4 generation</li>
+            <li><strong>Strengths:</strong>
+              <ul>
+                <li>Refined reasoning capabilities over base GPT-4</li>
+                <li>Better instruction following and alignment</li>
+                <li>Improved code generation accuracy</li>
+                <li>Enhanced multi-turn conversation handling</li>
+                <li>Better context retention across long chats</li>
+                <li>More consistent output quality</li>
+              </ul>
+            </li>
+            <li><strong>Ideal Use Cases:</strong>
+              <ul>
+                <li>Complex coding tasks requiring precise instructions</li>
+                <li>Multi-step refactoring projects</li>
+                <li>Extended coding sessions with context preservation</li>
+                <li>Tasks requiring nuanced understanding of requirements</li>
+                <li>Bridge between GPT-4 and GPT-5 capabilities</li>
+              </ul>
+            </li>
+          </ul>
+
           <h3>GPT-5 Series (Next Generation)</h3>
           <p>The latest generation of GPT models bringing breakthrough improvements in reasoning, context understanding, and code generation capabilities.</p>
 
@@ -4992,6 +5292,34 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
                 <li>Microservices architecture design</li>
                 <li>Complex algorithm implementation</li>
                 <li>Enterprise-level code refactoring</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>GPT-5 mini</h4>
+          <ul>
+            <li><strong>Released:</strong> September 2025</li>
+            <li><strong>Context Window:</strong> 128K tokens</li>
+            <li><strong>Output Size:</strong> 64K tokens</li>
+            <li><strong>Best For:</strong> Cost-effective GPT-5 capabilities, fast responses, routine development tasks</li>
+            <li><strong>Tier:</strong> Optimized speed/cost variant of GPT-5</li>
+            <li><strong>Strengths:</strong>
+              <ul>
+                <li>70% of GPT-5 capabilities at 50% of the cost</li>
+                <li>2x faster inference than GPT-5</li>
+                <li>Excellent for high-throughput scenarios</li>
+                <li>Strong performance on routine coding tasks</li>
+                <li>Better than GPT-4 for most common use cases</li>
+                <li>Optimized latency for real-time applications</li>
+              </ul>
+            </li>
+            <li><strong>Ideal Use Cases:</strong>
+              <ul>
+                <li>Daily development workflow</li>
+                <li>Real-time code completion</li>
+                <li>Rapid prototyping and iteration</li>
+                <li>Cost-sensitive projects with high volume</li>
+                <li>Teams that need GPT-5 quality with lower costs</li>
               </ul>
             </li>
           </ul>
@@ -5096,6 +5424,67 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
                 <li>Real-time pair programming</li>
                 <li>Modern web application development</li>
                 <li>High-velocity teams needing speed + quality</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>GPT-5.2-Codex</h4>
+          <ul>
+            <li><strong>Released:</strong> January 2026</li>
+            <li><strong>Context Window:</strong> 512K tokens</li>
+            <li><strong>Output Size:</strong> 128K tokens (2x GPT-5.2)</li>
+            <li><strong>Best For:</strong> Code-specialized generation, algorithm optimization, large code outputs</li>
+            <li><strong>Specialization:</strong> Fine-tuned for code generation with enhanced output capacity</li>
+            <li><strong>Strengths:</strong>
+              <ul>
+                <li>Code-first training with deeper software engineering knowledge</li>
+                <li>2x output capacity enables complete file generation</li>
+                <li>Superior algorithm design and optimization</li>
+                <li>Better understanding of coding patterns and idioms</li>
+                <li>Enhanced test generation and edge case coverage</li>
+                <li>Improved documentation generation</li>
+                <li>Strong performance on competitive programming problems</li>
+              </ul>
+            </li>
+            <li><strong>Ideal Use Cases:</strong>
+              <ul>
+                <li>Complete module and class generation</li>
+                <li>Complex algorithm implementations</li>
+                <li>Performance-critical code optimization</li>
+                <li>Comprehensive test suite creation</li>
+                <li>Large-scale code refactoring</li>
+                <li>Technical interview preparation</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>GPT-5.3-Codex</h4>
+          <ul>
+            <li><strong>Released:</strong> February 2026</li>
+            <li><strong>Context Window:</strong> 512K tokens</li>
+            <li><strong>Output Size:</strong> 128K tokens</li>
+            <li><strong>Best For:</strong> Latest code generation, enhanced accuracy, production-grade code</li>
+            <li><strong>Tier:</strong> Most recent code-specialized model</li>
+            <li><strong>Strengths:</strong>
+              <ul>
+                <li>Latest refinements in code generation accuracy (20% better than 5.2-Codex)</li>
+                <li>Enhanced understanding of 2026 frameworks and libraries</li>
+                <li>Better handling of modern language features (ES2026, Python 3.13, etc.)</li>
+                <li>Improved code consistency and maintainability</li>
+                <li>Superior error handling and edge case coverage</li>
+                <li>Enhanced security vulnerability detection</li>
+                <li>Better alignment with industry best practices</li>
+              </ul>
+            </li>
+            <li><strong>Ideal Use Cases:</strong>
+              <ul>
+                <li>Production-critical code generation</li>
+                <li>Latest framework implementations (2026+)</li>
+                <li>Security-sensitive applications</li>
+                <li>Enterprise-grade code quality requirements</li>
+                <li>Modern language feature adoption</li>
+                <li>Best-practice code architecture</li>
+                <li>Mission-critical systems development</li>
               </ul>
             </li>
           </ul>
@@ -5556,6 +5945,37 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
             </li>
           </ul>
 
+          <h4>Claude Sonnet 4.6</h4>
+          <ul>
+            <li><strong>Released:</strong> February 2026</li>
+            <li><strong>Context Window:</strong> 1M tokens (~2,500 pages)</li>
+            <li><strong>Output Size:</strong> 32K tokens (2x standard output)</li>
+            <li><strong>Best For:</strong> Large-scale refactoring, comprehensive documentation, complete module generation</li>
+            <li><strong>Tier:</strong> Latest flagship with enhanced output capacity</li>
+            <li><strong>Strengths:</strong>
+              <ul>
+                <li>Maintains 1M context with doubled output capacity (32K vs 16K)</li>
+                <li>10% improvement in reasoning accuracy over Sonnet 4.5</li>
+                <li>Enhanced multi-file code generation</li>
+                <li>Better handling of complex refactoring patterns</li>
+                <li>Improved consistency in large output generations</li>
+                <li>Superior at generating complete technical documents</li>
+                <li>Latest model improvements for 2026 frameworks</li>
+              </ul>
+            </li>
+            <li><strong>Ideal Use Cases:</strong>
+              <ul>
+                <li>Large-scale codebase refactoring across multiple files</li>
+                <li>Complete module and package implementation</li>
+                <li>Comprehensive architecture documentation</li>
+                <li>Full API specification generation</li>
+                <li>Enterprise migration planning documents</li>
+                <li>Multi-file feature implementations</li>
+                <li>Complete test suite generation</li>
+              </ul>
+            </li>
+          </ul>
+
           <h4>Claude Haiku 4.5</h4>
           <ul>
             <li><strong>Released:</strong> January 2026</li>
@@ -5579,6 +5999,82 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
                 <li>High-volume code reviews</li>
                 <li>Interactive pair programming</li>
                 <li>Fast multi-file analysis</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Claude Opus 4.5</h4>
+          <ul>
+            <li><strong>Released:</strong> January 2026</li>
+            <li><strong>Context Window:</strong> 500K tokens (~1,200 pages)</li>
+            <li><strong>Best For:</strong> Maximum quality code generation, mission-critical systems, complex reasoning</li>
+            <li><strong>Tier:</strong> Premium quality flagship model</li>
+            <li><strong>Strengths:</strong>
+              <ul>
+                <li>Best-in-class code quality and correctness</li>
+                <li>Superior reasoning for complex architectural decisions</li>
+                <li>Exceptional attention to detail and edge cases</li>
+                <li>Outstanding security and vulnerability analysis</li>
+                <li>Most thorough documentation generation</li>
+                <li>Excellent for safety-critical applications</li>
+                <li>Deep understanding of complex business logic</li>
+              </ul>
+            </li>
+            <li><strong>Ideal Use Cases:</strong>
+              <ul>
+                <li>Production-critical code requiring maximum quality</li>
+                <li>Financial services and healthcare applications</li>
+                <li>Security-sensitive implementations</li>
+                <li>Complex algorithm design and optimization</li>
+                <li>Comprehensive security audits and compliance</li>
+                <li>Mission-critical enterprise systems</li>
+                <li>Advanced architectural pattern implementation</li>
+              </ul>
+            </li>
+            <li><strong>Trade-offs:</strong>
+              <ul>
+                <li>Slower response times (quality-focused)</li>
+                <li>Higher cost per token (premium tier)</li>
+                <li>Best for critical tasks where quality trumps speed</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Claude Opus 4.6</h4>
+          <ul>
+            <li><strong>Released:</strong> February 2026</li>
+            <li><strong>Context Window:</strong> 500K tokens</li>
+            <li><strong>Output Size:</strong> 64K tokens (2x increase from 4.5)</li>
+            <li><strong>Best For:</strong> Long-form code generation, comprehensive documentation, large-scale implementations</li>
+            <li><strong>Tier:</strong> Enhanced premium flagship model</li>
+            <li><strong>Strengths:</strong>
+              <ul>
+                <li>Doubled output capacity enables complete module generation</li>
+                <li>Enhanced reasoning over previous Opus versions</li>
+                <li>Superior long-form technical writing</li>
+                <li>Better handling of complex multi-step implementations</li>
+                <li>Improved consistency across large outputs</li>
+                <li>Even more thorough edge case coverage</li>
+                <li>Advanced understanding of enterprise patterns</li>
+              </ul>
+            </li>
+            <li><strong>Ideal Use Cases:</strong>
+              <ul>
+                <li>Complete class and module implementations</li>
+                <li>Comprehensive API documentation suites</li>
+                <li>Large-scale architectural documentation</li>
+                <li>End-to-end feature implementations</li>
+                <li>Complex test suite generation</li>
+                <li>Multi-component system design</li>
+                <li>Extensive code review and analysis reports</li>
+              </ul>
+            </li>
+            <li><strong>Key Improvements over 4.5:</strong>
+              <ul>
+                <li><strong>Output Capacity:</strong> 64K tokens vs 32K tokens (2x)</li>
+                <li><strong>Reasoning:</strong> 15% improvement in complex problem-solving</li>
+                <li><strong>Consistency:</strong> Better maintenance of context across long outputs</li>
+                <li><strong>Documentation:</strong> Superior long-form technical writing</li>
               </ul>
             </li>
           </ul>
@@ -6930,20 +7426,30 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
     const sectionConfig = [
       { id: "what-is-copilot", title: "📖 Overview", tags: ["intro", "overview"] },
       { id: "copilot-features", title: "✨ Key Features", tags: ["features", "capabilities"] },
+      
+      // Copilot Modes
       { id: "copilot-modes", title: "🎯 Copilot Modes", tags: ["modes", "interaction"] },
+      { id: "copilot-modes-introduction", title: "📖 Introduction", parent: "copilot-modes", tags: ["overview", "introduction", "fundamentals"] },
       { id: "mode-ask", title: "💬 Ask Mode", tags: ["ask", "chat", "questions"], parent: "copilot-modes" },
       { id: "mode-plan", title: "📋 Plan Mode", tags: ["plan", "architecture", "design"], parent: "copilot-modes" },
       { id: "mode-edit", title: "✏️ Edit Mode", tags: ["edit", "refactor", "modify"], parent: "copilot-modes" },
       { id: "mode-agent", title: "🤖 Agent Mode", tags: ["agent", "autonomous", "workflow"], parent: "copilot-modes" },
+      
+      // Copilot Metrics
       { id: "copilot-metrics", title: "📊 Copilot Metrics", tags: ["metrics", "measurement", "analytics"] },
+      { id: "copilot-metrics-introduction", title: "📖 Introduction", parent: "copilot-metrics", tags: ["overview", "introduction", "fundamentals"] },
       { id: "metric-velocity", title: "⚡ Velocity Metrics", tags: ["velocity", "speed", "efficiency"], parent: "copilot-metrics" },
       { id: "metric-consistency", title: "🎯 Consistency Metrics", tags: ["consistency", "quality", "standards"], parent: "copilot-metrics" },
       { id: "metric-quality", title: "💎 Quality Metrics", tags: ["quality", "reliability", "performance"], parent: "copilot-metrics" },
+      
+      // LLM Models
       { id: "llm-models", title: "🧠 LLM Models", tags: ["models", "ai", "llm"] },
+      { id: "llm-models-introduction", title: "📖 Introduction", parent: "llm-models", tags: ["overview", "introduction", "fundamentals"] },
+      { id: "model-summary", title: "📊 Quick Comparison", tags: ["comparison", "cheatsheet", "summary"], parent: "llm-models" },
       { id: "model-gpt", title: "🔷 GPT", tags: ["gpt", "openai", "gpt4"], parent: "llm-models" },
       { id: "model-claude", title: "🟣 Claude", tags: ["claude", "anthropic", "sonnet"], parent: "llm-models" },
       { id: "model-gemini", title: "🔶 Gemini", tags: ["gemini", "google", "multimodal"], parent: "llm-models" },
-      { id: "model-summary", title: "📊 Quick Comparison", tags: ["comparison", "cheatsheet", "summary"], parent: "llm-models" },
+      
       { id: "best-practices", title: "⭐ Best Practices", tags: ["practices", "tips", "guidelines"] },
       { id: "use-cases", title: "💼 Use Cases", tags: ["examples", "scenarios", "applications"] },
       { id: "resources", title: "📚 Resources", tags: ["docs", "community", "learning"] }
@@ -6954,6 +7460,8 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
       index: 0,
       filtered: sectionConfig.map((_, i) => i), // indices
     };
+    
+    const collapsedState = {};
 
     const els = {
       toc: document.getElementById('toc'),
@@ -6972,20 +7480,61 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
       els.toc.innerHTML = '';
       els.tocMobile.innerHTML = '';
       
+      // First pass: identify parents and their children
+      const parentMap = new Map();
       state.filtered.forEach((idx) => {
         const s = sectionConfig[idx];
+        if (s.parent) {
+          if (!parentMap.has(s.parent)) {
+            parentMap.set(s.parent, []);
+          }
+          parentMap.get(s.parent).push(s.id);
+        }
+      });
+      
+      // Initialize collapsed state for parents (default: collapsed)
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        if (!s.parent && parentMap.has(s.id)) {
+          if (collapsedState[s.id] === undefined) {
+            collapsedState[s.id] = true; // collapsed by default
+          }
+        }
+      });
+      
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        
+        // Check if this is a sub-item (has a parent section)
         const isSubItem = !!s.parent;
+        const hasChildren = parentMap.has(s.id);
         
         // Desktop sidebar
         const liDesktop = document.createElement('li');
         liDesktop.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liDesktop.classList.add('has-children');
+          if (collapsedState[s.id]) {
+            liDesktop.classList.add('collapsed');
+          }
+        }
+        if (isSubItem && collapsedState[s.parent]) {
+          liDesktop.classList.add('collapsed');
+        }
+        liDesktop.dataset.sectionId = s.id;
+        
         const aDesktop = document.createElement('a');
         aDesktop.href = `#${s.id}`;
         aDesktop.textContent = s.title;
         aDesktop.addEventListener('click', (e) => {
           e.preventDefault();
-          navigateToId(s.id);
-          closeSidebar();
+          if (hasChildren) {
+            // Toggle collapse/expand
+            toggleCollapse(s.id, 'desktop');
+          } else {
+            navigateToId(s.id);
+            closeSidebar();
+          }
         });
         liDesktop.appendChild(aDesktop);
         els.toc.appendChild(liDesktop);
@@ -6993,18 +7542,69 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
         // Mobile offcanvas
         const liMobile = document.createElement('li');
         liMobile.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liMobile.classList.add('has-children');
+          if (collapsedState[s.id]) {
+            liMobile.classList.add('collapsed');
+          }
+        }
+        if (isSubItem && collapsedState[s.parent]) {
+          liMobile.classList.add('collapsed');
+        }
+        liMobile.dataset.sectionId = s.id;
+        
         const aMobile = document.createElement('a');
         aMobile.href = `#${s.id}`;
         aMobile.textContent = s.title;
         aMobile.addEventListener('click', (e) => {
           e.preventDefault();
-          navigateToId(s.id);
-          closeSidebar();
+          if (hasChildren) {
+            // Toggle collapse/expand
+            toggleCollapse(s.id, 'mobile');
+          } else {
+            navigateToId(s.id);
+            closeSidebar();
+          }
         });
         liMobile.appendChild(aMobile);
         els.tocMobile.appendChild(liMobile);
       });
       highlightActiveTOC();
+    }
+    
+    function toggleCollapse(parentId, context) {
+      // Toggle the collapsed state
+      collapsedState[parentId] = !collapsedState[parentId];
+      const isCollapsed = collapsedState[parentId];
+      
+      // Update both desktop and mobile TOCs
+      const containers = context === 'desktop' ? [els.toc] : context === 'mobile' ? [els.tocMobile] : [els.toc, els.tocMobile];
+      
+      containers.forEach(container => {
+        // Update parent item
+        const parentItem = container.querySelector(`li[data-section-id="${parentId}"]`);
+        if (parentItem) {
+          if (isCollapsed) {
+            parentItem.classList.add('collapsed');
+          } else {
+            parentItem.classList.remove('collapsed');
+          }
+        }
+        
+        // Update child items
+        const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+        childItems.forEach(child => {
+          const childId = child.dataset.sectionId;
+          const childSection = sectionConfig.find(s => s.id === childId);
+          if (childSection && childSection.parent === parentId) {
+            if (isCollapsed) {
+              child.classList.add('collapsed');
+            } else {
+              child.classList.remove('collapsed');
+            }
+          }
+        });
+      });
     }
 
     function setActiveByIndex(i){
@@ -7076,10 +7676,75 @@ Include: happy path, null/empty, boundaries, errors."</code></pre>
     function highlightActiveTOC(){
       const ids = state.filtered.map(idx => sectionConfig[idx].id);
       const activeId = ids[state.index];
-      // Highlight desktop sidebar
-      els.toc.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
-      // Highlight mobile offcanvas
-      els.tocMobile.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
+      
+      // Expand parent if active section is a child
+      const activeSection = sectionConfig.find(s => s.id === activeId);
+      if (activeSection && activeSection.parent) {
+        if (collapsedState[activeSection.parent]) {
+          collapsedState[activeSection.parent] = false;
+          [els.toc, els.tocMobile].forEach(container => {
+            const parentItem = container.querySelector(`li[data-section-id="${activeSection.parent}"]`);
+            if (parentItem) {
+              parentItem.classList.remove('collapsed');
+            }
+            // Show all children of this parent
+            const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+            childItems.forEach(child => {
+              const childId = child.dataset.sectionId;
+              const childSection = sectionConfig.find(s => s.id === childId);
+              if (childSection && childSection.parent === activeSection.parent) {
+                child.classList.remove('collapsed');
+              }
+            });
+          });
+        }
+      }
+      
+      // Highlight desktop sidebar and mobile offcanvas
+      let activeDesktopElement = null;
+      let activeMobileElement = null;
+      
+      els.toc.querySelectorAll('a').forEach(a => {
+        const isActive = a.getAttribute('href') === `#${activeId}`;
+        a.classList.toggle('active', isActive);
+        if (isActive) activeDesktopElement = a.closest('li');
+      });
+      
+      els.tocMobile.querySelectorAll('a').forEach(a => {
+        const isActive = a.getAttribute('href') === `#${activeId}`;
+        a.classList.toggle('active', isActive);
+        if (isActive) activeMobileElement = a.closest('li');
+      });
+      
+      // Scroll active item into view (desktop sidebar)
+      if (activeDesktopElement && els.sidebar) {
+        setTimeout(() => {
+          const isVisible = activeDesktopElement.offsetParent !== null && 
+                           !activeDesktopElement.classList.contains('collapsed');
+          if (isVisible) {
+            activeDesktopElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'nearest'
+            });
+          }
+        }, 50);
+      }
+      
+      // Scroll active item into view (mobile offcanvas)
+      if (activeMobileElement) {
+        setTimeout(() => {
+          const isVisible = activeMobileElement.offsetParent !== null && 
+                           !activeMobileElement.classList.contains('collapsed');
+          if (isVisible) {
+            activeMobileElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'nearest'
+            });
+          }
+        }, 50);
+      }
     }
 
     function openSidebar(){

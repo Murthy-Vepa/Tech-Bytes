@@ -1042,7 +1042,7 @@
           <h2>Introduction</h2>
           <p>Cloud design patterns are reusable solutions to commonly occurring problems in cloud application architecture. These patterns provide proven approaches for building reliable, scalable, secure, and efficient cloud-native applications on platforms like Microsoft Azure.</p>
           
-          <p>This comprehensive guide covers <strong>42 essential cloud design patterns</strong> organized into six key categories, with detailed Azure implementation guidance, code examples, and Well-Architected Framework alignments.</p>
+          <p>This comprehensive guide covers <strong>42 essential cloud design patterns</strong> organized into six key categories, plus <strong>6 architecture styles</strong> and <strong>5 AI agent orchestration patterns</strong>, with detailed Azure implementation guidance, code examples, and Well-Architected Framework alignments.</p>
 
           <div class="callout">
             <strong>💡 Why Use Cloud Design Patterns?</strong>
@@ -1128,6 +1128,16 @@
             <li><strong>Valet Key</strong> - Use token for restricted direct access to specific resource</li>
           </ul>
 
+          <h3>🤖 AI Agent Orchestration (5 patterns)</h3>
+          <p>Patterns for coordinating multiple autonomous AI agents to accomplish complex outcomes. These complement the cloud design patterns above by addressing the unique challenges of intelligent, autonomous components with reasoning capabilities and nondeterministic outputs.</p>
+          <ul>
+            <li><strong>Sequential</strong> - Chain agents in predefined linear order; each processes the previous agent's output</li>
+            <li><strong>Concurrent</strong> - Run multiple agents in parallel on the same task; aggregate results</li>
+            <li><strong>Group Chat</strong> - Agents participate in a shared conversation thread managed by a chat manager</li>
+            <li><strong>Handoff</strong> - Dynamic delegation where agents decide when to transfer control to a more appropriate agent</li>
+            <li><strong>Magentic</strong> - Manager agent builds and adapts a task ledger to solve open-ended problems</li>
+          </ul>
+
           <h2>How to Use This Guide</h2>
           
           <div class="mermaid">
@@ -1187,10 +1197,10 @@ graph TB
           <h2>Getting Started</h2>
           
           <h3>For Architects</h3>
-          <p>Start by exploring patterns in the <strong>Design & Implementation</strong> category to understand structural approaches. Then review <strong>Reliability & Resiliency</strong> patterns to ensure fault tolerance, and <strong>Security</strong> patterns for access control strategies.</p>
+          <p>Start by exploring patterns in the <strong>Design & Implementation</strong> category to understand structural approaches. Then review <strong>Reliability & Resiliency</strong> patterns to ensure fault tolerance, and <strong>Security</strong> patterns for access control strategies. For AI workloads, review the <strong>AI Agent Orchestration</strong> patterns.</p>
 
           <h3>For Developers</h3>
-          <p>Focus on the <strong>Azure Implementation</strong> and <strong>Example Code</strong> sections within each pattern. The code samples use Azure SDKs, Bicep templates, and Azure services to demonstrate practical implementation.</p>
+          <p>Focus on the <strong>Azure Implementation</strong> and <strong>Example Code</strong> sections within each pattern. The code samples use Azure SDKs, Bicep templates, and Azure services to demonstrate practical implementation. For AI agent apps, see the <strong>AI Agent Orchestration</strong> section for pattern selection guidance.</p>
 
           <h3>For Operations Teams</h3>
           <p>Pay special attention to <strong>Reliability & Resiliency</strong> patterns for monitoring and fault handling, <strong>Performance & Scalability</strong> patterns for managing load, and the <strong>Well-Architected Framework</strong> alignments for operational best practices.</p>
@@ -10961,6 +10971,541 @@ await containerClient.SetAccessPolicyAsync(permissions: Array.Empty&lt;BlobSigne
           </ul>
         </section>
 
+        <!-- AI Agent Orchestration Patterns -->
+        <section id="ai-agents-intro" role="article">
+          <h1>🤖 AI Agent Orchestration Patterns</h1>
+          <span class="badge">ai</span>
+          <span class="badge">agents</span>
+          <span class="badge">orchestration</span>
+          <span class="badge">multi-agent</span>
+
+          <h2>Introduction</h2>
+          <p>As architects and developers design workloads to take advantage of language model capabilities, AI agent systems become increasingly complex. Traditional cloud design patterns address structural and behavioral concerns in distributed systems, but AI agent orchestration patterns specifically address the coordination of components with <strong>reasoning capabilities, learning behaviors, and nondeterministic outputs</strong>.</p>
+
+          <div class="callout">
+            <strong>💡 Key Insight:</strong> Before adopting multi-agent orchestration, evaluate whether your scenario requires it. Agent architectures exist on a spectrum of complexity. Use the lowest level of complexity that reliably meets your requirements.
+          </div>
+
+          <h2>Complexity Spectrum</h2>
+          <div style="overflow-x: auto;">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Level</th>
+                  <th>Description</th>
+                  <th>Best For</th>
+                  <th>Consideration</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Direct model call</strong></td>
+                  <td>Single LLM call with a well-crafted prompt. No agent logic.</td>
+                  <td>Classification, summarization, translation, single-step tasks</td>
+                  <td>Least complex. If prompt engineering solves it, don't use an agent.</td>
+                </tr>
+                <tr>
+                  <td><strong>Single agent with tools</strong></td>
+                  <td>One agent that reasons and acts by selecting from available tools, APIs, and knowledge sources.</td>
+                  <td>Varied queries within a single domain requiring dynamic tool use</td>
+                  <td>Often the right default for enterprise use. Simpler to debug. Guard against infinite tool-call loops.</td>
+                </tr>
+                <tr>
+                  <td><strong>Multi-agent orchestration</strong></td>
+                  <td>Multiple specialized agents coordinate to solve a problem.</td>
+                  <td>Cross-functional problems, distinct security boundaries, parallel specialization</td>
+                  <td>Adds coordination overhead, latency, and failure modes. Justify added complexity.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Why Use Multiple Agents?</h2>
+          <ul>
+            <li><strong>Specialization</strong> - Individual agents focus on a specific domain or capability, reducing prompt complexity</li>
+            <li><strong>Scalability</strong> - Agents can be added or modified without redesigning the entire system</li>
+            <li><strong>Maintainability</strong> - Testing and debugging can be focused on individual agents</li>
+            <li><strong>Optimization</strong> - Each agent can use distinct models, tools, knowledge, and compute</li>
+          </ul>
+
+          <h2>Pattern Overview</h2>
+          <div class="mermaid">
+graph TB
+    Input[User Request]
+    
+    subgraph "Orchestration Patterns"
+    Seq[➡️ Sequential<br/>Pipeline of agents]
+    Con[⚡ Concurrent<br/>Parallel agents]
+    GC[💬 Group Chat<br/>Collaborative discussion]
+    HO[🤝 Handoff<br/>Dynamic delegation]
+    Mag[🧠 Magentic<br/>Plan-build-execute]
+    end
+    
+    Input --> Seq
+    Input --> Con
+    Input --> GC
+    Input --> HO
+    Input --> Mag
+    
+    Seq --> Result[Final Result]
+    Con --> Result
+    GC --> Result
+    HO --> Result
+    Mag --> Result
+    
+    style Seq fill:#3b82f6,color:#fff
+    style Con fill:#10b981,color:#fff
+    style GC fill:#f59e0b,color:#fff
+    style HO fill:#8b5cf6,color:#fff
+    style Mag fill:#ef4444,color:#fff
+          </div>
+
+          <h2>Choosing a Pattern</h2>
+          <div style="overflow-x: auto;">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Pattern</th>
+                  <th>Structure</th>
+                  <th>Control Flow</th>
+                  <th>Best For</th>
+                  <th>Key Risk</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Sequential</strong></td>
+                  <td>Linear pipeline; each agent processes previous agent's output</td>
+                  <td>Deterministic, predefined order</td>
+                  <td>Step-by-step refinement with clear stage dependencies</td>
+                  <td>Failures in early stages propagate; no parallelism</td>
+                </tr>
+                <tr>
+                  <td><strong>Concurrent</strong></td>
+                  <td>Parallel; agents work independently on the same input</td>
+                  <td>Deterministic or dynamic agent selection</td>
+                  <td>Independent analysis from multiple perspectives; latency-sensitive scenarios</td>
+                  <td>Requires conflict resolution when results contradict; resource-intensive</td>
+                </tr>
+                <tr>
+                  <td><strong>Group Chat</strong></td>
+                  <td>Conversational; agents contribute to a shared thread</td>
+                  <td>Chat manager controls turn order</td>
+                  <td>Consensus-building, brainstorming, iterative maker-checker validation</td>
+                  <td>Conversation loops; difficult to control with many agents</td>
+                </tr>
+                <tr>
+                  <td><strong>Handoff</strong></td>
+                  <td>Dynamic delegation; one active agent at a time</td>
+                  <td>Agents decide when to transfer control</td>
+                  <td>Tasks where the right specialist emerges during processing</td>
+                  <td>Infinite handoff loops; unpredictable routing paths</td>
+                </tr>
+                <tr>
+                  <td><strong>Magentic</strong></td>
+                  <td>Plan-build-execute; manager agent builds and adapts a task ledger</td>
+                  <td>Manager agent assigns and reorders tasks dynamically</td>
+                  <td>Open-ended problems with no predetermined solution path</td>
+                  <td>Slow to converge; stalls on ambiguous goals</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Relationship to Cloud Design Patterns</h2>
+          <ul>
+            <li>🔧 <strong>Pipes and Filters</strong> → <em>Sequential Orchestration</em> (uses AI agents instead of fixed processing components)</li>
+            <li>🔀 <strong>Scatter-Gather</strong> → <em>Concurrent Orchestration</em> (fan-out to agents, fan-in results)</li>
+            <li>🎭 <strong>Choreography</strong> → <em>Group Chat / Handoff</em> (distributed decision-making)</li>
+            <li>📅 <strong>Scheduler Agent Supervisor</strong> → <em>Magentic Orchestration</em> (dynamic planning and supervision)</li>
+          </ul>
+
+          <h2>Azure Implementations</h2>
+          <ul>
+            <li>🔷 <strong>Microsoft Agent Framework</strong> - Open-source SDK with built-in support for all five orchestration patterns</li>
+            <li>🔷 <strong>Azure AI Foundry Agent Service</strong> - Managed no-code approach using connected agents</li>
+            <li>🔷 <strong>Semantic Kernel</strong> - .NET/Python SDK for agent orchestration (migration guide available for Agent Framework)</li>
+          </ul>
+        </section>
+
+        <!-- Sequential Orchestration -->
+        <section id="ai-sequential" role="article">
+          <h1>➡️ Sequential Orchestration</h1>
+          <span class="badge">ai</span>
+          <span class="badge">pipeline</span>
+          <span class="badge">prompt-chaining</span>
+
+          <p><em>Also known as: pipeline, prompt chaining, linear delegation</em></p>
+
+          <h2>Overview</h2>
+          <p>The sequential orchestration pattern chains AI agents in a <strong>predefined, linear order</strong>. Each agent processes the output from the previous agent, creating a pipeline of specialized transformations. This pattern resembles the <strong>Pipes and Filters</strong> cloud design pattern, but uses AI agents instead of custom-coded processing components.</p>
+
+          <div class="mermaid">
+sequenceDiagram
+    participant Input
+    participant Agent1 as Agent 1
+    participant Agent2 as Agent 2
+    participant AgentN as Agent N
+    participant Result
+    
+    Input->>Agent1: Initial request
+    Agent1->>Agent1: Process with model + tools
+    Agent1->>Agent2: Transformed output
+    Agent2->>Agent2: Process with model + tools
+    Agent2->>AgentN: Further transformed output
+    AgentN->>AgentN: Process with model + tools
+    AgentN->>Result: Final output
+          </div>
+
+          <h3>When to Use</h3>
+          <p><strong>✅ Use Sequential Orchestration when:</strong></p>
+          <ul>
+            <li>Multistage processes with clear <strong>linear dependencies</strong> and predictable workflow progression</li>
+            <li>Data transformation pipelines where each stage adds specific value the next depends on</li>
+            <li>Workflow stages that cannot be parallelized</li>
+            <li>Progressive refinement requirements (draft → review → polish)</li>
+            <li>You understand the performance characteristics of every agent in the pipeline</li>
+          </ul>
+
+          <p><strong>❌ Avoid when:</strong></p>
+          <ul>
+            <li>Stages are embarrassingly parallel and can run without shared state contention</li>
+            <li>Only a few stages that a single agent could handle effectively</li>
+            <li>Early stages might fail and there is no way to prevent propagation</li>
+            <li>Agents need to collaborate rather than hand off work</li>
+            <li>The workflow requires backtracking, iteration, or dynamic routing</li>
+          </ul>
+
+          <h3>Example: Contract Generation Pipeline</h3>
+          <p>A law firm's document management system processes requests through four specialized agents:</p>
+          <ol>
+            <li><strong>Template selection agent</strong> - Receives client specifications and selects the appropriate base template</li>
+            <li><strong>Clause customization agent</strong> - Modifies standard clauses based on negotiated business terms</li>
+            <li><strong>Regulatory compliance agent</strong> - Reviews customized contract against applicable laws</li>
+            <li><strong>Risk assessment agent</strong> - Performs comprehensive risk analysis and provides protective language recommendations</li>
+          </ol>
+
+          <h3>Key Considerations</h3>
+          <ul>
+            <li>⚠️ <strong>Error propagation</strong> - Failures in early stages flow through the entire pipeline; implement validation between stages</li>
+            <li>⚠️ <strong>Context window growth</strong> - Accumulated context grows at each step; use compaction techniques (summarization, selective pruning)</li>
+            <li>⚠️ <strong>No parallelism</strong> - Each agent waits for the previous; total latency = sum of all agent latencies</li>
+            <li>✅ <strong>Deterministic</strong> - Predictable routing makes testing and debugging straightforward</li>
+          </ul>
+        </section>
+
+        <!-- Concurrent Orchestration -->
+        <section id="ai-concurrent" role="article">
+          <h1>⚡ Concurrent Orchestration</h1>
+          <span class="badge">ai</span>
+          <span class="badge">parallel</span>
+          <span class="badge">fan-out</span>
+
+          <p><em>Also known as: parallel, fan-out/fan-in, scatter-gather, map-reduce</em></p>
+
+          <h2>Overview</h2>
+          <p>The concurrent orchestration pattern runs <strong>multiple AI agents simultaneously</strong> on the same task. Each agent provides independent analysis or processing from its unique perspective or specialization. Results are aggregated by an initiator/collector agent. This resembles the <strong>Fan-out/Fan-in</strong> cloud design pattern.</p>
+
+          <div class="mermaid">
+graph TB
+    Input[Input Task]
+    
+    subgraph "Initiator / Collector"
+    IC[Orchestrator Agent]
+    end
+    
+    subgraph "Parallel Agents"
+    A1[Agent 1<br/>Perspective 1]
+    A2[Agent 2<br/>Perspective 2]
+    AN[Agent N<br/>Perspective N]
+    end
+    
+    Agg[Aggregated Result]
+    
+    Input --> IC
+    IC -->|Dispatch| A1
+    IC -->|Dispatch| A2
+    IC -->|Dispatch| AN
+    
+    A1 -->|Intermediate result| Agg
+    A2 -->|Intermediate result| Agg
+    AN -->|Intermediate result| Agg
+    
+    Agg --> IC
+    IC --> Output[Final Result]
+    
+    style IC fill:#3b82f6,color:#fff
+    style A1 fill:#10b981,color:#fff
+    style A2 fill:#10b981,color:#fff
+    style AN fill:#10b981,color:#fff
+          </div>
+
+          <h3>Aggregation Strategies</h3>
+          <ul>
+            <li><strong>Voting / Majority-rule</strong> - For classification tasks where agents vote on the answer</li>
+            <li><strong>Weighted merging</strong> - For scored recommendations where agent expertise weights differ</li>
+            <li><strong>LLM-synthesized summary</strong> - When results need to be reconciled into a coherent narrative</li>
+          </ul>
+
+          <h3>When to Use</h3>
+          <p><strong>✅ Use Concurrent Orchestration when:</strong></p>
+          <ul>
+            <li>Tasks that can run in parallel without shared state contention</li>
+            <li>Tasks that benefit from multiple independent perspectives (brainstorming, ensemble reasoning, voting-based decisions)</li>
+            <li>Time-sensitive scenarios where parallel processing reduces latency</li>
+          </ul>
+
+          <p><strong>❌ Avoid when:</strong></p>
+          <ul>
+            <li>Agents need to build on each other's work in a specific sequence</li>
+            <li>Resource constraints (model quota) make parallel processing inefficient</li>
+            <li>Agents cannot reliably coordinate changes to shared state simultaneously</li>
+            <li>No clear conflict resolution strategy exists for contradictory results</li>
+          </ul>
+
+          <h3>Example: Stock Analysis</h3>
+          <p>A financial services firm dispatches the same stock ticker to four specialized agents running in parallel:</p>
+          <ul>
+            <li><strong>Fundamental analysis agent</strong> - Evaluates financial statements, revenue trends, competitive positioning</li>
+            <li><strong>Technical analysis agent</strong> - Examines price patterns, volume indicators, momentum signals</li>
+            <li><strong>Sentiment analysis agent</strong> - Processes news, social media, analyst reports</li>
+            <li><strong>ESG agent</strong> - Reviews environmental, social, and governance sustainability risks</li>
+          </ul>
+        </section>
+
+        <!-- Group Chat Orchestration -->
+        <section id="ai-group-chat" role="article">
+          <h1>💬 Group Chat Orchestration</h1>
+          <span class="badge">ai</span>
+          <span class="badge">collaboration</span>
+          <span class="badge">roundtable</span>
+
+          <p><em>Also known as: roundtable, collaborative, multi-agent debate, council</em></p>
+
+          <h2>Overview</h2>
+          <p>The group chat orchestration pattern enables multiple agents to solve problems, make decisions, or validate work by <strong>participating in a shared conversation thread</strong>. A chat manager coordinates the flow by determining which agents respond next and managing different interaction modes — from collaborative brainstorming to structured quality gates. Human participants can also join the chat thread.</p>
+
+          <div class="mermaid">
+graph LR
+    Input[Input]
+    GM[Chat Manager]
+    Thread[Accumulating<br/>Chat Thread]
+    A1[Agent 1]
+    A2[Agent 2]
+    AN[Agent N]
+    Human[Human<br/>Participant]
+    Result[Result]
+    
+    Input --> GM
+    GM --> A1
+    GM --> A2
+    GM --> AN
+    A1 -->|Chat output| Thread
+    A2 -->|Chat output| Thread
+    AN -->|Chat output| Thread
+    Human -.->|Optional input| Thread
+    Thread --> GM
+    Thread --> Result
+    
+    style GM fill:#f59e0b,color:#fff
+    style Thread fill:#e2e8f0
+          </div>
+
+          <h3>Maker-Checker Loops</h3>
+          <p>A specific sub-pattern of group chat where one agent (the <strong>maker</strong>) creates or proposes something, and another agent (the <strong>checker</strong>) evaluates it against defined criteria. If the checker finds gaps, it pushes back with feedback. The cycle repeats until approval or an iteration cap is reached.</p>
+          <p><em>Also known as: evaluator-optimizer, generator-verifier, critic loop, reflection loop</em></p>
+
+          <h3>When to Use</h3>
+          <p><strong>✅ Use Group Chat Orchestration when:</strong></p>
+          <ul>
+            <li>Creative brainstorming where agents with different perspectives build on each other's contributions</li>
+            <li>Decision-making processes that benefit from debate and consensus-building</li>
+            <li>Quality assurance requiring structured review processes and iteration</li>
+            <li>Compliance validation requiring multiple expert perspectives</li>
+            <li>Human-in-the-loop scenarios where humans guide the conversation</li>
+          </ul>
+
+          <p><strong>❌ Avoid when:</strong></p>
+          <ul>
+            <li>Basic task delegation or linear pipeline processing is sufficient</li>
+            <li>Real-time processing requirements make discussion overhead unacceptable</li>
+            <li>The chat manager has no objective way to determine task completion</li>
+            <li>More than 3 agents make control difficult to maintain</li>
+          </ul>
+
+          <h3>Example: Park Development Proposal Review</h3>
+          <p>A city parks department uses group chat to evaluate new park proposals. Specialist agents debate from different perspectives before community review:</p>
+          <ul>
+            <li><strong>Community engagement agent</strong> - Accessibility requirements, resident feedback, usage patterns</li>
+            <li><strong>Environmental planning agent</strong> - Ecological impact, sustainability, regulatory compliance</li>
+            <li><strong>Budget and operations agent</strong> - Construction costs, maintenance expenses, operational sustainability</li>
+            <li><strong>Parks department employee</strong> - Human participant adding real-time insight</li>
+          </ul>
+        </section>
+
+        <!-- Handoff Orchestration -->
+        <section id="ai-handoff" role="article">
+          <h1>🤝 Handoff Orchestration</h1>
+          <span class="badge">ai</span>
+          <span class="badge">routing</span>
+          <span class="badge">triage</span>
+
+          <p><em>Also known as: routing, triage, transfer, dispatch, delegation</em></p>
+
+          <h2>Overview</h2>
+          <p>The handoff orchestration pattern enables <strong>dynamic delegation of tasks between specialized agents</strong>. Each agent can assess the task and decide whether to handle it directly or transfer it to a more appropriate agent based on context and requirements. Only one agent is active at a time — full control transfers from one agent to another.</p>
+
+          <div class="mermaid">
+graph LR
+    Input[Customer Request]
+    
+    T[Triage Agent]
+    A2[Technical<br/>Infrastructure Agent]
+    A3[Financial<br/>Resolution Agent]
+    A4[Account<br/>Access Agent]
+    H[Human Support<br/>Agent]
+    
+    Input --> T
+    T -->|Network issue| A2
+    T -->|Billing dispute| A3
+    T -->|Account problem| A4
+    A2 -->|Escalate| H
+    A3 -->|Complex case| H
+    A4 -->|Resolved| Result[Result]
+    
+    style T fill:#8b5cf6,color:#fff
+    style H fill:#ef4444,color:#fff
+          </div>
+
+          <h3>When to Use</h3>
+          <p><strong>✅ Use Handoff Orchestration when:</strong></p>
+          <ul>
+            <li>Tasks requiring specialized knowledge or tools where the required agents cannot be predetermined</li>
+            <li>Expertise requirements emerge <em>during</em> processing, requiring dynamic routing based on content analysis</li>
+            <li>Multiple-domain problems that require different specialists operating one at a time</li>
+          </ul>
+
+          <p><strong>❌ Avoid when:</strong></p>
+          <ul>
+            <li>The appropriate agent or sequence is identifiable from the initial input (use deterministic routing instead)</li>
+            <li>Task routing is deterministic and rule-based, not context-driven</li>
+            <li>Multiple operations should run concurrently to address the task</li>
+            <li>Avoiding infinite handoff loops is challenging</li>
+          </ul>
+
+          <h3>Key Considerations</h3>
+          <ul>
+            <li>⚠️ <strong>Infinite loops</strong> - Define clear termination conditions and escalation paths to human agents</li>
+            <li>⚠️ <strong>Context continuity</strong> - Each receiving agent needs sufficient context from the previous agent</li>
+            <li>✅ <strong>Single active agent</strong> - Simplifies security model; each handoff has a clear owner</li>
+            <li>✅ <strong>Dynamic routing</strong> - The system naturally routes to the most capable agent for the task at hand</li>
+          </ul>
+        </section>
+
+        <!-- Magentic Orchestration -->
+        <section id="ai-magentic" role="article">
+          <h1>🧠 Magentic Orchestration</h1>
+          <span class="badge">ai</span>
+          <span class="badge">dynamic</span>
+          <span class="badge">task-ledger</span>
+
+          <p><em>Also known as: dynamic orchestration, task-ledger-based orchestration, adaptive planning</em></p>
+
+          <h2>Overview</h2>
+          <p>The magentic orchestration pattern is designed for <strong>open-ended and complex problems that have no predetermined solution path</strong>. A magentic manager agent builds a <strong>task ledger</strong> — a dynamic plan with goals and subgoals — which is continuously refined through collaboration with specialized agents. Agents in this pattern typically have tools that allow them to make direct changes in external systems.</p>
+
+          <div class="mermaid">
+graph TB
+    Input[Incident / Complex Problem]
+    
+    subgraph "Manager Agent"
+    Mgr[Magentic Manager]
+    Ledger[Task &amp; Progress Ledger]
+    Check{Goal<br/>Achieved?}
+    end
+    
+    A1[Diagnostics Agent]
+    A2[Infrastructure Agent]
+    A3[Rollback Agent]
+    A4[Communication Agent]
+    ExtSys[External Systems]
+    Human[Human Participant]
+    Result[Result]
+    
+    Input --> Mgr
+    Mgr --> Ledger
+    Ledger -.-> Human
+    Mgr -->|Invoke agents| A1
+    Mgr -->|Invoke agents| A2
+    Mgr -->|Invoke agents| A3
+    Mgr -->|Invoke agents| A4
+    A1 --> ExtSys
+    A2 --> ExtSys
+    A3 --> ExtSys
+    A4 -->|Notifications| Human
+    A1 -->|Results| Mgr
+    A2 -->|Results| Mgr
+    A3 -->|Results| Mgr
+    Mgr --> Check
+    Check -->|No| Mgr
+    Check -->|Yes| Result
+    
+    style Mgr fill:#ef4444,color:#fff
+    style Ledger fill:#fef3c7
+    style Check fill:#8b5cf6,color:#fff
+          </div>
+
+          <h3>Task Ledger</h3>
+          <p>The task ledger is the core artifact of the magentic pattern. It contains:</p>
+          <ul>
+            <li>High-level goals and desired outcomes</li>
+            <li>Specific investigation or action steps</li>
+            <li>Status of each task (pending, in-progress, complete, failed)</li>
+            <li>Dynamic adjustments as new information emerges</li>
+          </ul>
+          <p>The ledger provides a complete audit trail and enables human review at any point in the workflow.</p>
+
+          <h3>When to Use</h3>
+          <p><strong>✅ Use Magentic Orchestration when:</strong></p>
+          <ul>
+            <li>Complex or open-ended use cases with <strong>no predetermined solution path</strong></li>
+            <li>Input from multiple specialized agents is needed to develop a valid solution approach</li>
+            <li>A human-reviewable plan must be generated before or after implementation</li>
+            <li>Agents have tools that interact with external systems or make changes in running systems</li>
+          </ul>
+
+          <p><strong>❌ Avoid when:</strong></p>
+          <ul>
+            <li>The solution path is deterministic or well-understood</li>
+            <li>No requirement to produce a task ledger or audit trail</li>
+            <li>The task has low complexity (simpler patterns suffice)</li>
+            <li>The work is time-sensitive (magentic focuses on building viable plans, not optimizing for speed)</li>
+          </ul>
+
+          <h3>Example: Incident Response (SRE)</h3>
+          <p>An SRE team uses magentic orchestration for low-risk incident response. When a service outage occurs:</p>
+          <ol>
+            <li><strong>Manager agent</strong> creates initial task ledger with goals: restore availability, identify root cause</li>
+            <li><strong>Diagnostics agent</strong> analyzes logs, metrics, error patterns, reports findings back</li>
+            <li><strong>Manager</strong> updates ledger with specific investigation steps; consults infrastructure agent</li>
+            <li><strong>Communication agent</strong> provides stakeholder notification capabilities; manager adds communication checkpoints</li>
+            <li><strong>Rollback agent</strong> added to plan if deployment reversion is needed</li>
+            <li>Manager continuously refines ledger based on new information, adding/removing/reordering tasks</li>
+          </ol>
+
+          <h3>Relationship to Other Patterns</h3>
+          <div class="callout">
+            Magentic orchestration is an extension of the Group Chat pattern. The key difference: Magentic focuses on building a <em>plan of approach</em>, while other agents use tools to make changes in external systems rather than only contributing knowledge to a discussion.
+          </div>
+
+          <h3>Implementation</h3>
+          <ul>
+            <li>🔷 <strong>Microsoft Agent Framework</strong> - Built-in magentic orchestration with human-in-the-loop support</li>
+            <li>⚠️ Implement <strong>stall detection</strong> and <strong>iteration caps</strong> to prevent infinite planning loops</li>
+            <li>⚠️ Persist the task ledger in <strong>durable storage</strong> so workflows can resume after interruptions</li>
+          </ul>
+        </section>
+
         <!-- Resources Section -->
         <section id="resources" role="article">
           <h1>📚 Resources</h1>
@@ -10976,6 +11521,7 @@ await containerClient.SetAccessPolicyAsync(permissions: Array.Empty&lt;BlobSigne
           <ul>
             <li>🌐 <a href="https://learn.microsoft.com/azure/architecture/" target="_blank" rel="noopener">Azure Architecture Center</a> - Main hub for architecture guidance</li>
             <li>📖 <a href="https://learn.microsoft.com/azure/architecture/patterns/" target="_blank" rel="noopener">Cloud Design Patterns</a> - Complete catalog of all patterns</li>
+            <li>🤖 <a href="https://learn.microsoft.com/azure/architecture/ai-ml/guide/ai-agent-design-patterns" target="_blank" rel="noopener">AI Agent Orchestration Patterns</a> - Multi-agent coordination patterns for AI workloads</li>
             <li>🏛️ <a href="https://learn.microsoft.com/azure/architecture/guide/architecture-styles/" target="_blank" rel="noopener">Architecture Styles</a> - Guide to choosing architecture styles</li>
             <li>🎯 <a href="https://learn.microsoft.com/azure/architecture/framework/" target="_blank" rel="noopener">Azure Well-Architected Framework</a> - Five pillars of architectural excellence</li>
             <li>📐 <a href="https://learn.microsoft.com/azure/architecture/browse/" target="_blank" rel="noopener">Architecture Reference</a> - Browse reference architectures</li>
@@ -11040,6 +11586,14 @@ await containerClient.SetAccessPolicyAsync(permissions: Array.Empty&lt;BlobSigne
             <li>🔷 <a href="https://learn.microsoft.com/entra/identity/" target="_blank" rel="noopener">Microsoft Entra ID</a> - Identity and access management</li>
             <li>🔷 <a href="https://learn.microsoft.com/azure/key-vault/" target="_blank" rel="noopener">Azure Key Vault</a> - Secrets and key management</li>
             <li>🔷 <a href="https://learn.microsoft.com/azure/defender-for-cloud/" target="_blank" rel="noopener">Microsoft Defender for Cloud</a> - Cloud security posture</li>
+          </ul>
+
+          <h3>AI & Agent Orchestration</h3>
+          <ul>
+            <li>🔷 <a href="https://learn.microsoft.com/azure/ai-foundry/agents/overview" target="_blank" rel="noopener">Azure AI Foundry Agent Service</a> - Managed multi-agent orchestration</li>
+            <li>🔷 <a href="https://learn.microsoft.com/agent-framework/overview/agent-framework-overview" target="_blank" rel="noopener">Microsoft Agent Framework</a> - Open-source SDK for multi-agent orchestrations (Sequential, Concurrent, Group Chat, Handoff, Magentic)</li>
+            <li>🔷 <a href="https://learn.microsoft.com/semantic-kernel/frameworks/agent/agent-orchestration/" target="_blank" rel="noopener">Semantic Kernel</a> - .NET/Python SDK for AI agent orchestration</li>
+            <li>🔷 <a href="https://learn.microsoft.com/azure/ai-services/openai/" target="_blank" rel="noopener">Azure OpenAI Service</a> - Large language models for agent reasoning</li>
           </ul>
 
           <h2>Tools & SDKs</h2>
@@ -11234,6 +11788,14 @@ await containerClient.SetAccessPolicyAsync(permissions: Array.Empty&lt;BlobSigne
       { id: "federated-identity", title: "🔐 Federated Identity", tags: ["security", "authentication", "identity"], group: "Security" },
       { id: "quarantine", title: "🛡️ Quarantine", tags: ["security", "validation", "safety"], group: "Security" },
       { id: "valet-key", title: "🔑 Valet Key", tags: ["security", "access", "tokens"], group: "Security" },
+      
+      // AI Agent Orchestration Patterns
+      { id: "ai-agents-intro", title: "🤖 AI Agent Orchestration", tags: ["ai", "agents", "orchestration", "multi-agent"], group: "AI Agent Orchestration" },
+      { id: "ai-sequential", title: "➡️ Sequential Orchestration", tags: ["ai", "agents", "sequential", "pipeline", "prompt-chaining"], group: "AI Agent Orchestration" },
+      { id: "ai-concurrent", title: "⚡ Concurrent Orchestration", tags: ["ai", "agents", "parallel", "fan-out", "scatter-gather"], group: "AI Agent Orchestration" },
+      { id: "ai-group-chat", title: "💬 Group Chat Orchestration", tags: ["ai", "agents", "group-chat", "collaboration", "roundtable"], group: "AI Agent Orchestration" },
+      { id: "ai-handoff", title: "🤝 Handoff Orchestration", tags: ["ai", "agents", "handoff", "routing", "triage"], group: "AI Agent Orchestration" },
+      { id: "ai-magentic", title: "🧠 Magentic Orchestration", tags: ["ai", "agents", "magentic", "dynamic", "task-ledger"], group: "AI Agent Orchestration" },
       
       // Resources
       { id: "resources", title: "📚 Resources", tags: ["docs", "links", "reference"], group: "Resources" }

@@ -872,7 +872,7 @@
       border-radius: 0 0 0.5rem 0.5rem;
     }
 
-  /* Document Footer */
+ 
     .document-footer {
       text-align: center;
       padding: 20px;
@@ -2185,40 +2185,46 @@ flowchart TB
             </thead>
             <tbody>
               <tr>
-                <td><strong>GPT-4 Turbo</strong></td>
+                <td><strong>GPT-4o</strong></td>
                 <td>128K tokens</td>
-                <td>Excellent reasoning, follows instructions well</td>
-                <td>Complex queries, long documents</td>
+                <td>Excellent reasoning, multimodal, follows instructions well</td>
+                <td>Complex queries, vision + text RAG</td>
               </tr>
               <tr>
-                <td><strong>GPT-3.5 Turbo</strong></td>
-                <td>16K tokens</td>
-                <td>Fast, cost-effective</td>
-                <td>Simple Q&A, high volume</td>
+                <td><strong>GPT-4o mini</strong></td>
+                <td>128K tokens</td>
+                <td>Fast, highly cost-effective, near GPT-4o quality</td>
+                <td>Simple Q&A, high-volume production</td>
               </tr>
               <tr>
-                <td><strong>Claude 3 Opus</strong></td>
+                <td><strong>o3 / o4-mini</strong></td>
                 <td>200K tokens</td>
-                <td>Best-in-class context following</td>
-                <td>Very long documents, research</td>
+                <td>Extended chain-of-thought, advanced reasoning</td>
+                <td>Complex multi-hop reasoning, research synthesis</td>
               </tr>
               <tr>
-                <td><strong>Claude 3 Sonnet</strong></td>
+                <td><strong>Claude 3.7 Sonnet</strong></td>
                 <td>200K tokens</td>
-                <td>Balance of speed and quality</td>
-                <td>Production applications</td>
+                <td>Best-in-class instruction following, hybrid reasoning mode</td>
+                <td>Very long documents, enterprise apps</td>
               </tr>
               <tr>
-                <td><strong>Gemini 1.5 Pro</strong></td>
+                <td><strong>Claude 3.5 Haiku</strong></td>
+                <td>200K tokens</td>
+                <td>Fast, cost-effective long-context model</td>
+                <td>High-throughput, cost-sensitive use cases</td>
+              </tr>
+              <tr>
+                <td><strong>Gemini 2.0 Flash</strong></td>
                 <td>1M tokens</td>
-                <td>Massive context, multimodal</td>
-                <td>Entire books, code repositories</td>
+                <td>Massive context, multimodal, very low cost</td>
+                <td>Entire code repositories, full books, video RAG</td>
               </tr>
               <tr>
-                <td><strong>Llama 3 70B</strong></td>
-                <td>8K tokens</td>
-                <td>Open-source, self-hosted</td>
-                <td>Privacy-critical, on-premise</td>
+                <td><strong>Llama 3.3 70B</strong></td>
+                <td>128K tokens</td>
+                <td>Open-source, self-hosted, competitive with GPT-4o mini</td>
+                <td>Privacy-critical, air-gapped, on-premise deployment</td>
               </tr>
             </tbody>
           </table>
@@ -9769,6 +9775,498 @@ else:<br/>
           </div>
         </section>
 
+        <!-- ═══════════════════════════════════════ AGENTIC RAG ═══════════════════════════════════════ -->
+        <section id="agentic-rag" role="article">
+          <h1>🤖 Agentic RAG</h1>
+          <span class="badge">advanced</span> <span class="badge">agentic</span> <span class="badge">multi-step</span>
+
+          <h2>What is Agentic RAG?</h2>
+          <p>
+            Agentic RAG extends traditional RAG by giving the LLM <strong>agency</strong> — the ability to autonomously decide 
+            <em>when</em> to retrieve, <em>what</em> to retrieve, and <em>how many times</em> to iterate before generating a final 
+            answer. Instead of a fixed retrieve-then-generate pipeline, the LLM acts as an orchestrator that can reason, 
+            plan, use tools, self-reflect, and loop until it is confident in its response.
+          </p>
+
+          <h2>Naive RAG vs. Agentic RAG</h2>
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th>Naive RAG</th>
+                <th>Agentic RAG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Retrieval timing</strong></td>
+                <td>Once, before generation</td>
+                <td>Dynamically, as needed during reasoning</td>
+              </tr>
+              <tr>
+                <td><strong>Number of retrievals</strong></td>
+                <td>Fixed (1 round)</td>
+                <td>Variable (1-N rounds)</td>
+              </tr>
+              <tr>
+                <td><strong>Query formulation</strong></td>
+                <td>User query verbatim</td>
+                <td>LLM crafts targeted sub-queries</td>
+              </tr>
+              <tr>
+                <td><strong>Tool use</strong></td>
+                <td>Vector search only</td>
+                <td>Search, SQL, APIs, code execution</td>
+              </tr>
+              <tr>
+                <td><strong>Self-correction</strong></td>
+                <td>None</td>
+                <td>Critiques and refines its own output</td>
+              </tr>
+              <tr>
+                <td><strong>Complexity handled</strong></td>
+                <td>Single-hop questions</td>
+                <td>Multi-hop, comparative, analytical</td>
+              </tr>
+              <tr>
+                <td><strong>Latency</strong></td>
+                <td>Low (1 LLM call)</td>
+                <td>Higher (multiple LLM calls)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>The Agentic RAG Loop</h2>
+
+          <div class="mermaid">
+flowchart TB
+    Q["User Query"] --> P["Plan: Decompose into Sub-Questions"]
+    P --> D{{"Need retrieval?"}}
+    D -- Yes --> R["Retrieve from\nKnowledge Base"]
+    D -- No --> G
+    R --> A["Analyse Retrieved Chunks"]
+    A --> E{{"Sufficient\ncontext?"}}
+    E -- No --> REF["Refine Query /\nRetrieve Again"]
+    REF --> R
+    E -- Yes --> G["Generate Answer Draft"]
+    G --> C{{"Self-Critique:\nHallucination / Gaps?"}}
+    C -- Issues found --> P2["Re-plan / Retrieve\nMissing Info"]
+    P2 --> R
+    C -- OK --> F["Final Answer with Citations"]
+
+    style F fill:#52c41a,stroke:#237804,color:#fff,stroke-width:2px
+    style Q fill:#1890ff,stroke:#096dd9,color:#fff
+    style G fill:#ffd666,stroke:#d46b08
+          </div>
+
+          <h2>Key Agentic Patterns</h2>
+
+          <h3>1. ReAct (Reason + Act)</h3>
+          <p>
+            The LLM interleaves <strong>Thought → Action → Observation</strong> steps in a loop. Each action can be a retrieval 
+            call, a tool use, or a calculation. The LLM observes the result and decides its next step.
+          </p>
+          <div class="example">
+            <strong>ReAct Trace Example:</strong><br/>
+            <strong>Question:</strong> "Which company had higher revenue in 2024 — Acme Corp or Globex?"<br/><br/>
+            <strong>Thought 1:</strong> I need revenue figures for both companies.<br/>
+            <strong>Action 1:</strong> Search("Acme Corp 2024 annual revenue")<br/>
+            <strong>Observation 1:</strong> Acme Corp reported $4.2B in 2024.<br/><br/>
+            <strong>Thought 2:</strong> Now I need Globex's revenue.<br/>
+            <strong>Action 2:</strong> Search("Globex 2024 annual revenue")<br/>
+            <strong>Observation 2:</strong> Globex reported $3.8B in 2024.<br/><br/>
+            <strong>Thought 3:</strong> Acme ($4.2B) > Globex ($3.8B). I can answer now.<br/>
+            <strong>Final Answer:</strong> Acme Corp had higher revenue in 2024 at $4.2B vs Globex's $3.8B.
+          </div>
+
+          <h3>2. FLARE (Forward-Looking Active REtrieval)</h3>
+          <p>
+            The LLM generates a response token-by-token. When it encounters <strong>low-confidence tokens</strong> 
+            (uncertainty about a fact), it pauses, retrieves relevant context for that specific claim, then 
+            continues generation with updated information.
+          </p>
+          <div class="example">
+            <strong>How FLARE Works:</strong><br/>
+            1. LLM starts generating: "The CEO of Acme Corp is..."<br/>
+            2. Confidence score of next token drops below threshold (e.g., &lt; 0.5)<br/>
+            3. System retrieves: Search("Acme Corp current CEO")<br/>
+            4. LLM continues with retrieved context: "...Jane Smith, who joined in 2023."<br/>
+            5. Generation resumes — retrieval triggered only where uncertainty exists
+          </div>
+
+          <h3>3. Self-RAG</h3>
+          <p>
+            Self-RAG fine-tunes the LLM to generate special <strong>reflection tokens</strong> that control the retrieval 
+            process. The model learns to decide: <em>Should I retrieve? Is this retrieved passage relevant? Is my 
+            generated response supported by the passage?</em>
+          </p>
+
+          <table class="table table-sm">
+            <thead>
+              <tr><th>Reflection Token</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>[Retrieve]</code></td><td>Trigger a retrieval call</td></tr>
+              <tr><td><code>[IsREL]</code></td><td>Retrieved passage is relevant</td></tr>
+              <tr><td><code>[IsSUP]</code></td><td>Generation is supported by context</td></tr>
+              <tr><td><code>[IsUSE]</code></td><td>Response is useful to the user</td></tr>
+            </tbody>
+          </table>
+
+          <h3>4. Corrective RAG (CRAG)</h3>
+          <p>
+            After initial retrieval, a lightweight evaluator scores the relevance of retrieved documents. If relevance 
+            is <strong>low or ambiguous</strong>, CRAG triggers a web search to supplement or replace the local knowledge 
+            base results before generation.
+          </p>
+
+          <h2>Multi-Agent RAG Architectures</h2>
+
+          <div class="mermaid">
+flowchart LR
+    U["User Query"] --> O["Orchestrator Agent"]
+    O --> A1["Retrieval Agent\n(Vector Search)"]
+    O --> A2["SQL Agent\n(Structured Data)"]
+    O --> A3["Web Search Agent\n(Real-time Info)"]
+    A1 --> SYN["Synthesis Agent"]
+    A2 --> SYN
+    A3 --> SYN
+    SYN --> VAL["Validation Agent\n(Fact-Check)"]
+    VAL --> R["Final Response"]
+
+    style O fill:#722ed1,stroke:#391085,color:#fff
+    style SYN fill:#1890ff,stroke:#096dd9,color:#fff
+    style VAL fill:#faad14,stroke:#d48806
+    style R fill:#52c41a,stroke:#237804,color:#fff
+          </div>
+
+          <h2>When to Use Agentic RAG</h2>
+
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Use Case</th>
+                <th>Why Agentic RAG Helps</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Multi-hop questions</strong></td>
+                <td>Requires chaining multiple retrievals</td>
+                <td>"Who manages the team that built Project X?"</td>
+              </tr>
+              <tr>
+                <td><strong>Comparative analysis</strong></td>
+                <td>Multiple targeted retrievals needed</td>
+                <td>"Compare Q3 vs Q4 performance across regions"</td>
+              </tr>
+              <tr>
+                <td><strong>Ambiguous queries</strong></td>
+                <td>Agent can clarify and refine before retrieving</td>
+                <td>"Tell me about Apple" (company or fruit?)</td>
+              </tr>
+              <tr>
+                <td><strong>Mixed data sources</strong></td>
+                <td>Agent selects the right tool/source</td>
+                <td>Query needing both vector search and SQL</td>
+              </tr>
+              <tr>
+                <td><strong>Research synthesis</strong></td>
+                <td>Iterative retrieval builds deeper understanding</td>
+                <td>"Summarise all known side effects of Drug X"</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Implementation with LangGraph</h2>
+
+          <div class="example">
+            <strong>Agentic RAG Loop (Python / LangGraph):</strong>
+            <pre><code>from langgraph.graph import StateGraph, END
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
+
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+
+def should_retrieve(state):
+    """Decide whether retrieval is needed based on LLM decision."""
+    response = llm.invoke([
+        SystemMessage(content="Decide if you need to search the knowledge base. Reply RETRIEVE or ANSWER."),
+        HumanMessage(content=state["query"])
+    ])
+    return "retrieve" if "RETRIEVE" in response.content else "answer"
+
+def retrieve(state):
+    docs = vector_store.similarity_search(state["query"], k=5)
+    state["context"] = "\n\n".join([d.page_content for d in docs])
+    return state
+
+def generate(state):
+    response = llm.invoke([
+        SystemMessage(content=f"Answer using context:\n{state.get('context', '')}"),
+        HumanMessage(content=state["query"])
+    ])
+    state["answer"] = response.content
+    return state
+
+def self_critique(state):
+    critique = llm.invoke([
+        SystemMessage(content="Is this answer fully supported by the context? Reply GOOD or NEEDS_MORE_INFO."),
+        HumanMessage(content=f"Answer: {state['answer']}\nContext: {state.get('context', '')}")
+    ])
+    state["critique"] = critique.content
+    return state
+
+graph = StateGraph(dict)
+graph.add_node("retrieve", retrieve)
+graph.add_node("generate", generate)
+graph.add_node("critique", self_critique)
+graph.set_conditional_entry_point(should_retrieve, {"retrieve": "retrieve", "answer": "generate"})
+graph.add_edge("retrieve", "generate")
+graph.add_edge("generate", "critique")
+graph.add_conditional_edges("critique", lambda s: END if "GOOD" in s["critique"] else "retrieve")
+app = graph.compile()</code></pre>
+          </div>
+
+          <h2>Trade-offs</h2>
+
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Benefit</th><th>Cost</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Higher accuracy on complex queries</td><td>Higher latency (2-5x vs naive RAG)</td></tr>
+              <tr><td>Handles multi-hop reasoning</td><td>Higher token cost (multiple LLM calls)</td></tr>
+              <tr><td>Self-correcting (less hallucination)</td><td>More complex to debug and monitor</td></tr>
+              <tr><td>Flexible tool use</td><td>Requires careful loop termination logic</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout bg-gradient-purple">
+            <strong>💡 Key Takeaway:</strong> Use Agentic RAG when your queries require <strong>multi-hop reasoning, comparative 
+            analysis, or mixed data sources</strong>. For simple factual Q&A, standard RAG is faster and cheaper. Start with 
+            a <strong>ReAct loop</strong> using LangGraph or LlamaIndex Agents — they handle the complexity of state management 
+            and loop termination for you. Always set a <strong>max iteration limit</strong> (e.g., 5 steps) to prevent infinite loops.
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ GRAPH RAG ═══════════════════════════════════════ -->
+        <section id="graph-rag" role="article">
+          <h1>🕸️ GraphRAG</h1>
+          <span class="badge">advanced</span> <span class="badge">knowledge graph</span> <span class="badge">Microsoft</span>
+
+          <h2>What is GraphRAG?</h2>
+          <p>
+            GraphRAG (Graph Retrieval-Augmented Generation), introduced by Microsoft Research in 2024, replaces the 
+            flat vector index with a <strong>knowledge graph</strong> built from the corpus. The graph captures entities, 
+            relationships, and community structures — enabling the LLM to answer <strong>global, thematic questions</strong> 
+            that standard RAG cannot handle because they span the entire corpus rather than a few similar chunks.
+          </p>
+
+          <div class="callout bg-gradient-blue">
+            <strong>🔑 Key insight:</strong> Standard RAG excels at <em>"local"</em> queries (specific facts). GraphRAG excels at 
+            <em>"global"</em> queries (themes, summaries, relationships across many documents).
+          </div>
+
+          <h2>How GraphRAG Works</h2>
+
+          <div class="mermaid">
+flowchart TB
+    subgraph Indexing["Indexing Phase (Offline)"]
+        D["Raw Documents"] --> E["Entity Extraction\n(LLM-based NER)"]
+        E --> G["Build Knowledge Graph\nEntities + Relationships"]
+        G --> C["Community Detection\n(Leiden Algorithm)"]
+        C --> S["Generate Community\nSummaries (LLM)"]
+        S --> IDX["Graph Index +\nVector Index"]
+    end
+
+    subgraph Query["Query Phase (Online)"]
+        Q["User Query"] --> R["Map: Query each\nCommunity Summary"]
+        R --> AGG["Reduce: Aggregate\nTop Answers"]
+        AGG --> F["Final Answer"]
+    end
+
+    IDX --> Q
+
+    style Indexing fill:#f0f5ff,stroke:#adc6ff
+    style Query fill:#f6ffed,stroke:#b7eb8f
+    style F fill:#52c41a,stroke:#237804,color:#fff
+          </div>
+
+          <h2>GraphRAG Pipeline Steps</h2>
+
+          <h3>Step 1: Entity & Relationship Extraction</h3>
+          <p>An LLM reads each document chunk and extracts entities (people, organisations, concepts) and the relationships between them.</p>
+          <div class="example">
+            <strong>Input chunk:</strong> "Alice leads the Cloud Platform team. The Cloud Platform team uses Azure Kubernetes Service to deploy microservices."<br/><br/>
+            <strong>Extracted:</strong><br/>
+            Entities: [Alice (Person), Cloud Platform Team (Team), Azure Kubernetes Service (Technology), Microservices (Concept)]<br/>
+            Relationships: Alice → LEADS → Cloud Platform Team; Cloud Platform Team → USES → Azure Kubernetes Service; Azure Kubernetes Service → DEPLOYS → Microservices
+          </div>
+
+          <h3>Step 2: Community Detection</h3>
+          <p>The Leiden algorithm partitions the graph into <strong>communities</strong> (clusters of closely related entities). Each community represents a coherent topic or domain within the corpus.</p>
+
+          <h3>Step 3: Community Summaries</h3>
+          <p>An LLM generates a natural-language summary for each community, capturing the key entities, relationships, and themes. These summaries are stored alongside the graph and used at query time.</p>
+
+          <h3>Step 4: Query with Map-Reduce</h3>
+          <p>At query time, GraphRAG uses a <strong>map-reduce</strong> approach:</p>
+          <ul>
+            <li><strong>Map:</strong> Query each community summary independently — "How does this community's content relate to the question?"</li>
+            <li><strong>Reduce:</strong> Aggregate partial answers from all relevant communities into a final comprehensive answer.</li>
+          </ul>
+
+          <h2>GraphRAG vs Standard RAG</h2>
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th>Standard RAG</th>
+                <th>GraphRAG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Query type</strong></td>
+                <td>Local: specific fact lookup</td>
+                <td>Global: themes, patterns, summaries</td>
+              </tr>
+              <tr>
+                <td><strong>Index structure</strong></td>
+                <td>Flat vector index</td>
+                <td>Knowledge graph + vector index</td>
+              </tr>
+              <tr>
+                <td><strong>Relationship handling</strong></td>
+                <td>Implicit (via embedding similarity)</td>
+                <td>Explicit (graph edges)</td>
+              </tr>
+              <tr>
+                <td><strong>Indexing cost</strong></td>
+                <td>Low (embed chunks)</td>
+                <td>High (LLM calls for extraction)</td>
+              </tr>
+              <tr>
+                <td><strong>Query cost</strong></td>
+                <td>Low (1 vector search)</td>
+                <td>High (map-reduce over communities)</td>
+              </tr>
+              <tr>
+                <td><strong>Multi-hop reasoning</strong></td>
+                <td>Weak</td>
+                <td>Strong (graph traversal)</td>
+              </tr>
+              <tr>
+                <td><strong>Best corpus size</strong></td>
+                <td>Any</td>
+                <td>Large, entity-rich corpora (1K+ docs)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Query Types: Local vs Global</h2>
+
+          <div class="example">
+            <strong>Local Query (Standard RAG wins):</strong><br/>
+            "What is the refund period for Product X?"<br/>
+            → Answer found in 1-2 specific document chunks.<br/><br/>
+
+            <strong>Global Query (GraphRAG wins):</strong><br/>
+            "What are the main themes discussed in our support tickets over the last year?"<br/>
+            → Requires synthesising patterns across thousands of documents — no single chunk contains the answer.
+          </div>
+
+          <h2>Hybrid: Local + Global Retrieval</h2>
+          <p>Microsoft's GraphRAG implementation supports a <strong>drift search</strong> mode that combines local vector 
+          search with community context for queries that are neither purely local nor purely global.</p>
+
+          <table class="table table-sm">
+            <thead>
+              <tr><th>Mode</th><th>Use When</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Local</strong></td><td>Specific entity lookups, factual questions</td></tr>
+              <tr><td><strong>Global</strong></td><td>Thematic summaries, corpus-wide analysis</td></tr>
+              <tr><td><strong>Drift</strong></td><td>Exploratory questions that span both local and global context</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Getting Started with Microsoft GraphRAG</h2>
+
+          <div class="example">
+            <strong>Installation &amp; Quick Start:</strong>
+            <pre><code># Install Microsoft GraphRAG
+pip install graphrag
+
+# Initialise a new GraphRAG project
+python -m graphrag init --root ./my_rag_project
+
+# Configure: edit my_rag_project/settings.yaml
+# - Set your OpenAI API key
+# - Point to your documents folder
+
+# Build the index (knowledge graph + community summaries)
+python -m graphrag index --root ./my_rag_project
+
+# Query with global search (thematic questions)
+python -m graphrag query \
+  --root ./my_rag_project \
+  --method global \
+  --query "What are the main themes in this dataset?"
+
+# Query with local search (specific facts)
+python -m graphrag query \
+  --root ./my_rag_project \
+  --method local \
+  --query "Who is responsible for the payments module?"</code></pre>
+          </div>
+
+          <h2>When to Choose GraphRAG</h2>
+
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Choose GraphRAG If…</th>
+                <th>Stick with Standard RAG If…</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Users ask thematic, summary, or "big picture" questions</td>
+                <td>Users ask specific factual questions</td>
+              </tr>
+              <tr>
+                <td>Your corpus is entity-rich (reports, contracts, emails)</td>
+                <td>Your corpus is primarily procedural (docs, tutorials)</td>
+              </tr>
+              <tr>
+                <td>Relationships between entities are important</td>
+                <td>Documents are largely independent</td>
+              </tr>
+              <tr>
+                <td>Corpus is large (1,000+ documents)</td>
+                <td>Corpus is small or medium (&lt; 500 documents)</td>
+              </tr>
+              <tr>
+                <td>Indexing cost is acceptable (1-time)</td>
+                <td>Cost and simplicity are top priorities</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout bg-gradient-teal">
+            <strong>💡 Key Takeaway:</strong> GraphRAG is a powerful complement to standard RAG, not a replacement. Use <strong>standard RAG 
+            for local queries</strong> (fast, cheap, accurate) and <strong>GraphRAG for global, thematic queries</strong> (understanding themes, 
+            cross-document relationships). For most production systems, a <strong>hybrid approach</strong> — routing queries to local or global 
+            retrieval based on query type — gives the best results. The Microsoft <code>graphrag</code> Python package provides 
+            a production-ready implementation.
+          </div>
+        </section>
+
         <!-- ═══════════════════════════════════════ IMPLEMENTATION ═══════════════════════════════════════ -->
         <section id="implementation" role="article">
           <h1>👨‍💻 Implementation</h1>
@@ -9991,32 +10489,32 @@ flowchart TB
             <tbody>
               <tr>
                 <td><strong>OpenAI</strong></td>
-                <td>GPT-4-turbo</td>
-                <td>$10/1M tokens</td>
-                <td>⭐ Highest quality, function calling</td>
+                <td>GPT-4o</td>
+                <td>$2.50/1M tokens</td>
+                <td>⭐ Highest quality, multimodal, function calling</td>
               </tr>
               <tr>
                 <td><strong>OpenAI</strong></td>
-                <td>GPT-3.5-turbo</td>
-                <td>$0.50/1M tokens</td>
-                <td>Cost-effective, simple queries</td>
+                <td>GPT-4o mini</td>
+                <td>$0.15/1M tokens</td>
+                <td>Cost-effective, 128K context, simple queries</td>
               </tr>
               <tr>
                 <td><strong>Anthropic</strong></td>
-                <td>Claude 3 Opus</td>
-                <td>$15/1M tokens</td>
-                <td>Long context (200K), analysis</td>
+                <td>Claude 3.7 Sonnet</td>
+                <td>$3.00/1M tokens</td>
+                <td>Long context (200K), best instruction following</td>
               </tr>
               <tr>
                 <td><strong>Anthropic</strong></td>
-                <td>Claude 3 Haiku</td>
-                <td>$0.25/1M tokens</td>
-                <td>Speed, cost-sensitive</td>
+                <td>Claude 3.5 Haiku</td>
+                <td>$0.80/1M tokens</td>
+                <td>Speed, long context, cost-sensitive</td>
               </tr>
               <tr>
                 <td><strong>Azure OpenAI</strong></td>
-                <td>GPT-4</td>
-                <td>$30/1M tokens</td>
+                <td>GPT-4o</td>
+                <td>~$2.50/1M tokens</td>
                 <td>Enterprise, compliance, SLA</td>
               </tr>
             </tbody>
@@ -10027,14 +10525,13 @@ flowchart TB
           <div class="mermaid">
 flowchart LR
     D1["1. Local Dev
-    Chroma + GPT-3.5
-    Fast iteration"] --> D2["2. Staging
-    Qdrant + GPT-4
-    Real data testing"]
+Chroma + GPT-4o mini
+Fast iteration"] --> D2["2. Staging
+Qdrant + GPT-4o
+Real data testing"]
     
     D2 --> D3["3. Production
-    Pinecone + GPT-4
-    Load testing"]
+Pinecone + GPT-4o
     
     D3 --> D4["4. Optimization
     Add caching
@@ -10056,7 +10553,7 @@ flowchart LR
             • Framework: <strong>LangChain or LlamaIndex</strong><br/>
             • Embedding: <strong>OpenAI text-embedding-3-small</strong><br/>
             • Vector DB: <strong>Pinecone (serverless)</strong><br/>
-            • LLM: <strong>GPT-3.5-turbo</strong> (dev), <strong>GPT-4-turbo</strong> (prod)<br/>
+            • LLM: <strong>GPT-4o mini</strong> (dev), <strong>GPT-4o</strong> (prod)<br/>
             • Hosting: <strong>Vercel/Railway/Render</strong><br/><br/>
             
             <strong>Why:</strong> All managed services, minimal DevOps, fast development<br/>
@@ -11396,7 +11893,7 @@ settings = Settings()
             <strong>RAG Solution:</strong><br/>
             • Index: Product catalog with specs, reviews, Q&A<br/>
             • Retrieval: Hybrid search (product IDs need exact match)<br/>
-            • Generation: GPT-3.5-turbo for conversational recommendations<br/><br/>
+            • Generation: GPT-4o mini for conversational recommendations<br/><br/>
             
             <strong>Results:</strong><br/>
             • Conversion rate +15-30%<br/>
@@ -12538,12 +13035,12 @@ flowchart TB
             
             <strong>Strategy:</strong><br/>
             • Classify query complexity (LLM or heuristic)<br/>
-            • Simple queries → GPT-3.5-turbo or Claude Haiku (200ms, $0.0005)<br/>
-            • Complex queries → GPT-4 or Claude Opus (2s, $0.03)<br/><br/>
+            • Simple queries → GPT-4o mini or Gemini 2.0 Flash (200ms, $0.00015)<br/>
+            • Complex queries → GPT-4o or Claude 3.7 Sonnet (2s, $0.0025)<br/><br/>
             
             <strong>Example:</strong><br/>
-            • "What is your return policy?" → Simple → GPT-3.5<br/>
-            • "Compare your return policy to industry standards and recommend improvements" → Complex → GPT-4<br/><br/>
+            • "What is your return policy?" → Simple → GPT-4o mini<br/>
+            • "Compare your return policy to industry standards and recommend improvements" → Complex → GPT-4o<br/><br/>
             
             <strong>Results:</strong> 60% of queries are simple → Average cost -40%, latency -50%
           </div>
@@ -12902,8 +13399,8 @@ flowchart TB
 
           <h2>Overview</h2>
           <p>
-            LLMs have finite context windows (GPT-4: 128K tokens, Claude: 200K). RAG systems often retrieve more text 
-            than fits in the window. This section covers strategies to work within context limits while maintaining quality.
+            LLMs have finite context windows — GPT-4o: 128K tokens, Claude 3.7 Sonnet: 200K, Gemini 2.0 Flash: 1M. RAG systems often retrieve 
+            more text than fits in the window. This section covers strategies to work within context limits while maintaining quality.
           </p>
 
           <h2>Context Window Sizes (2026)</h2>
@@ -12919,34 +13416,40 @@ flowchart TB
             </thead>
             <tbody>
               <tr>
-                <td><strong>GPT-4-turbo</strong></td>
+                <td><strong>GPT-4o</strong></td>
                 <td>128K tokens</td>
-                <td>$10/1M tokens</td>
+                <td>$2.50/1M tokens</td>
                 <td>~100K (reserve space for output)</td>
               </tr>
               <tr>
-                <td><strong>GPT-3.5-turbo</strong></td>
-                <td>16K tokens</td>
-                <td>$0.50/1M tokens</td>
-                <td>~12K</td>
+                <td><strong>GPT-4o mini</strong></td>
+                <td>128K tokens</td>
+                <td>$0.15/1M tokens</td>
+                <td>~100K</td>
               </tr>
               <tr>
-                <td><strong>Claude 3 Opus</strong></td>
+                <td><strong>Claude 3.7 Sonnet</strong></td>
                 <td>200K tokens</td>
-                <td>$15/1M tokens</td>
+                <td>$3.00/1M tokens</td>
                 <td>~180K</td>
               </tr>
               <tr>
-                <td><strong>Claude 3 Haiku</strong></td>
+                <td><strong>Claude 3.5 Haiku</strong></td>
                 <td>200K tokens</td>
-                <td>$0.25/1M tokens</td>
+                <td>$0.80/1M tokens</td>
                 <td>~180K</td>
               </tr>
               <tr>
-                <td><strong>Llama 3 (self-hosted)</strong></td>
-                <td>8K-32K tokens</td>
+                <td><strong>Gemini 2.0 Flash</strong></td>
+                <td>1M tokens</td>
+                <td>$0.10/1M tokens</td>
+                <td>~800K</td>
+              </tr>
+              <tr>
+                <td><strong>Llama 3.3 70B (self-hosted)</strong></td>
+                <td>128K tokens</td>
                 <td>Compute cost</td>
-                <td>~6K-28K</td>
+                <td>~100K</td>
               </tr>
             </tbody>
           </table>
@@ -13039,29 +13542,30 @@ flowchart TB
             • Compression would lose important details<br/><br/>
             
             <strong>Cost Comparison:</strong><br/>
-            • GPT-3.5 (16K): $0.50/1M input tokens<br/>
-            • GPT-4-turbo (128K): $10/1M input tokens (20x more expensive)<br/>
-            • Claude 3 Haiku (200K): $0.25/1M tokens (cheapest long-context option)<br/><br/>
+            • GPT-4o mini (128K): $0.15/1M input tokens (best value at 128K)<br/>
+            • Claude 3.5 Haiku (200K): $0.80/1M tokens (cost-effective long context)<br/>
+            • Claude 3.7 Sonnet (200K): $3.00/1M tokens (best quality long context)<br/>
+            • Gemini 2.0 Flash (1M): $0.10/1M tokens (cheapest, massive context)<br/><br/>
             
-            <strong>Recommendation:</strong> Use Claude 3 Haiku for cost-effective long context
+            <strong>Recommendation:</strong> Use Claude 3.5 Haiku or Gemini 2.0 Flash for cost-effective long context
           </div>
 
           <h2>Context Budget Allocation</h2>
 
           <div class="example">
-            <strong>For 16K Context Window (GPT-3.5):</strong><br/>
-            • System prompt: 500 tokens (3%)<br/>
-            • User query: 100 tokens (1%)<br/>
-            • Retrieved context: 12,000 tokens (75%)<br/>
-            • Reserved for output: 3,400 tokens (21%)<br/>
-            • <strong>Total: 16,000 tokens (100%)</strong><br/><br/>
-            
-            <strong>For 128K Context Window (GPT-4-turbo):</strong><br/>
+            <strong>For 128K Context Window (GPT-4o / GPT-4o mini):</strong><br/>
             • System prompt: 500 tokens (0.4%)<br/>
             • User query: 100 tokens (0.1%)<br/>
             • Retrieved context: 100,000 tokens (78%)<br/>
             • Reserved for output: 27,400 tokens (21%)<br/>
-            • <strong>Total: 128,000 tokens (100%)</strong>
+            • <strong>Total: 128,000 tokens (100%)</strong><br/><br/>
+
+            <strong>For 200K Context Window (Claude 3.7 Sonnet / 3.5 Haiku):</strong><br/>
+            • System prompt: 1,000 tokens (0.5%)<br/>
+            • User query: 200 tokens (0.1%)<br/>
+            • Retrieved context: 160,000 tokens (80%)<br/>
+            • Reserved for output: 38,800 tokens (19%)<br/>
+            • <strong>Total: 200,000 tokens (100%)</strong>
           </div>
 
           <h2>Lost-in-the-Middle Problem</h2>
@@ -13113,16 +13617,13 @@ flowchart TB
               <tr>
                 <td><strong>Cost-sensitive</strong></td>
                 <td>Any</td>
-                <td>Context compression + GPT-3.5</td>
+                <td>Context compression + GPT-4o mini or Gemini 2.0 Flash</td>
               </tr>
             </tbody>
           </table>
 
           <div class="callout">
-            <strong>💡 Key Takeaway:</strong> For most RAG systems, use <strong>reranking + context compression</strong> to fit within 
-            GPT-3.5's 16K context (cheap, fast). Compress retrieved docs by 40-60% using <strong>LLMLingua</strong> with minimal 
-            quality loss. For long documents (contracts, research papers), upgrade to <strong>Claude 3 Haiku (200K context, $0.25/1M)</strong> 
-            - cheaper than GPT-4-turbo. Monitor context usage: aim for 75% context + 21% output buffer.
+            <strong>💡 Key Takeaway:</strong> For most RAG systems, use <strong>reranking + context compression</strong> to maximize quality within budget. Compress retrieved docs by 40-60% using <strong>LLMLingua</strong> with minimal quality loss. For long documents (contracts, research papers), use <strong>Claude 3.5 Haiku (200K context, $0.80/1M)</strong> or <strong>Gemini 2.0 Flash (1M context, $0.10/1M)</strong> for maximum cost efficiency. Monitor context usage: aim for 75-80% context + 20% output buffer.
           </div>
         </section>
 
@@ -13219,31 +13720,36 @@ flowchart TB
             
             <table class="table table-sm">
               <tr>
-                <td><strong>GPT-4-turbo:</strong></td>
-                <td>$10/1M input</td>
-                <td>Highest quality</td>
+                <td><strong>GPT-4o:</strong></td>
+                <td>$2.50/1M input</td>
+                <td>Highest quality, multimodal</td>
               </tr>
               <tr>
-                <td><strong>GPT-3.5-turbo:</strong></td>
-                <td>$0.50/1M input</td>
-                <td>20x cheaper, 90% quality</td>
+                <td><strong>GPT-4o mini:</strong></td>
+                <td>$0.15/1M input</td>
+                <td>17x cheaper than GPT-4o, 90% quality</td>
               </tr>
               <tr>
-                <td><strong>Claude 3 Haiku:</strong></td>
-                <td>$0.25/1M input</td>
-                <td>40x cheaper, 85% quality</td>
+                <td><strong>Claude 3.5 Haiku:</strong></td>
+                <td>$0.80/1M input</td>
+                <td>Fast, great for long context, 88% quality</td>
               </tr>
               <tr>
-                <td><strong>Llama 3 (self-hosted):</strong></td>
+                <td><strong>Gemini 2.0 Flash:</strong></td>
+                <td>$0.10/1M input</td>
+                <td>25x cheaper than GPT-4o, 1M context, 85% quality</td>
+              </tr>
+              <tr>
+                <td><strong>Llama 3.3 70B (self-hosted):</strong></td>
                 <td>~$0.001-0.01/1M</td>
-                <td>1000x cheaper, 75% quality</td>
+                <td>250-2500x cheaper, 75% quality</td>
               </tr>
             </table><br/>
             
             <strong>Hybrid Approach:</strong><br/>
-            • Simple queries (60% of traffic) → GPT-3.5-turbo<br/>
-            • Complex queries (40% of traffic) → GPT-4-turbo<br/>
-            • Blended cost: 60% × $0.025 + 40% × $0.05 = $0.035/query (13% savings)<br/><br/>
+            • Simple queries (60% of traffic) → GPT-4o mini<br/>
+            • Complex queries (40% of traffic) → GPT-4o<br/>
+            • Blended cost: 60% × $0.0015 + 40% × $0.025 = $0.0109/query (savings vs full GPT-4o)<br/><br/>
             
             <strong>Query Classifier:</strong><br/>
             Use heuristics or small LLM to classify complexity
@@ -13361,10 +13867,10 @@ graph TB
           <div class="example">
             • <strong>Embedding:</strong> text-embedding-3-small ($0.02/1M)<br/>
             • <strong>Vector DB:</strong> Pinecone serverless (easy setup)<br/>
-            • <strong>LLM:</strong> GPT-3.5-turbo ($0.50/1M)<br/>
+            • <strong>LLM:</strong> GPT-4o mini ($0.15/1M)<br/>
             • <strong>Caching:</strong> In-memory (simple)<br/>
-            • <strong>Cost:</strong> ~$0.025/query<br/>
-            • <strong>Latency:</strong> ~2-4s<br/>
+            • <strong>Cost:</strong> ~$0.002/query<br/>
+            • <strong>Latency:</strong> ~1-3s<br/>
             • <strong>Quality:</strong> 85-90%
           </div>
 
@@ -13372,10 +13878,10 @@ graph TB
           <div class="example">
             • <strong>Embedding:</strong> text-embedding-3-small<br/>
             • <strong>Vector DB:</strong> Pinecone or Qdrant<br/>
-            • <strong>LLM:</strong> GPT-4-turbo for complex, GPT-3.5 for simple<br/>
+            • <strong>LLM:</strong> GPT-4o for complex, GPT-4o mini for simple<br/>
             • <strong>Caching:</strong> Redis (1hr TTL, 70% hit rate)<br/>
             • <strong>Optimization:</strong> Context compression (50%)<br/>
-            • <strong>Cost:</strong> ~$0.012/query (with cache)<br/>
+            • <strong>Cost:</strong> ~$0.005/query (with cache)<br/>
             • <strong>Latency:</strong> ~1.5-3s (p95)<br/>
             • <strong>Quality:</strong> 90-95%
           </div>
@@ -13384,19 +13890,19 @@ graph TB
           <div class="example">
             • <strong>Embedding:</strong> Self-hosted sentence-transformers<br/>
             • <strong>Vector DB:</strong> pgvector (free with existing Postgres)<br/>
-            • <strong>LLM:</strong> Claude 3 Haiku or self-hosted Llama 3<br/>
+            • <strong>LLM:</strong> Gemini 2.0 Flash or self-hosted Llama 3.3 70B<br/>
             • <strong>Caching:</strong> Redis (aggressive, 24hr TTL, 80% hit rate)<br/>
             • <strong>Optimization:</strong> Context compression + streaming<br/>
-            • <strong>Cost:</strong> ~$0.001-0.005/query<br/>
+            • <strong>Cost:</strong> ~$0.0001-0.001/query<br/>
             • <strong>Latency:</strong> ~2-5s<br/>
             • <strong>Quality:</strong> 80-85%
           </div>
 
           <div class="callout">
             <strong>💡 Key Takeaway:</strong> <strong>Caching is the highest ROI optimization</strong> - 70% cache hit rate = 70% cost 
-            reduction with zero quality loss. For cost, use <strong>GPT-3.5-turbo + context compression</strong> ($0.01-0.02/query). 
-            For latency, use <strong>streaming</strong> (70% perceived improvement). Balance: GPT-4 for complex queries, GPT-3.5 for simple, 
-            70% cache hit rate, context compression → $0.012/query, 1.5s latency, 92% quality.
+            reduction with zero quality loss. For cost, use <strong>GPT-4o mini + context compression</strong> (~$0.001-0.005/query). 
+            For latency, use <strong>streaming</strong> (70% perceived improvement). Balance: GPT-4o for complex queries, GPT-4o mini for simple, 
+            70% cache hit rate, context compression → ~$0.005/query, 1.5s latency, 92% quality.
           </div>
         </section>
 
@@ -13594,7 +14100,7 @@ graph TB
           <hr />
           <div class="document-footer">
             <p>
-              <strong>Last Updated:</strong> February 2026 |
+              <strong>Last Updated:</strong> April 2026 |
               <strong>Curated by:</strong> Murthy Vepa with ❤️ | 
               <strong>Powered by:</strong> GitHub Copilot
             </p>
@@ -13676,6 +14182,8 @@ graph TB
       { id: "chunking-strategies",       title: "✂️ Chunking Strategies",                   parent: "advanced-techniques", tags: ["chunking", "segmentation", "splitting"] },
       { id: "query-expansion",           title: "🔍 Query Expansion",                       parent: "advanced-techniques", tags: ["query", "expansion", "enhancement"] },
       { id: "context-compression",       title: "🗜️ Context Compression",                  parent: "advanced-techniques", tags: ["compression", "context", "optimization"] },
+      { id: "agentic-rag",               title: "🤖 Agentic RAG",                           parent: "advanced-techniques", tags: ["agentic", "multi-step", "reasoning", "ReAct", "FLARE", "Self-RAG"] },
+      { id: "graph-rag",                 title: "🕸️ GraphRAG",                              parent: "advanced-techniques", tags: ["graph", "knowledge graph", "Microsoft", "community", "global queries"] },
       
       // Implementation
       { id: "implementation",            title: "👨‍💻 Implementation",                       tags: ["implementation", "development", "coding"] },

@@ -574,20 +574,23 @@
         <h2>📋 Categories</h2>
       </div>
       <div class="category-menu">
-        <div class="menu-item azure active" onclick="showCategory('azure')">
-          <span class="menu-icon">☁️</span>
+        <!-- Foundation -->
+        <div class="menu-item design active" onclick="showCategory('design')">
+          <span class="menu-icon">🏗️</span>
           <div class="menu-text">
-            <div class="menu-title">Azure Services</div>
-            <div class="menu-count">16 guides</div>
+            <div class="menu-title">Design & Arch</div>
+            <div class="menu-count">13 guides</div>
           </div>
         </div>
-        <div class="menu-item ai" onclick="showCategory('ai')">
-          <span class="menu-icon">🤖</span>
+        <div class="menu-item method" onclick="showCategory('method')">
+          <span class="menu-icon">🎯</span>
           <div class="menu-text">
-            <div class="menu-title">AI & Copilot</div>
-            <div class="menu-count">11 guides</div>
+            <div class="menu-title">Methodologies</div>
+            <div class="menu-count">8 guides</div>
           </div>
         </div>
+        
+        <!-- Development Stack -->
         <div class="menu-item frontend" onclick="showCategory('frontend')">
           <span class="menu-icon">🎨</span>
           <div class="menu-text">
@@ -609,13 +612,8 @@
             <div class="menu-count">5 guides</div>
           </div>
         </div>
-        <div class="menu-item devops" onclick="showCategory('devops')">
-          <span class="menu-icon">🚀</span>
-          <div class="menu-text">
-            <div class="menu-title">DevOps & Infra</div>
-            <div class="menu-count">6 guides</div>
-          </div>
-        </div>
+        
+        <!-- Quality & Operations -->
         <div class="menu-item testing" onclick="showCategory('testing')">
           <span class="menu-icon">🧪</span>
           <div class="menu-text">
@@ -630,6 +628,22 @@
             <div class="menu-count">4 guides</div>
           </div>
         </div>
+        <div class="menu-item devops" onclick="showCategory('devops')">
+          <span class="menu-icon">🚀</span>
+          <div class="menu-text">
+            <div class="menu-title">DevOps & Infra</div>
+            <div class="menu-count">6 guides</div>
+          </div>
+        </div>
+        
+        <!-- Cloud & Advanced -->
+        <div class="menu-item azure" onclick="showCategory('azure')">
+          <span class="menu-icon">☁️</span>
+          <div class="menu-text">
+            <div class="menu-title">Azure Services</div>
+            <div class="menu-count">16 guides</div>
+          </div>
+        </div>
         <div class="menu-item data" onclick="showCategory('data')">
           <span class="menu-icon">📊</span>
           <div class="menu-text">
@@ -637,17 +651,10 @@
             <div class="menu-count">4 guides</div>
           </div>
         </div>
-        <div class="menu-item method" onclick="showCategory('method')">
-          <span class="menu-icon">🎯</span>
+        <div class="menu-item ai" onclick="showCategory('ai')">
+          <span class="menu-icon">🤖</span>
           <div class="menu-text">
-            <div class="menu-title">Methodologies</div>
-            <div class="menu-count">7 guides</div>
-          </div>
-        </div>
-        <div class="menu-item design" onclick="showCategory('design')">
-          <span class="menu-icon">🏗️</span>
-          <div class="menu-text">
-            <div class="menu-title">Design & Arch</div>
+            <div class="menu-title">AI & Copilot</div>
             <div class="menu-count">11 guides</div>
           </div>
         </div>
@@ -657,7 +664,7 @@
     <!-- Main Content -->
     <div class="main-content">
       <!-- Azure Services -->
-      <div id="azure-section" class="content-section active">
+      <div id="azure-section" class="content-section">
         <div class="category-content azure">
           <div class="category-header">
             <span class="category-icon">☁️</span>
@@ -683,6 +690,10 @@
             <a href="Azure Service Bus - In a Nutshell.html" target="_blank" class="guide-card">
               <div class="guide-title">📨 Azure Service Bus</div>
               <p class="guide-description">Enterprise messaging with queues, topics, and reliable delivery</p>
+            </a>
+            <a href="Azure Cosmos DB - In a Nutshell.html" target="_blank" class="guide-card">
+              <div class="guide-title">🌍 Azure Cosmos DB</div>
+              <p class="guide-description">Globally distributed, multi-model NoSQL database service with unlimited scale</p>
             </a>
             <div class="guide-card soon">
               <div class="guide-title">🎯 Azure Kubernetes Service (AKS)<span class="soon-badge">Soon</span></div>
@@ -756,8 +767,8 @@
               <div class="guide-title">🧮 Vector Databases</div>
               <p class="guide-description">Specialized databases for storing and searching high-dimensional vectors for AI</p>
             </a>
-            <a href="GitHub SpecKit - In a Nutshell.html" target="_blank" class="guide-card">
-              <div class="guide-title">📋 GitHub SpecKit</div>
+            <a href="GitHub Spec Kit - In a Nutshell.html" target="_blank" class="guide-card">
+              <div class="guide-title">📋 GitHub Spec Kit</div>
               <p class="guide-description">Specification-driven development toolkit for building from requirements</p>
             </a>
             <a href="Prompt Engineering - In a Nutshell.html" target="_blank" class="guide-card">
@@ -776,10 +787,14 @@
               <div class="guide-title">🏭 Azure AI Foundry<span class="soon-badge">Soon</span></div>
               <p class="guide-description">Microsoft's unified platform for building AI applications</p>
             </div>
-            <div class="guide-card soon">
-              <div class="guide-title">🧩 Semantic Kernel<span class="soon-badge">Soon</span></div>
+            <a href="LangChain and LangGraph - In a Nutshell.html" target="_blank" class="guide-card">
+              <div class="guide-title">🦜 LangChain &amp; LangGraph</div>
+              <p class="guide-description">Framework for building LLM-powered apps and stateful multi-agent workflows</p>
+            </a>
+            <a href="Semantic Kernel - In a Nutshell.html" target="_blank" class="guide-card">
+              <div class="guide-title">🧩 Semantic Kernel</div>
               <p class="guide-description">Microsoft's SDK for orchestrating AI agents and plugins</p>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -796,8 +811,8 @@
               <div class="guide-title">⚛️ React.js</div>
               <p class="guide-description">JavaScript library for building user interfaces with components</p>
             </a>
-            <a href="Blazor - In a Nutshell.html" target="_blank" class="guide-card">
-              <div class="guide-title">🔥 Blazor</div>
+            <a href="ASP.NET Core Blazor - In a Nutshell.html" target="_blank" class="guide-card">
+              <div class="guide-title">🔥 ASP.NET Core Blazor</div>
               <p class="guide-description">.NET framework for building interactive web UIs using C# instead of JavaScript</p>
             </a>
             <div class="guide-card soon">
@@ -1024,6 +1039,10 @@
               <div class="guide-title">🧠 Product Mindset</div>
               <p class="guide-description">Product thinking and customer-centric development approach</p>
             </a>
+            <a href="Diversity and Inclusion - In a Nutshell.html" target="_blank" class="guide-card">
+              <div class="guide-title">🤝 Diversity & Inclusion</div>
+              <p class="guide-description">Building inclusive workplaces and culture of belonging</p>
+            </a>
             <div class="guide-card soon">
               <div class="guide-title">🔄 DevOps Practices<span class="soon-badge">Soon</span></div>
               <p class="guide-description">Culture, practices, and tools for collaboration between Dev and Ops</p>
@@ -1041,7 +1060,7 @@
       </div>
 
       <!-- Design & Architecture -->
-      <div id="design-section" class="content-section">
+      <div id="design-section" class="content-section active">
         <div class="category-content design">
           <div class="category-header">
             <span class="category-icon">🏗️</span>
@@ -1075,6 +1094,14 @@
             <a href="UML - In a Nutshell.html" target="_blank" class="guide-card">
               <div class="guide-title">📐 UML</div>
               <p class="guide-description">Unified Modeling Language for visualizing software system design</p>
+            </a>
+            <a href="Diagram as Code - In a Nutshell.html" target="_blank" class="guide-card">
+              <div class="guide-title">🎨 Diagram as Code</div>
+              <p class="guide-description">Create diagrams using code with Mermaid, PlantUML, Graphviz, and more</p>
+            </a>
+            <a href="Markdown and Mermaid - In a Nutshell.html" target="_blank" class="guide-card">
+              <div class="guide-title">📝 Markdown & Mermaid</div>
+              <p class="guide-description">Documentation and diagramming with Markdown syntax and Mermaid diagrams</p>
             </a>
             <a href="TwelveFactorApp - In a Nutshell.html" target="_blank" class="guide-card">
               <div class="guide-title">🏗️ Twelve-Factor App</div>

@@ -829,6 +829,8 @@ ul
         theme: 'base',
         securityLevel: 'loose',
         logLevel: 'error',
+        fontFamily: 'Segoe UI Semibold',
+        fontSize: '18px',
         flowchart: {
         useMaxWidth: true,
         htmlLabels: true,
@@ -1038,21 +1040,6 @@ ul
             <span class="badge">overview</span>
             <span class="badge">concepts</span>
 
-            <h2>Table of Contents</h2>
-            <ol>
-                <li><a href="#introduction">Introduction</a></li>
-                <li><a href="#what-is-azure-cosmos-db">What is Azure Cosmos DB?</a></li>
-                <li><a href="#multi-model-architecture">Multi-Model Architecture</a></li>
-                <li><a href="#global-distribution">Global Distribution</a></li>
-                <li><a href="#partitioning-strategy">Partitioning Strategy</a></li>
-                <li><a href="#consistency-levels">Consistency Levels</a></li>
-                <li><a href="#request-units-rus">Request Units (RUs)</a></li>
-                <li><a href="#indexing-strategy">Indexing Strategy</a></li>
-                <li><a href="#resource-model">Resource Model</a></li>
-                <li><a href="#use-cases">Use Cases</a></li>
-                <li><a href="#summary">Summary</a></li>
-            </ol>
-
             <h2 id="introduction">1. Introduction</h2>
 
             <p>Azure Cosmos DB is Microsoft's globally distributed, multi-model database service designed for mission-critical applications that require low latency, high availability, and elastic scalability at a global scale.</p>
@@ -1076,7 +1063,6 @@ ul
             <h3>Supported APIs</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Segoe UI', 'fontSize':12, 'nodeSpacing': 200, 'rackSpacing': 100}}}%%
             flowchart TD
                 CosmosDB["Azure Cosmos DB 
             Unified Database Engine"]
@@ -1170,7 +1156,6 @@ ul
             <h3>Architecture</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'default', 'themeVariables': {'fontFamily':'Segoe UI'}}}%%
             flowchart TB
 
                 subgraph "Primary Region: East US"
@@ -1234,7 +1219,6 @@ ul
             <h3>Logical Partitioning</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Segoe UI'}}}%%
             block-beta
             columns 3
             
@@ -1272,7 +1256,6 @@ ul
             <p>Hierarchical Partition Keys allow you to overcome the 20 GB limit and provide better query flexibility.</p>
 
             <div class="mermaid">
-            %%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Segoe UI'}}}%%
             flowchart TB
                 subgraph Traditional["Traditional Single Partition Key"]
                     T1["tenantId: tenant-001
@@ -1322,7 +1305,6 @@ ul
             <h3>Consistency Spectrum</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'default', 'themeVariables': {'fontFamily':'Segoe UI'}}}%%
             flowchart LR
                 Strong["Strong
             Consistency"]
@@ -1425,7 +1407,6 @@ ul
             <h3>Factors Affecting RU Consumption</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'default', 'themeVariables': {'fontFamily':'Segoe UI'}}}%%
             block-beta
             columns 3
             
@@ -1490,7 +1471,6 @@ ul
             <p>Azure Cosmos DB offers three throughput provisioning models:</p>
 
             <div class="mermaid">
-            %%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Segoe UI'}}}%%
             flowchart TD
                 Start{{"**Choose Throughput
             Model**"}}
@@ -1639,7 +1619,6 @@ ul
             <h3>How Indexing Works</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Segoe UI'}, 'flowchart': {'nodeSpacing': 50, 'rankSpacing': 80}}}%%
             flowchart TB
                 Start["📄 Document Inserted/Updated"]
                 
@@ -1756,7 +1735,6 @@ ul
             <h3>Resource Hierarchy</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Segoe UI'}}}%%
             flowchart TD
 
                 Account["Azure Cosmos DB Account
@@ -1918,17 +1896,6 @@ ul
         <span class="badge">modeling</span>
         <span class="badge">partition-keys</span>
         <span class="badge">design</span>
-
-        <h2>Table of Contents</h2>
-        <ol>
-            <li><a href="#dm-core-concepts">Core Concepts</a></li>
-            <li><a href="#dm-partitioning-strategy">Partitioning Strategy</a></li>
-            <li><a href="#dm-data-modelling-approaches">Data Modelling Approaches</a></li>
-            <li><a href="#dm-best-practices">Best Practices</a></li>
-            <li><a href="#dm-dos-and-donts">Do's and Don'ts</a></li>
-            <li><a href="#dm-common-patterns">Common Patterns</a></li>
-            <li><a href="#dm-summary">Summary</a></li>
-        </ol>
 
         <h2 id="dm-core-concepts">1. Core Concepts</h2>
 
@@ -2187,7 +2154,6 @@ ul
         <h2 id="dm-data-modelling-approaches">3. Data Modelling Approaches</h2>
 
         <div class="mermaid">
-        %%{init: {'theme':'default', 'themeVariables': {'fontFamily':'Segoe UI'}, 'flowchart': {'nodeSpacing': 20, 'rankSpacing': 20}}}%%
         flowchart LR
             Start{"**Data Modeling Decision**"}
             Start --> Q1{"Data always 
@@ -2892,33 +2858,6 @@ ul
         <span class="badge">queries</span>
         <span class="badge">sql</span>
         <span class="badge">nosql</span>
-
-        <h2>Table of Contents</h2>
-        <ol>
-            <li><a href="#qd-basic-select">Basic SELECT Queries</a></li>
-            <li><a href="#qd-where-clause">WHERE Clause - Filtering</a></li>
-            <li><a href="#qd-nested-properties">Nested Property Queries</a></li>
-            <li><a href="#qd-array-operations">Array Operations</a></li>
-            <li><a href="#qd-aggregate-functions">Aggregate Functions</a></li>
-            <li><a href="#qd-order-by">ORDER BY</a></li>
-            <li><a href="#qd-string-functions">String Functions</a></li>
-            <li><a href="#qd-math-functions">Math Functions</a></li>
-            <li><a href="#qd-type-checking">Type Checking Functions</a></li>
-            <li><a href="#qd-date-time">Date and Time Functions</a></li>
-            <li><a href="#qd-conditional-logic">Conditional Logic</a></li>
-            <li><a href="#qd-subqueries">Subqueries and Advanced Queries</a></li>
-            <li><a href="#qd-join-operations">JOIN Operations</a></li>
-            <li><a href="#qd-distinct-top">DISTINCT and TOP</a></li>
-            <li><a href="#qd-group-by">GROUP BY</a></li>
-            <li><a href="#qd-advanced-arrays">Advanced Array Functions</a></li>
-            <li><a href="#qd-geospatial">Geospatial Queries</a></li>
-            <li><a href="#qd-cross-partition">Cross-Partition Queries</a></li>
-            <li><a href="#qd-system-functions">Special System Functions</a></li>
-            <li><a href="#qd-optimization">Performance Optimization Patterns</a></li>
-            <li><a href="#qd-summary">Summary of Query Capabilities</a></li>
-            <li><a href="#qd-best-practices">Best Practices</a></li>
-            <li><a href="#qd-ru-guidelines">RU Cost Guidelines</a></li>
-        </ol>
 
         <h2 id="qd-test-data">Test Data Setup</h2>
 
@@ -3779,19 +3718,6 @@ SELECT * FROM c WHERE c.inStock = true AND c.category = "Books"</code></pre>
     <span class="badge">optimization</span>
     <span class="badge">RUs</span>
 
-    <h2>Table of Contents</h2>
-    <ol>
-        <li><a href="#qp-understanding-partitions">Understanding Partitions</a></li>
-        <li><a href="#qp-query-types-costs">Query Types & Costs</a></li>
-        <li><a href="#qp-composite-indexes">Composite Indexes</a></li>
-        <li><a href="#qp-pagination">Pagination</a></li>
-        <li><a href="#qp-hot-partitions">Hot Partitions</a></li>
-        <li><a href="#qp-geospatial-queries">Geospatial Queries</a></li>
-        <li><a href="#qp-best-practices">Best Practices</a></li>
-        <li><a href="#qp-quick-references">Quick Reference</a></li>
-        <li><a href="#qp-summary">Summary</a></li>
-    </ol>
-
     <h2 id="qp-understanding-partitions">1. Understanding Partitions</h2>
 
     <h3>Logical Partitions</h3>
@@ -4333,17 +4259,6 @@ WHERE ST_WITHIN(@userLocation, d.boundary)</code></pre>
             <span class="badge">stored-procedures</span>
             <span class="badge">triggers</span>
             <span class="badge">UDFs</span>
-
-            <h2>Table of Contents</h2>
-            <ol>
-                <li><a href="#ssp-overview">Overview</a></li>
-                <li><a href="#ssp-stored-procedures">Stored Procedures</a></li>
-                <li><a href="#ssp-triggers">Triggers</a></li>
-                <li><a href="#ssp-udfs">User-Defined Functions (UDFs)</a></li>
-                <li><a href="#ssp-change-feed">Change Feed</a></li>
-                <li><a href="#ssp-best-practices">Best Practices</a></li>
-                <li><a href="#ssp-summary">Summary</a></li>
-            </ol>
 
             <h2 id="ssp-overview">1. Overview</h2>
 
@@ -5253,18 +5168,6 @@ WHERE ST_WITHIN(@userLocation, d.boundary)</code></pre>
             <span class="badge">embeddings</span>
             <span class="badge">RAG</span>
 
-            <h2>Table of Contents</h2>
-            <ol>
-                <li><a href="#vector-search-overview">Overview</a></li>
-                <li><a href="#what-is-vector-search">What is Vector Search?</a></li>
-                <li><a href="#vs-use-cases">Use Cases</a></li>
-                <li><a href="#vs-how-it-works">How It Works</a></li>
-                <li><a href="#vector-search-vs-alternatives">Vector Search vs Alternatives</a></li>
-                <li><a href="#vs-integration-benefits">Integration Benefits</a></li>
-                <li><a href="#vector-search-best-practices">Best Practices</a></li>
-                <li><a href="#vector-search-summary">Summary</a></li>
-            </ol>
-
             <h2 id="vector-search-overview">Overview</h2>
 
             <p>Azure Cosmos DB for NoSQL provides <strong>integrated vector search capabilities</strong>, enabling you to store, index, and query high-dimensional vectors alongside your operational data. This makes Cosmos DB an excellent choice for AI-powered applications that require both transactional data management and semantic search capabilities.</p>
@@ -5287,7 +5190,6 @@ WHERE ST_WITHIN(@userLocation, d.boundary)</code></pre>
             <h3>Traditional Search vs Vector Search</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Segoe UI'}, 'flowchart': {'nodeSpacing': 30, 'rankSpacing': 50}}}%%
             flowchart LR
                 subgraph Traditional["❌ Traditional Keyword Search"]
                     T1["Query: 
@@ -5402,7 +5304,6 @@ Vector: [0.12, -0.34, 0.89, 0.45, ..., 0.67]  // 1536 dimensions</code></pre>
             <h3>Architecture Overview</h3>
 
             <div class="mermaid">
-            %%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Segoe UI'}, 'flowchart': {'nodeSpacing': 40, 'rankSpacing': 60}}}%%
             flowchart TB
                 Input["📝 Input Text: 
             'AI-powered database'"]
@@ -5750,44 +5651,780 @@ AND VectorDistance(c.contentVector, @query) < 0.8</code></pre>
 
         </section>
 
-        <section id="cosmosdb-resources" role="article">
-        <h1>Resources</h1>
-        <span class="badge">docs, community</span>
-        
-        <h2>Official Resources</h2>
-        <ul class="list-style-none">
-            <li><a href="https://learn.microsoft.com/azure/cosmos-db/" target="_blank" rel="noopener">Azure Cosmos DB Documentation</a></li>
-            <li><a href="https://learn.microsoft.com/azure/cosmos-db/sql/" target="_blank" rel="noopener">SQL API Documentation</a></li>
-            <li><a href="https://learn.microsoft.com/azure/cosmos-db/tutorials" target="_blank" rel="noopener">Tutorials and Quickstarts</a></li>
-            <li><a href="https://learn.microsoft.com/azure/cosmos-db/pricing" target="_blank" rel="noopener">Pricing Information</a></li>
-            <li><a href="https://learn.microsoft.com/azure/cosmos-db/support-and-troubleshooting" target="_blank" rel="noopener">Support and Troubleshooting</a></li>
-        </ul>
+        <!-- Security & RBAC Section -->
+        <section id="cosmosdb-security" role="article">
+          <h1>Security and Compliance</h1>
+          <span class="badge">security</span>
+          <span class="badge">rbac</span>
+          <span class="badge">encryption</span>
+          <span class="badge">networking</span>
 
-        <h2>Key Takeaways</h2>
-        <div class="callout">
+          <p>Azure Cosmos DB provides enterprise-grade security with multiple layers of protection including network isolation, identity-based access control, data encryption, and compliance certifications.</p>
+
+          <h2>Security Architecture</h2>
+
+          <div class="mermaid">
+graph TB
+    subgraph NETWORK["🌐 Network Security"]
+        VNet[Private Endpoint
+        VNet Integration]
+        FW[IP Firewall
+        Service Endpoints]
+    end
+
+    subgraph IDENTITY["🔑 Identity & Access"]
+        ENTRA[Microsoft Entra ID
+        RBAC]
+        KEYS[Master Keys
+        Resource Tokens]
+        MI[Managed Identity
+        Keyless Auth]
+    end
+
+    subgraph DATA["🔒 Data Protection"]
+        ENC[Encryption at Rest
+        AES-256]
+        TLS[Encryption in Transit
+        TLS 1.2+]
+        CMK[Customer-Managed Keys
+        Azure Key Vault]
+    end
+
+    subgraph COMPLIANCE["✅ Compliance"]
+        CERT[ISO 27001, SOC 2
+        HIPAA, PCI DSS]
+        AUDIT[Audit Logs
+        Diagnostic Settings]
+    end
+
+    CLIENT[Application] --> NETWORK
+    NETWORK --> IDENTITY
+    IDENTITY --> DATA
+    DATA --> COMPLIANCE
+          </div>
+
+          <h2>Authentication Methods</h2>
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Use Case</th>
+                <th>Security Level</th>
+                <th>Recommended?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Microsoft Entra ID (RBAC)</strong></td>
+                <td>Applications, services, users</td>
+                <td>⭐⭐⭐⭐⭐</td>
+                <td>✅ Preferred</td>
+              </tr>
+              <tr>
+                <td><strong>Managed Identity</strong></td>
+                <td>Azure services (Functions, AKS, VMs)</td>
+                <td>⭐⭐⭐⭐⭐</td>
+                <td>✅ Preferred for Azure</td>
+              </tr>
+              <tr>
+                <td><strong>Resource Tokens</strong></td>
+                <td>Client apps, limited-scope access</td>
+                <td>⭐⭐⭐⭐</td>
+                <td>✅ For direct client access</td>
+              </tr>
+              <tr>
+                <td><strong>Primary/Secondary Keys</strong></td>
+                <td>Admin access, legacy systems</td>
+                <td>⭐⭐⭐</td>
+                <td>⚠️ Avoid if possible</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Role-Based Access Control (RBAC)</h2>
+
+          <h3>Built-in Roles</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Permissions</th>
+                <th>Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Cosmos DB Built-in Data Reader</strong></td>
+                <td>Read items and metadata</td>
+                <td>Read-only applications</td>
+              </tr>
+              <tr>
+                <td><strong>Cosmos DB Built-in Data Contributor</strong></td>
+                <td>Read + write items and metadata</td>
+                <td>Application backends</td>
+              </tr>
+              <tr>
+                <td><strong>Cosmos DB Operator</strong></td>
+                <td>Manage accounts but not data</td>
+                <td>Infra/DevOps teams</td>
+              </tr>
+              <tr>
+                <td><strong>Custom Role</strong></td>
+                <td>Granular permissions via policy</td>
+                <td>Fine-grained access control</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Assigning RBAC with Azure CLI</h3>
+          <pre><code># Assign Cosmos DB Data Contributor role to a managed identity
+az cosmosdb sql role assignment create \
+  --account-name mycosmosaccount \
+  --resource-group myResourceGroup \
+  --role-definition-name "Cosmos DB Built-in Data Contributor" \
+  --principal-id &lt;managed-identity-object-id&gt; \
+  --scope "/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.DocumentDB/databaseAccounts/&lt;account&gt;"</code></pre>
+
+          <h3>Keyless Authentication (.NET SDK)</h3>
+          <pre><code>// ✅ Preferred: Use Managed Identity (no keys in code)
+using Azure.Identity;
+using Microsoft.Azure.Cosmos;
+
+var credential = new DefaultAzureCredential();
+var client = new CosmosClient(
+    accountEndpoint: "https://myaccount.documents.azure.com:443/",
+    tokenCredential: credential
+);</code></pre>
+
+          <h2>Network Security</h2>
+
+          <h3>Private Endpoints (Recommended)</h3>
+          <ul>
+            <li>🔒 <strong>Private Endpoint:</strong> Route traffic through Azure Private Link — no public internet exposure</li>
+            <li>🌐 <strong>VNet Integration:</strong> Restrict access to specific virtual networks and subnets</li>
+            <li>🚫 <strong>Disable Public Access:</strong> Set <code>publicNetworkAccess: Disabled</code> for maximum isolation</li>
+            <li>🔥 <strong>IP Firewall:</strong> Whitelist specific IP ranges when private endpoints are not feasible</li>
+            <li>🏢 <strong>Service Endpoints:</strong> Allow Azure services to connect without traversing the internet</li>
+          </ul>
+
+          <h3>Network Access Tiers</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Configuration</th>
+                <th>Security Level</th>
+                <th>Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Private Endpoint only</td>
+                <td>🔒🔒🔒 Maximum</td>
+                <td>Production enterprise workloads</td>
+              </tr>
+              <tr>
+                <td>VNet + IP Firewall</td>
+                <td>🔒🔒 High</td>
+                <td>Hybrid environments</td>
+              </tr>
+              <tr>
+                <td>IP Firewall only</td>
+                <td>🔒 Medium</td>
+                <td>Dev/Test with known IP ranges</td>
+              </tr>
+              <tr>
+                <td>Public (all IPs)</td>
+                <td>⚠️ Low</td>
+                <td>Development only</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Data Encryption</h2>
+
+          <h3>Encryption at Rest</h3>
+          <ul>
+            <li>🔐 All data automatically encrypted using <strong>AES-256</strong></li>
+            <li>🗝️ Default: Microsoft-managed encryption keys</li>
+            <li>🏦 Optional: <strong>Customer-Managed Keys (CMK)</strong> via Azure Key Vault for regulatory compliance</li>
+            <li>📦 Backups and replicated data are also encrypted</li>
+          </ul>
+
+          <h3>Customer-Managed Keys (CMK)</h3>
+          <pre><code>// Configure CMK via Azure CLI
+az cosmosdb create \
+  --name myCosmosAccount \
+  --resource-group myRG \
+  --key-uri "https://mykeyvault.vault.azure.net/keys/mykey/&lt;key-version&gt;"</code></pre>
+
+          <h3>Encryption in Transit</h3>
+          <ul>
+            <li>🔒 <strong>TLS 1.2+</strong> enforced for all connections</li>
+            <li>🚫 Older TLS versions (1.0, 1.1) are automatically rejected</li>
+            <li>✅ All SDK connections use HTTPS by default</li>
+          </ul>
+
+          <h2>Compliance &amp; Certifications</h2>
+
+          <div class="callout">
+            <strong>✅ Azure Cosmos DB Compliance Certifications</strong><br />
+            <ul>
+              <li>🏅 <strong>ISO 27001, 27017, 27018</strong> — Information Security Management</li>
+              <li>🏅 <strong>SOC 1, SOC 2, SOC 3</strong> — Service Organization Controls</li>
+              <li>🏅 <strong>HIPAA / HITECH</strong> — Healthcare data protection</li>
+              <li>🏅 <strong>PCI DSS</strong> — Payment Card Industry security</li>
+              <li>🏅 <strong>FedRAMP High</strong> — US Government workloads</li>
+              <li>🏅 <strong>GDPR</strong> — European data protection</li>
+              <li>🏅 <strong>CSA STAR</strong> — Cloud Security Alliance</li>
+            </ul>
+          </div>
+
+          <h2>Audit Logging &amp; Monitoring</h2>
+
+          <h3>Diagnostic Settings</h3>
+          <ul>
+            <li>📊 <strong>DataPlaneRequests:</strong> Log all data operations (reads, writes, queries)</li>
+            <li>🔧 <strong>ControlPlaneRequests:</strong> Log admin/management operations</li>
+            <li>🔍 <strong>QueryRuntimeStatistics:</strong> Log query execution metrics</li>
+            <li>⚠️ <strong>MongoRequests:</strong> Log MongoDB API operations</li>
+            <li>📈 Route logs to <strong>Log Analytics, Storage Account, or Event Hubs</strong></li>
+          </ul>
+
+          <h3>Key Audit Queries (Log Analytics)</h3>
+          <pre><code>// Find failed authentication attempts
+AzureDiagnostics
+| where ResourceType == "DATABASEACCOUNTS"
+| where Category == "DataPlaneRequests"
+| where statusCode_s == "401" or statusCode_s == "403"
+| project TimeGenerated, operationType_s, statusCode_s, clientIpAddress_s
+| order by TimeGenerated desc</code></pre>
+
+          <h2>Security Best Practices</h2>
+
+          <div class="callout">
+            <strong>🔒 Security Checklist</strong><br />
             <ol>
-                <li>Comprehensive official documentation available</li>
-                <li>Tutorials for hands-on learning</li>
-                <li>Clear pricing details to plan costs</li>
-                <li>Robust support resources for troubleshooting</li>
-                <li>Community and sample code for practical insights</li>
+              <li>✅ Use <strong>Managed Identity</strong> or <strong>Entra ID RBAC</strong> — avoid master keys in application code</li>
+              <li>✅ Store connection strings and keys in <strong>Azure Key Vault</strong></li>
+              <li>✅ Enable <strong>Private Endpoints</strong> and disable public network access in production</li>
+              <li>✅ Apply <strong>least-privilege RBAC</strong> — Data Reader for read-only apps, Data Contributor for write access</li>
+              <li>✅ Enable <strong>diagnostic logging</strong> and send to Log Analytics for audit trails</li>
+              <li>✅ Use <strong>Customer-Managed Keys</strong> if your compliance framework requires key control</li>
+              <li>✅ Regularly <strong>rotate access keys</strong> if using primary/secondary keys</li>
+              <li>✅ Configure <strong>Azure Defender for Cosmos DB</strong> for threat detection</li>
+              <li>✅ Review <strong>RBAC assignments</strong> regularly and remove unused access</li>
+              <li>✅ Enable <strong>IP firewall rules</strong> as defense-in-depth even with private endpoints</li>
             </ol>
-        </div>
+          </div>
+        </section>
 
-        <h2>Getting Help</h2>
-        <ul class="list-style-none">
-            <li><a href="https://stackoverflow.com/questions/tagged/azure-cosmosdb" target="_blank" rel="noopener">Stack Overflow - Azure Cosmos DB</a></li>
-            <li><a href="https://techcommunity.microsoft.com/t5/azure-database-services/bd-p/AzureDatabaseServices" target="_blank" rel="noopener">Microsoft Tech Community - Azure Database Services</a></li>
-            <li><a href="https://github.com/Azure/azure-cosmosdb-js-server" target="_blank" rel="noopener">Server-Side Programming Samples</a></li>
-        </ul>
+        <!-- Best Practices Section -->
+        <section id="cosmosdb-best-practices" role="article">
+          <h1>Best Practices</h1>
+          <span class="badge">best-practices</span>
+          <span class="badge">recommendations</span>
+          <span class="badge">patterns</span>
+          <span class="badge">sdk</span>
 
-        <hr />
-        <div class="document-footer">
+          <h2>Data Modeling</h2>
+
+          <div class="callout">
+            <strong>🏗️ Data Modeling Principles</strong><br />
+            <ul>
+              <li>✅ <strong>Design for your access patterns</strong> — model data around how you query, not how it's normalized</li>
+              <li>✅ <strong>Embed related data</strong> when always accessed together (avoids cross-partition reads)</li>
+              <li>✅ <strong>Reference (normalize) data</strong> when it's independently updated or excessively large</li>
+              <li>✅ <strong>Use Hierarchical Partition Keys</strong> when a single partition key produces partitions over 20 GB</li>
+              <li>✅ <strong>Choose high-cardinality partition keys</strong> (userId, deviceId, tenantId) to avoid hot partitions</li>
+              <li>✅ <strong>Avoid low-cardinality partition keys</strong> like status, country, or boolean fields</li>
+              <li>✅ <strong>Pre-compute aggregations</strong> — denormalize counters and summaries into documents to avoid expensive queries</li>
+            </ul>
+          </div>
+
+          <h2>Performance Optimization</h2>
+
+          <h3>Query Performance</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Practice</th>
+                <th>Impact</th>
+                <th>Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Always include partition key in WHERE clause</td>
+                <td>🟢 Critical</td>
+                <td>Converts cross-partition to single-partition query</td>
+              </tr>
+              <tr>
+                <td>Use point reads (id + partition key)</td>
+                <td>🟢 Critical</td>
+                <td>1 RU cost, &lt; 10ms latency</td>
+              </tr>
+              <tr>
+                <td>Project only needed fields (no SELECT *)</td>
+                <td>🟡 High</td>
+                <td>Reduces RU cost and response payload</td>
+              </tr>
+              <tr>
+                <td>Create composite indexes for ORDER BY</td>
+                <td>🟡 High</td>
+                <td>Avoids expensive in-memory sorts</td>
+              </tr>
+              <tr>
+                <td>Use pagination with continuation tokens</td>
+                <td>🟡 High</td>
+                <td>Prevents timeouts and distributes RU cost</td>
+              </tr>
+              <tr>
+                <td>Use ARRAY_CONTAINS instead of JOIN</td>
+                <td>🟠 Medium</td>
+                <td>More efficient for array membership checks</td>
+              </tr>
+              <tr>
+                <td>Exclude non-queried paths from indexing</td>
+                <td>🟠 Medium</td>
+                <td>Reduces write RU overhead</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Throughput Management</h3>
+          <ul>
+            <li>📊 <strong>Start with autoscale</strong> — automatically scales 10x based on usage, prevents throttling</li>
+            <li>⏰ <strong>Use provisioned throughput for predictable workloads</strong> — cheaper at steady high load</li>
+            <li>💡 <strong>Serverless for intermittent workloads</strong> — no idle cost, pay only per request</li>
+            <li>🔄 <strong>Share throughput at database level</strong> for multiple small containers</li>
+            <li>📈 <strong>Monitor RU usage</strong> via Azure Monitor — scale when consistently above 80% utilization</li>
+            <li>⚠️ <strong>Handle 429 (throttling) with retry-after logic</strong> in all SDK calls</li>
+          </ul>
+
+          <h2>SDK Best Practices</h2>
+
+          <h3>Client Initialization</h3>
+          <pre><code>// ✅ CORRECT: Singleton client — reuse across the application lifetime
+public class CosmosService
+{
+    private static readonly CosmosClient _client = new CosmosClient(
+        accountEndpoint: Environment.GetEnvironmentVariable("COSMOS_ENDPOINT"),
+        tokenCredential: new DefaultAzureCredential(),
+        new CosmosClientOptions
+        {
+            ApplicationPreferredRegions = new[] { "East US", "West US 2" },
+            ConsistencyLevel = ConsistencyLevel.Session,
+            MaxRetryAttemptsOnRateLimitedRequests = 9,
+            MaxRetryWaitTimeOnRateLimitedRequests = TimeSpan.FromSeconds(30)
+        }
+    );
+}
+
+// ❌ WRONG: Creating a new client per request is very expensive
+var client = new CosmosClient(connectionString); // Don't do this in a loop!</code></pre>
+
+          <h3>Error Handling &amp; Retry</h3>
+          <pre><code>try
+{
+    var response = await container.ReadItemAsync&lt;Product&gt;(
+        id: productId,
+        partitionKey: new PartitionKey(category)
+    );
+
+    // Log diagnostics if latency is high
+    if (response.Diagnostics.GetClientElapsedTime() > TimeSpan.FromMilliseconds(100))
+    {
+        logger.LogWarning("Slow Cosmos DB read: {Diagnostics}", response.Diagnostics);
+    }
+}
+catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.TooManyRequests)
+{
+    // 429: Respect the retry-after header
+    await Task.Delay(ex.RetryAfter ?? TimeSpan.FromSeconds(1));
+    // Retry logic here
+}
+catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+{
+    // 404: Handle not-found gracefully
+    return null;
+}</code></pre>
+
+          <h3>Batch Operations</h3>
+          <pre><code>// ✅ Use TransactionalBatch for atomic operations within a partition
+var batch = container.CreateTransactionalBatch(new PartitionKey(userId));
+
+batch.CreateItem(new Order { Id = orderId, UserId = userId, ... });
+batch.PatchItem(userId, new[] {
+    PatchOperation.Increment("/orderCount", 1)
+});
+
+TransactionalBatchResponse batchResponse = await batch.ExecuteAsync();
+
+if (!batchResponse.IsSuccessStatusCode)
+{
+    throw new Exception($"Batch failed: {batchResponse.ErrorMessage}");
+}</code></pre>
+
+          <h2>Cost Optimization</h2>
+
+          <h3>RU Reduction Strategies</h3>
+          <ul>
+            <li>💰 <strong>Point reads over queries:</strong> 1 RU vs 3-10 RU — cache the document ID</li>
+            <li>💰 <strong>Filter on indexed partition key:</strong> Single-partition queries are 10-50x cheaper</li>
+            <li>💰 <strong>Exclude large text fields from index:</strong> Add <code>excludedPaths</code> for blob-like content</li>
+            <li>💰 <strong>Use TTL (Time-to-Live):</strong> Auto-delete expired data, reducing storage costs</li>
+            <li>💰 <strong>Compress large values:</strong> Smaller items = fewer RUs per operation</li>
+            <li>💰 <strong>Batch writes with bulk executor:</strong> Reduces per-operation overhead</li>
+          </ul>
+
+          <h3>Pricing Mode Selection</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Recommended Mode</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Steady, predictable traffic</td>
+                <td>Manual provisioned throughput</td>
+                <td>Lowest cost at high consistent load</td>
+              </tr>
+              <tr>
+                <td>Variable / spiky traffic</td>
+                <td>Autoscale provisioned</td>
+                <td>Scales 10x, prevents throttling</td>
+              </tr>
+              <tr>
+                <td>Development / testing</td>
+                <td>Serverless or free tier</td>
+                <td>No idle cost, free first 1000 RU/s</td>
+              </tr>
+              <tr>
+                <td>Low-traffic microservices</td>
+                <td>Serverless</td>
+                <td>Pay only per request</td>
+              </tr>
+              <tr>
+                <td>Shared dev environment</td>
+                <td>Database-level shared throughput</td>
+                <td>Split cost across containers</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Reliability &amp; Availability</h2>
+
+          <ul>
+            <li>🌍 <strong>Enable multi-region writes</strong> for active-active configuration — maximize availability</li>
+            <li>🔄 <strong>Configure automatic failover</strong> with priority regions for disaster recovery</li>
+            <li>📋 <strong>Choose appropriate consistency:</strong> Session (default) balances consistency and performance</li>
+            <li>🔃 <strong>Use Change Feed</strong> for event-driven processing — decouple consumers from writes</li>
+            <li>💾 <strong>Enable continuous backup</strong> (7 or 30-day) for point-in-time restore capability</li>
+            <li>⚡ <strong>Configure Availability Zones</strong> in supported regions for zone-redundant replication</li>
+          </ul>
+
+          <h2>Monitoring &amp; Observability</h2>
+
+          <h3>Key Metrics to Track</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Alert Threshold</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total Request Units Consumed</td>
+                <td>&gt; 80% of provisioned</td>
+                <td>Scale up or optimize queries</td>
+              </tr>
+              <tr>
+                <td>HTTP 429 (Throttled Requests)</td>
+                <td>&gt; 1% of requests</td>
+                <td>Increase throughput or optimize</td>
+              </tr>
+              <tr>
+                <td>Server-Side Latency (P99)</td>
+                <td>&gt; 10ms</td>
+                <td>Check hot partitions or query plans</td>
+              </tr>
+              <tr>
+                <td>Normalized RU Consumption</td>
+                <td>&gt; 100%</td>
+                <td>Immediate scale-up required</td>
+              </tr>
+              <tr>
+                <td>Data Size per Partition Key</td>
+                <td>Approaching 20 GB</td>
+                <td>Consider Hierarchical Partition Keys</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Diagnostic Logging Setup</h3>
+          <pre><code>// Configure SDK diagnostics for slow operations
+container.Database.Client.ClientOptions.CosmosClientTelemetryOptions = new CosmosClientTelemetryOptions
+{
+    DisableSendingMetricsToService = false
+};
+
+// Log diagnostics when latency exceeds threshold
+var response = await container.ReadItemAsync&lt;T&gt;(id, partitionKey);
+var elapsed = response.Diagnostics.GetClientElapsedTime();
+if (elapsed > TimeSpan.FromMilliseconds(250))
+{
+    logger.LogWarning("High latency detected. Diagnostics: {Diag}", 
+        response.Diagnostics.ToString());
+}</code></pre>
+
+          <h2>Anti-Patterns to Avoid</h2>
+
+          <h3>❌ Common Mistakes</h3>
+          <ul>
+            <li>❌ <strong>Creating a new CosmosClient per request</strong> — use a singleton instead</li>
+            <li>❌ <strong>Using SELECT * in production queries</strong> — always project needed fields</li>
+            <li>❌ <strong>Choosing low-cardinality partition keys</strong> (status, country) — causes hot partitions</li>
+            <li>❌ <strong>Ignoring 429 errors</strong> — implement retry with exponential backoff</li>
+            <li>❌ <strong>Storing master keys in source code or config files</strong> — use Key Vault</li>
+            <li>❌ <strong>Running cross-partition queries for frequent operations</strong> — redesign data model</li>
+            <li>❌ <strong>Using stored procedures for simple writes</strong> — use SDK directly instead</li>
+            <li>❌ <strong>Embedding unbounded arrays in documents</strong> — document will grow past 2 MB limit</li>
+            <li>❌ <strong>Not indexing frequently filtered properties</strong> — leads to full-scan queries</li>
+            <li>❌ <strong>Over-indexing everything</strong> — adds unnecessary write RU overhead</li>
+          </ul>
+
+          <div class="callout">
+            <strong>🎯 Production Readiness Checklist</strong><br />
+            <ol>
+              <li>✅ <strong>Partition key chosen</strong> with high cardinality and aligned to query patterns</li>
+              <li>✅ <strong>Composite indexes</strong> configured for ORDER BY and multi-filter queries</li>
+              <li>✅ <strong>Autoscale or serverless</strong> provisioned based on traffic pattern</li>
+              <li>✅ <strong>Singleton CosmosClient</strong> with retry options configured</li>
+              <li>✅ <strong>Managed Identity or Entra ID RBAC</strong> for authentication (no master keys)</li>
+              <li>✅ <strong>Private endpoints</strong> enabled, public access disabled</li>
+              <li>✅ <strong>Diagnostic logging</strong> enabled, routed to Log Analytics</li>
+              <li>✅ <strong>Azure Monitor alerts</strong> configured for 429 errors and latency spikes</li>
+              <li>✅ <strong>Multi-region replication</strong> with automatic failover configured</li>
+              <li>✅ <strong>Continuous backup</strong> enabled for point-in-time restore</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="cosmosdb-resources" role="article">
+          <h1>Resources</h1>
+          <span class="badge">docs</span>
+          <span class="badge">community</span>
+          <span class="badge">links</span>
+
+          <h2>Official Documentation</h2>
+          <ul class="list-style-none">
+            <li>📚 <a href="https://learn.microsoft.com/azure/cosmos-db/" target="_blank" rel="noopener">Azure Cosmos DB Documentation</a></li>
+            <li>🎯 <a href="https://learn.microsoft.com/azure/cosmos-db/introduction" target="_blank" rel="noopener">Introduction to Azure Cosmos DB</a></li>
+            <li>🔑 <a href="https://learn.microsoft.com/azure/cosmos-db/resource-model" target="_blank" rel="noopener">Resource Model Overview</a></li>
+            <li>📦 <a href="https://learn.microsoft.com/azure/cosmos-db/partitioning-overview" target="_blank" rel="noopener">Partitioning &amp; Horizontal Scaling</a></li>
+            <li>🔄 <a href="https://learn.microsoft.com/azure/cosmos-db/consistency-levels" target="_blank" rel="noopener">Consistency Levels</a></li>
+            <li>💰 <a href="https://learn.microsoft.com/azure/cosmos-db/request-units" target="_blank" rel="noopener">Request Units (RUs)</a></li>
+            <li>📊 <a href="https://learn.microsoft.com/azure/cosmos-db/index-overview" target="_blank" rel="noopener">Indexing in Azure Cosmos DB</a></li>
+            <li>🔒 <a href="https://learn.microsoft.com/azure/cosmos-db/secure-access-to-data" target="_blank" rel="noopener">Security Overview</a></li>
+            <li>🌍 <a href="https://learn.microsoft.com/azure/cosmos-db/distribute-data-globally" target="_blank" rel="noopener">Global Distribution</a></li>
+            <li>📡 <a href="https://learn.microsoft.com/azure/cosmos-db/change-feed" target="_blank" rel="noopener">Change Feed</a></li>
+          </ul>
+
+          <h2>Getting Started</h2>
+          <ul class="list-style-none">
+            <li>🚀 <a href="https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-dotnet" target="_blank" rel="noopener">Quickstart: .NET SDK</a></li>
+            <li>🐍 <a href="https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-python" target="_blank" rel="noopener">Quickstart: Python SDK</a></li>
+            <li>☕ <a href="https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-java" target="_blank" rel="noopener">Quickstart: Java SDK</a></li>
+            <li>📦 <a href="https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-nodejs" target="_blank" rel="noopener">Quickstart: Node.js SDK</a></li>
+            <li>🖥️ <a href="https://learn.microsoft.com/azure/cosmos-db/try-free" target="_blank" rel="noopener">Try Azure Cosmos DB Free</a></li>
+            <li>🧪 <a href="https://learn.microsoft.com/azure/cosmos-db/emulator" target="_blank" rel="noopener">Use the Cosmos DB Emulator (Local Dev)</a></li>
+            <li>📖 <a href="https://learn.microsoft.com/azure/cosmos-db/tutorials" target="_blank" rel="noopener">Tutorials and Step-by-Step Guides</a></li>
+          </ul>
+
+          <h2>Architecture &amp; Best Practices</h2>
+          <ul class="list-style-none">
+            <li>🏗️ <a href="https://learn.microsoft.com/azure/well-architected/service-guides/cosmos-db" target="_blank" rel="noopener">Well-Architected Framework: Cosmos DB</a></li>
+            <li>🎯 <a href="https://learn.microsoft.com/azure/cosmos-db/modeling-data" target="_blank" rel="noopener">Data Modeling Best Practices</a></li>
+            <li>🔑 <a href="https://learn.microsoft.com/azure/cosmos-db/partitioning-overview" target="_blank" rel="noopener">Partition Key Selection Guide</a></li>
+            <li>⚡ <a href="https://learn.microsoft.com/azure/cosmos-db/performance-tips-dotnet-sdk-v3-sql" target="_blank" rel="noopener">Performance Tips (.NET SDK)</a></li>
+            <li>🌐 <a href="https://learn.microsoft.com/azure/cosmos-db/global-dist-under-the-hood" target="_blank" rel="noopener">Global Distribution Deep Dive</a></li>
+            <li>🔄 <a href="https://learn.microsoft.com/azure/cosmos-db/change-feed-design-patterns" target="_blank" rel="noopener">Change Feed Design Patterns</a></li>
+          </ul>
+
+          <h2>Learning Resources</h2>
+          <ul class="list-style-none">
+            <li>🎓 <a href="https://learn.microsoft.com/training/paths/work-with-nosql-data-in-azure-cosmos-db/" target="_blank" rel="noopener">Microsoft Learn: Work with NoSQL Data in Azure Cosmos DB</a></li>
+            <li>🎓 <a href="https://learn.microsoft.com/training/modules/explore-non-relational-data-offerings-azure/" target="_blank" rel="noopener">Explore Non-Relational Data Offerings</a></li>
+            <li>📺 <a href="https://www.youtube.com/c/AzureCosmosDB" target="_blank" rel="noopener">YouTube: Azure Cosmos DB Channel</a></li>
+            <li>🎬 <a href="https://learn.microsoft.com/azure/cosmos-db/demos-videos" target="_blank" rel="noopener">Official Demos &amp; Videos</a></li>
+            <li>📝 <a href="https://devblogs.microsoft.com/cosmosdb/" target="_blank" rel="noopener">Azure Cosmos DB Blog</a></li>
+          </ul>
+
+          <h2>Tools &amp; Extensions</h2>
+          <ul class="list-style-none">
+            <li>🔧 <a href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb" target="_blank" rel="noopener">VS Code Extension: Azure Cosmos DB</a></li>
+            <li>💻 <a href="https://learn.microsoft.com/azure/cosmos-db/emulator" target="_blank" rel="noopener">Azure Cosmos DB Emulator (Windows)</a></li>
+            <li>🐳 <a href="https://learn.microsoft.com/azure/cosmos-db/docker-emulator-linux" target="_blank" rel="noopener">Cosmos DB Emulator Docker Image (Linux)</a></li>
+            <li>⚡ <a href="https://learn.microsoft.com/powershell/module/az.cosmosdb/" target="_blank" rel="noopener">Azure PowerShell: Az.CosmosDB Module</a></li>
+            <li>🖥️ <a href="https://learn.microsoft.com/cli/azure/cosmosdb" target="_blank" rel="noopener">Azure CLI: cosmosdb commands</a></li>
+            <li>🏗️ <a href="https://learn.microsoft.com/azure/cosmos-db/manage-with-bicep" target="_blank" rel="noopener">Deploy with Bicep / ARM Templates</a></li>
+          </ul>
+
+          <h2>SDK References</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Language</th>
+                <th>Package</th>
+                <th>Docs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>.NET / C#</td>
+                <td><code>Microsoft.Azure.Cosmos</code></td>
+                <td><a href="https://learn.microsoft.com/dotnet/api/microsoft.azure.cosmos" target="_blank" rel="noopener">API Reference</a></td>
+              </tr>
+              <tr>
+                <td>Python</td>
+                <td><code>azure-cosmos</code></td>
+                <td><a href="https://learn.microsoft.com/python/api/azure-cosmos" target="_blank" rel="noopener">API Reference</a></td>
+              </tr>
+              <tr>
+                <td>Java</td>
+                <td><code>azure-cosmos</code> (Maven)</td>
+                <td><a href="https://learn.microsoft.com/java/api/overview/azure/cosmos-readme" target="_blank" rel="noopener">API Reference</a></td>
+              </tr>
+              <tr>
+                <td>Node.js</td>
+                <td><code>@azure/cosmos</code> (npm)</td>
+                <td><a href="https://learn.microsoft.com/javascript/api/@azure/cosmos" target="_blank" rel="noopener">API Reference</a></td>
+              </tr>
+              <tr>
+                <td>Go</td>
+                <td><code>azcosmos</code></td>
+                <td><a href="https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos" target="_blank" rel="noopener">API Reference</a></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Samples &amp; Templates</h2>
+          <ul class="list-style-none">
+            <li>🎨 <a href="https://github.com/Azure-Samples/cosmos-db-nosql-dotnet-sample-app" target="_blank" rel="noopener">Sample App: .NET with Cosmos DB (GitHub)</a></li>
+            <li>🤖 <a href="https://github.com/Azure-Samples/cosmosdb-nosql-copilot" target="_blank" rel="noopener">Sample: RAG Chatbot with Cosmos DB Vector Search</a></li>
+            <li>🛒 <a href="https://github.com/Azure-Samples/azure-cosmos-db-retail-app" target="_blank" rel="noopener">Sample: Retail Application (E-commerce)</a></li>
+            <li>📦 <a href="https://github.com/Azure/azure-quickstart-templates" target="_blank" rel="noopener">ARM Quickstart Templates</a></li>
+            <li>🔧 <a href="https://github.com/Azure/azure-sdk-for-net/tree/main/sdk/cosmosdb/Azure.ResourceManager.CosmosDB" target="_blank" rel="noopener">Azure SDK Samples (GitHub)</a></li>
+          </ul>
+
+          <h2>Community &amp; Support</h2>
+          <ul class="list-style-none">
+            <li>💬 <a href="https://learn.microsoft.com/answers/tags/187/azure-cosmos-db" target="_blank" rel="noopener">Microsoft Q&amp;A: Azure Cosmos DB</a></li>
+            <li>💡 <a href="https://stackoverflow.com/questions/tagged/azure-cosmosdb" target="_blank" rel="noopener">Stack Overflow: azure-cosmosdb</a></li>
+            <li>👥 <a href="https://techcommunity.microsoft.com/t5/azure-database-services/bd-p/AzureDatabaseServices" target="_blank" rel="noopener">Microsoft Tech Community: Azure Database Services</a></li>
+            <li>🐛 <a href="https://feedback.azure.com/d365community/forum/3002b3be-0d25-ec11-b6e6-000d3a4f0f1c" target="_blank" rel="noopener">Feature Requests &amp; Feedback</a></li>
+            <li>📧 <a href="https://azure.microsoft.com/support/options/" target="_blank" rel="noopener">Azure Support Options</a></li>
+          </ul>
+
+          <h2>Pricing &amp; Service Limits</h2>
+          <ul class="list-style-none">
+            <li>💰 <a href="https://azure.microsoft.com/pricing/details/cosmos-db/" target="_blank" rel="noopener">Azure Cosmos DB Pricing</a></li>
+            <li>🎯 <a href="https://learn.microsoft.com/azure/cosmos-db/resource-limits" target="_blank" rel="noopener">Service Limits &amp; Quotas</a></li>
+            <li>📊 <a href="https://learn.microsoft.com/azure/cosmos-db/serverless" target="_blank" rel="noopener">Serverless Capacity Mode</a></li>
+            <li>⚡ <a href="https://learn.microsoft.com/azure/cosmos-db/provision-throughput-autoscale" target="_blank" rel="noopener">Autoscale Throughput</a></li>
+            <li>🆓 <a href="https://learn.microsoft.com/azure/cosmos-db/free-tier" target="_blank" rel="noopener">Free Tier Details (1000 RU/s + 25 GB free)</a></li>
+          </ul>
+
+          <h2>Key Takeaways</h2>
+          <div class="callout">
+            <ol>
+              <li><strong>Azure Cosmos DB is a globally distributed, multi-model database</strong> with 99.999% availability SLA and single-digit millisecond latency</li>
+              <li><strong>Partition key choice is the most critical design decision</strong> — choose high-cardinality keys aligned to your access patterns</li>
+              <li><strong>Request Units (RUs) are the currency of throughput</strong> — optimize queries, use point reads, and choose the right pricing model</li>
+              <li><strong>Five consistency levels</strong> let you tune the tradeoff between consistency guarantees and performance/cost</li>
+              <li><strong>The SQL API (NoSQL)</strong> is the recommended API with the richest feature set including vector search, change feed, and full RBAC support</li>
+              <li><strong>Security best practice:</strong> Use Managed Identity + RBAC, Private Endpoints, and Key Vault — never embed master keys in code</li>
+              <li><strong>Vector Search is built-in</strong> — ideal for RAG patterns, semantic search, and AI-powered applications without a separate vector database</li>
+              <li><strong>Change Feed</strong> enables event-driven architectures — trigger downstream processing on every write</li>
+              <li><strong>Use the Cosmos DB Emulator</strong> for local development — free, full-fidelity local testing</li>
+              <li><strong>Monitor and set alerts</strong> on RU consumption, 429 errors, and latency to maintain healthy performance</li>
+            </ol>
+          </div>
+
+          <h2>Quick Reference Card</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Recommended Approach</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fetch single item by known ID</td>
+                <td>Point read (id + partition key) — 1 RU</td>
+              </tr>
+              <tr>
+                <td>Query within one partition</td>
+                <td>Include partition key in WHERE — 3-20 RU</td>
+              </tr>
+              <tr>
+                <td>Analytics/reporting across all data</td>
+                <td>Azure Synapse Link / Cosmos DB Analytical Store</td>
+              </tr>
+              <tr>
+                <td>AI chat history + semantic search</td>
+                <td>Partition by userId + Vector Search on embeddings</td>
+              </tr>
+              <tr>
+                <td>High-volume IoT ingestion</td>
+                <td>Autoscale + partition by deviceId</td>
+              </tr>
+              <tr>
+                <td>Multi-region active-active</td>
+                <td>Multi-region writes + Session consistency</td>
+              </tr>
+              <tr>
+                <td>Event-driven microservices</td>
+                <td>Change Feed Processor with Azure Functions</td>
+              </tr>
+              <tr>
+                <td>Development &amp; testing</td>
+                <td>Cosmos DB Emulator (Docker) — free local dev</td>
+              </tr>
+              <tr>
+                <td>Low-traffic production app</td>
+                <td>Serverless (pay per request, no idle cost)</td>
+              </tr>
+              <tr>
+                <td>Steady high-throughput production</td>
+                <td>Autoscale provisioned throughput</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Getting Help</h2>
+          <ul class="list-style-none">
+            <li>📖 <a href="https://learn.microsoft.com/azure/cosmos-db/" target="_blank" rel="noopener">Read the Docs</a></li>
+            <li>💬 <a href="https://learn.microsoft.com/answers/tags/187/azure-cosmos-db" target="_blank" rel="noopener">Ask the Community</a></li>
+            <li>🎫 <a href="https://azure.microsoft.com/support/create-ticket/" target="_blank" rel="noopener">Open a Support Ticket</a></li>
+            <li>💡 <a href="https://feedback.azure.com/d365community/forum/3002b3be-0d25-ec11-b6e6-000d3a4f0f1c" target="_blank" rel="noopener">Request Features</a></li>
+          </ul>
+
+          <hr />
+          <div class="document-footer">
             <p>
-            <strong>Last Updated:</strong> January 2026 | 
-            <strong>Curated by:</strong> Murthy Vepa with ❤️ | <strong>Powered by:</strong> GitHub Copilot
+              <strong>Last Updated:</strong> January 2026 | 
+              <strong>Curated by:</strong> Murthy Vepa with ❤️ | <strong>Powered by:</strong> GitHub Copilot
             </p>
-        </div>
+          </div>
         </section>
         </div>
     </main>
@@ -5810,25 +6447,27 @@ AND VectorDistance(c.contentVector, @query) < 0.8</code></pre>
 </div>
 
 <script>
-    // - Mermaid Initialization -
+    // ---- Mermaid Initialization ----
     document.addEventListener('DOMContentLoaded', () => {
     if (window.mermaid) {
         window.mermaid.contentLoaded();
     }
     });
 
-    // - Configuration -
+    // ---- Configuration ----
     const sectionConfig = [
-    { id: "cosmosdb-concepts", title: "Cosmos DB Concepts", tags: ["intro", "overview", "concepts"] },
-    { id: "cosmosdb-data-modelling", title: "Data Modelling", tags: ["modeling", "partition-keys", "design"] },
-    { id: "cosmosdb-querying-data", title: "Querying Data", tags: ["queries", "sql", "nosql"] },
-    { id: "cosmosdb-query-performance", title: "Query Performance", tags: ["performance", "optimization", "RUs"] },
-    { id: "cosmosdb-server-side-programming", title: "Server-Side Programming", tags: ["stored-procedures", "triggers", "UDFs"] },
-    { id: "cosmosdb-vector-search", title: "Vector Search & AI", tags: ["AI", "vector-search", "embeddings", "RAG"] },
-    { id: "cosmosdb-resources", title: "Resources", tags: ["docs", "community", "links"] }
+      { id: "cosmosdb-concepts", title: "📖 Core Concepts & Architecture", tags: ["intro", "overview", "concepts", "rus", "consistency", "indexing", "global-distribution"] },
+      { id: "cosmosdb-data-modelling", title: "🏗️ Data Modelling & Partitioning", tags: ["modeling", "partition-keys", "design", "embedding", "referencing", "hpk"] },
+      { id: "cosmosdb-querying-data", title: "🔍 Querying Data - SQL API", tags: ["queries", "sql", "nosql", "select", "where", "aggregates", "join"] },
+      { id: "cosmosdb-query-performance", title: "⚡ Query Performance & Optimization", tags: ["performance", "optimization", "RUs", "indexes", "pagination", "hot-partitions"] },
+      { id: "cosmosdb-server-side-programming", title: "💻 Server-Side Programming", tags: ["stored-procedures", "triggers", "UDFs", "change-feed", "javascript"] },
+      { id: "cosmosdb-vector-search", title: "🤖 Vector Search & AI Integration", tags: ["AI", "vector-search", "embeddings", "RAG", "semantic-search", "openai"] },
+      { id: "cosmosdb-security", title: "🔒 Security & Compliance", tags: ["security", "rbac", "encryption", "networking", "private-endpoints", "entra", "compliance"] },
+      { id: "cosmosdb-best-practices", title: "✨ Best Practices", tags: ["best-practices", "recommendations", "patterns", "sdk", "performance", "cost"] },
+      { id: "cosmosdb-resources", title: "📚 Resources", tags: ["docs", "community", "links", "samples", "pricing"] }
     ];
 
-    // - State & rendering -
+    // ---- State & rendering ----
     const state = {
     index: 0,
     filtered: sectionConfig.map((_, i) => i), // indices
@@ -5970,7 +6609,7 @@ AND VectorDistance(c.contentVector, @query) < 0.8</code></pre>
     if(offcanvas) offcanvas.hide();
     }
 
-    // - Events -
+    // ---- Events ----
     els.prev.addEventListener('click', () => navigate(-1));
     els.next.addEventListener('click', () => navigate(1));
 

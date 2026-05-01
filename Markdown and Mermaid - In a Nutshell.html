@@ -1,0 +1,4698 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>📝</text></svg>" />
+  <title>Markdown and Mermaid - In a Nutshell</title>
+  <meta name="description" content="A comprehensive guide to Markdown and Mermaid for creating diagrams and documentation.">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #ffffff;
+      --fg: #0f172a;
+      --muted: #64748b;
+      --accent: #3b82f6;
+      --accent-light: #dbeafe;
+      --border: #e2e8f0;
+      --sidebar-bg: #ffffff;
+      --sidebar-fg: #0f172a;
+      --code-bg: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%);
+      --focus: #10b981;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 20px rgba(0,0,0,0.12), 0 6px 6px rgba(0,0,0,0.08);
+      --gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+    
+    /* Bootstrap Gradient Utility Classes */
+    .bg-gradient-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important; }
+    .bg-gradient-green { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important; }
+    .bg-gradient-yellow { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important; }
+    .bg-gradient-pink { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%) !important; }
+    .bg-gradient-purple { background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%) !important; }
+    .bg-gradient-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%) !important; }
+    .bg-gradient-blue-dark { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; }
+    .bg-gradient-gray { background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important; }
+    .bg-gradient-purple-dark { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important; }
+    .bg-gradient-teal-dark { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%) !important; }
+    .bg-gradient-green-dark { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+    .bg-gradient-red { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important; }
+    .bg-gradient-green-light { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important; }
+    .bg-gradient-blue-sky { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important; }
+    .bg-gradient-red-dark { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important; }
+    .bg-gradient-indigo { background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important; }
+    .bg-gradient-green-medium { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+    .bg-gradient-orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important; }
+    .bg-gradient-violet { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; }
+    .bg-gradient-lime { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%) !important; }
+    .bg-gradient-sky { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important; }
+    
+    /* Apply theme colors to Bootstrap elements */
+    body { background-color: var(--bg); color: var(--fg); overflow: hidden; }
+    .navbar { background-color: var(--fg) !important; border-bottom: none !important; box-shadow: var(--shadow-md) !important; }
+    .navbar-brand { cursor: pointer; color: var(--bg) !important; font-weight: 600; letter-spacing: 0px; }
+    .navbar-toggler-icon { 
+      filter: invert(1);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2896, 165, 250, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    
+    .btn-outline-secondary { border-color: var(--border) !important; color: var(--fg) !important; }
+    .btn-outline-secondary:hover { background-color: var(--accent-light) !important; border-color: var(--accent) !important; color: var(--accent) !important; }
+    
+    /* Sidebar - Modern Design */
+    nav.sidebar { 
+      background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%); 
+      border-right: 1px solid rgba(0, 0, 0, 0.05) !important;  
+      overflow-y: auto; 
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.06);
+      padding-top: 0;
+    }
+    
+    .menu-header {  
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.1) 100%);
+      font-weight: bold; 
+      padding: 1.25rem 1.25rem; 
+      letter-spacing: 0px; 
+      font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      border-bottom: 2px solid #a5aab3;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      color: #0c346c;
+      text-shadow: none;
+      margin: 0;
+      text-transform: none;
+    }
+    .menu-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: left 0.6s ease;
+    }
+    .menu-header:hover::before {
+      left: 100%;
+    }
+    .menu-header::after {
+      content: '📋';
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.3rem;
+      opacity: 0.9;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+    }
+    
+    .toc { 
+      list-style: none; 
+      padding: 0rem 0; 
+      margin: 0; 
+      background: transparent;
+    }
+    .toc li { 
+      margin: 0; 
+    }
+    
+    /* Section grouping */
+    .toc li[data-group="overview"] { margin-bottom: 0.75rem; }
+    .toc li[data-group="solid"]:first-of-type { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(59, 130, 246, 0.15);
+      padding-top: 1rem;
+    }
+    .toc li[data-group="other-principles"]:first-of-type { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(16, 185, 129, 0.15);
+      padding-top: 1rem;
+    }
+    .toc li[data-group="resources"] { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(100, 116, 139, 0.15);
+      padding-top: 1rem;
+    }
+    
+    .list-group-item { 
+      background: transparent; 
+      border-color: transparent; 
+      padding: 0; 
+      margin: 0.25rem 0.75rem; 
+      border-radius: 0rem;
+      transition: all 0.2s ease;
+    }
+    .list-group-item a { 
+      color: #1f2937; 
+      text-decoration: none; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-start; 
+      gap: 0.4rem; 
+      border-left: 3px solid transparent; 
+      padding: 0.85rem 1.25rem; 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      font-weight: 500; 
+      border-radius: 0rem;
+      font-size: 0.95rem;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    .list-group-item a::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+      border-radius: 0 0px 0px 0;
+    }
+    .list-group-item a::after {
+      content: '▶';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .list-group-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-item a:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    .list-group-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-item a.active::before {
+      transform: scaleY(1);
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      width: 5px;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+    .list-group-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Sub-items tree connectors */
+    .list-group-sub-item a::before { 
+      content: '├─';
+      font-size: 0.85rem;
+      margin-right: 0.5rem;
+      color: #6b7280;
+      z-index: 1;
+      position: relative;
+    }
+    
+    /* Sub-items styling - similar to main items but smaller and indented */
+    .list-group-sub-item {
+      background: transparent; 
+      border-color: transparent; 
+      padding: 0px; 
+      margin: 0.2rem 0.75rem 0.2rem 1.5rem;
+      border-radius: 0rem;
+      transition: all 0.2s ease;
+      position: relative;
+      list-style-type: none;
+    }
+    .list-group-sub-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+      border-radius: 0 0px 0px 0;
+      z-index: 1;
+    }
+    .list-group-sub-item a {
+      color: #1f2937; 
+      text-decoration: none; 
+      display: block;
+      border-left: 3px solid transparent; 
+      padding: 0.65rem 1rem 0.65rem 2.00rem;
+      transition: all 0.2s ease; 
+      font-weight: 500; 
+      border-radius: 0rem;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Sub-items hover and active states - same as main items */
+    .list-group-sub-item a::after {
+      content: '▶';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .list-group-sub-item:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-sub-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-sub-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    
+    .list-group-sub-item.active::before {
+      transform: scaleY(1);
+      width: 5px;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+    .list-group-sub-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-sub-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-sub-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Collapsible parent items */
+    .list-group-item.has-children {
+      cursor: default;
+    }
+    .list-group-item.has-children > a {
+      cursor: pointer;
+      user-select: none;
+    }
+    .list-group-item.has-children > a::after {
+      content: '▼';
+      font-size: 0.65rem;
+      opacity: 0.6;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    .list-group-item.has-children.collapsed > a::after {
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    .list-group-item.has-children > a:hover::after {
+      opacity: 1;
+    }
+    
+    /* Hide collapsed children */
+    .list-group-sub-item.collapsed {
+      display: none;
+      max-height: 0;
+      overflow: hidden;
+    }
+    
+    .list-group-item a::after {
+      content: '▶';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .list-group-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-item a:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    .list-group-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Badge styling */
+    .badge { font-size: 0.8rem; padding: 0.15rem 0.4rem; background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent); font-weight: 600; border-radius: 0.25rem; font-style: normal; line-height: 1.2; opacity: 0.9; }
+    .badge { background: var(--accent); color: white; border: none; font-size: 0.6rem; padding: 0.25rem 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-top: 0.5rem; margin-right: 0.35rem; }
+    .list-group-item a:hover .badge { opacity: 1; background: var(--accent); color: white; }
+    .list-group-item a.active .badge { background: rgba(255, 255, 255, 0.3); color: white; border-color: rgba(255, 255, 255, 0.6); font-weight: 600; opacity: 1; }
+        
+    /* Content */
+    .content { width: 100%; max-width: 100%; margin: 0 auto; background: #ffffff; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+    section { display: none !important; margin-bottom: 2rem; }
+    section.active { display: block !important; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    h1 { font-size: 2rem; font-weight: 700; margin: 1rem 0 0.25rem 0; letter-spacing: -0.5px; color: var(--fg); display: block; border: none; }
+    h2 { font-size: 1.5rem; font-weight: 600; margin: 1.5rem 0 0.75rem 0; color: var(--fg); border-bottom: 2px solid var(--accent-light); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.1rem; color: var(--accent); font-weight: 600; margin: 1rem 0 0.5rem 0; }
+    h4 { font-size: 0.8rem; color: var(--fg); font-weight: 600; margin: 0.75rem 0 0.4rem 0; }
+    p { margin: 1rem 0; line-height: 1.65; color: var(--fg); }
+    ul, ol { margin: 1rem 0; padding-left: 2rem; }
+    li { margin: 0.5rem 0; color: var(--fg); }
+    
+    code { background: var(--code-bg); border: 1px solid var(--border); padding: 0.2rem 0.5rem; font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace; font-size: 0.9em; color: var(--accent); border-radius: 0.5rem; }
+    pre { background: var(--code-bg); border: 0px solid var(--border); padding: 1rem; border-radius: 0.5rem; overflow: auto; box-shadow: var(--shadow-sm); margin: 1rem 0; }
+    pre code { padding: 0; background: transparent; border: none; color: var(--fg); }
+    
+    .callout { border-left: 5px solid var(--accent); background: var(--accent-light); padding: 1rem 1.2rem; margin: 1.5rem 0; border-radius: 0.5rem; box-shadow: var(--shadow-sm); font-weight: 500; color: var(--fg); }
+    
+    /* Table styling */
+    .table { color: var(--fg); }
+    .table thead th { background: var(--accent-light); color: var(--accent); border-color: var(--border); font-weight: 600; }
+    .table tbody td { border-color: var(--border); }
+    .table-striped tbody tr:nth-of-type(odd) { background-color: rgba(0,0,0,0.02); }
+    .table-striped tbody tr:hover { background-color: var(--accent-light); }
+    
+    /* Controls/Pagination */
+    .controls { opacity: 0.5; position: fixed; bottom: 0.25rem; right: 1rem; width: auto; z-index: 1000; background: transparent; display: flex; align-items: center; justify-content: center; gap: 0rem; padding: 0; min-height: 40px; }
+    @media (max-width: 991px) {
+      .controls { bottom: 0.25rem; right: 1rem; }
+      .menu-header { color: var(--focus); }
+    }
+    .controls:hover { opacity: 1; }
+    
+    .page-indicator { color: var(--accent); font-weight: 600; font-size: 0.875rem; }
+    .btn-group .btn { margin: 0px 2px; padding: 0.2rem 0.5rem; background: var(--accent); color: white; border-color: var(--accent); font-size: 1rem; font-weight: bold; }
+    .btn-group .btn:hover { background: var(--accent); }
+    .btn-group .btn + .btn { margin-left: -1px; }
+    
+    /* Mobile/Offcanvas */
+    .offcanvas { background: var(--bg) !important; }
+    .offcanvas-header { border-bottom: 1px solid var(--border); }
+    .offcanvas-title { color: var(--fg); font-weight: 600; }
+    .btn-close { color: var(--fg); }
+    
+    /* Scrollbar */
+    nav.sidebar::-webkit-scrollbar { width: 6px; }
+    nav.sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+    nav.sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 0px; }
+    nav.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
+    
+    /* Mermaid Diagrams */
+    .mermaid {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      position: relative;
+    }
+    .mermaid.rendered {
+      min-height: 0;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+      min-height: 300px;
+      transition: transform 0.3s ease;
+      transform-origin: center center;
+    }
+    .mermaid.zoomed {
+      overflow: auto;
+      cursor: grab;
+    }
+    .mermaid.zoomed:active {
+      cursor: grabbing;
+    }
+    .mermaid svg text {
+      font-size: 14px !important;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    }
+    
+    /* Mermaid title styling */
+    .mermaid svg text, .diagram-modal-content svg text {
+      font-size: 1rem !important;
+      font-weight: bold !important;
+      fill: var(--fg) !important;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    }
+
+    .mermaid svg *
+    {
+        color: #333;
+    }
+
+    .mermaid[data-processed="true"] {
+      min-height: 0;
+    }
+    
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+    
+    /* Zoom controls */
+    .zoom-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+    .mermaid:hover .zoom-controls {
+      opacity: 1;
+    }
+    .zoom-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+    }
+    .zoom-btn:hover {
+      background: #2563eb;
+      transform: scale(1.1);
+    }
+
+    /* Modal for diagram zoom */
+    .diagram-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .diagram-modal.active {
+      display: flex;
+    }
+    .diagram-modal-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border-radius: 0;
+      padding: 3rem 3rem 3rem 3rem;
+      overflow: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .diagram-modal-content svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .modal-close {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+      z-index: 10000;
+    }
+    .modal-close:hover {
+      background: #dc2626;
+      transform: scale(1.1);
+    }
+    .modal-zoom-controls {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10000;
+      padding: 0rem;
+      border-radius: 0.4rem;
+    }
+    .modal-zoom-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+    }
+    .modal-zoom-btn:hover {
+      background: #2563eb;
+      transform: scale(1.1);
+    }
+    
+    /* Utilities */
+    .search { height: 0; overflow: hidden; padding: 0 !important; }
+    .search input { display: none; }
+    .min-vh-100 { min-height: 100vh; }
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { position: static; width: auto; height: auto; padding: 0.4rem 0.6rem; background: var(--accent); color: white; border-radius: 0.4rem; }
+    
+    /* Override Bootstrap defaults for theme */
+    a { color: var(--accent); }
+    a:hover { color: var(--accent); text-decoration: underline; }
+    
+    /* Responsive - keep sidebar visible on desktop, offcanvas on mobile */
+    @media (max-width: 991px) {
+      nav.sidebar { display: none; }
+      #main { width: 100%; }
+      .row { --bs-gutter-x: 0; }
+    }
+    
+    /* Layout - prevent unnecessary scrolling */
+    html, body { height: 100%; margin: 0; }
+    #appContainer { display: flex; flex-direction: column; height: calc(100vh - 50px); }
+    #mainRow { flex: 1; overflow: hidden; display: flex; }
+    nav.sidebar { overflow-y: auto; max-height: 100%; position: relative; padding-bottom: 0px; }
+    #main { overflow: hidden; display: flex; flex-direction: column; height: 100%; -webkit-tap-highlight-color: transparent; outline: none; border: none; }
+    #main:focus { outline: none; }
+    .content { overflow-y: auto; flex: 1; width: 100%; min-height: 0; padding: 0rem 1.5rem 0rem 1.5rem; }
+    
+    /* Contact Info */
+    .contact-info {
+      font-weight: 400 !important;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--accent-light);
+      margin: 0;
+      opacity: 0.5;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .contact-info:hover {
+      opacity: 0.9;
+      text-decoration: none;
+    }
+    @media (max-width: 991px) {
+      .navbar-brand {
+        font-size: 1rem !important;
+        flex: 1;
+      }
+      .contact-info {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+    @media (max-width: 576px) {
+      .navbar-brand {
+        font-size: 0.9rem !important;
+      }
+      .contact-info {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+      }
+    }
+
+    .list-style-none {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* JSON Syntax Highlighting */
+    pre code.language-json {
+      display: block;
+      white-space: pre;
+      font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    pre code.language-json .json-key {
+      color: #0451a5;
+      font-weight: 500;
+    }
+
+    pre code.language-json .json-string {
+      color: #a31515;
+    }
+
+    pre code.language-json .json-number {
+      color: #098658;
+    }
+
+    pre code.language-json .json-boolean {
+      color: #0000ff;
+      font-weight: 600;
+    }
+
+    pre code.language-json .json-null {
+      color: #0000ff;
+      font-weight: 600;
+    }
+
+    pre code.language-json .json-punctuation {
+      color: #333;
+    }
+
+    /* SQL Syntax Highlighting */
+    pre code.language-sql {
+      display: block;
+      white-space: pre;
+      font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    pre code.language-sql .sql-keyword {
+      color: #0000ff;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    pre code.language-sql .sql-string {
+      color: #a31515;
+    }
+
+    pre code.language-sql .sql-number {
+      color: #098658;
+    }
+
+    pre code.language-sql .sql-comment {
+      color: #008000;
+      font-style: italic;
+    }
+
+    pre code.language-sql .sql-function {
+      color: #795e26;
+      font-weight: 500;
+    }
+
+    pre code.language-sql .sql-operator {
+      color: #666;
+      font-weight: 500;
+    }
+
+    /* Language Label for Code Blocks */
+    pre[data-language]::before {
+      content: attr(data-language);
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 0.75em;
+      color: #6a737d;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: var(--bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border);
+    }
+
+    /* Enhanced pre/code styling for syntax highlighted blocks */
+    pre.syntax-highlighted {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 1.5rem 1rem 1rem 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+      margin: 1rem 0;
+    }
+
+    pre.syntax-highlighted code {
+      background: transparent;
+      padding: 0;
+      border: none;
+      color: var(--fg);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    ul
+    {
+        list-style-type: none;
+    }
+  /* Document Footer */
+    .document-footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .document-footer p {
+      margin: 0;
+      font-size: 14px;
+      color: #6c757d;
+      line-height: 1.6;
+    }
+    .document-footer strong {
+      color: #495057;
+    }
+
+    /* Static Code Block Styles - No Collapse/Expand */
+    pre {
+      margin: 1.5rem 0;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: auto;
+      box-shadow: var(--shadow-sm);
+      background: var(--code-bg);
+    }
+
+    pre code {
+      display: block;
+      padding: 1rem;
+      background: transparent;
+    }
+  </style>
+  <!-- Mermaid.js for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    // Initialize Mermaid with proper configuration
+    document.addEventListener('DOMContentLoaded', function() {
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        logLevel: 'error',
+        fontFamily: 'Segoe UI Semibold',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis',
+        },
+        sequence: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          diagramMarginX: 50,
+          diagramMarginY: 10
+        }
+      });
+      
+      // Render all diagrams
+      renderMermaidDiagrams();
+    });
+    
+    async function renderMermaidDiagrams() {
+      const diagrams = document.querySelectorAll('.mermaid');
+      
+      for (let i = 0; i < diagrams.length; i++) {
+        const diagram = diagrams[i];
+        const code = diagram.textContent.trim();
+        
+        // Store original code
+        if (!diagram.hasAttribute('data-original-code')) {
+          diagram.setAttribute('data-original-code', code);
+        }
+        
+        try {
+          const { svg } = await mermaid.render('mermaid-diagram-' + i, code);
+          diagram.innerHTML = svg;
+          diagram.setAttribute('data-processed', 'true');
+          
+          // Add zoom controls
+          addZoomControls(diagram);
+        } catch (error) {
+          console.error('Mermaid rendering error for diagram ' + i + ':', error);
+          diagram.innerHTML = '<div class="text-danger p-3 border border-danger border-2 rounded">Error rendering diagram: ' + error.message + '</div>';
+        }
+      }
+    }
+    
+    // Add zoom controls to mermaid diagrams
+    function addZoomControls(diagram) {
+      const controls = document.createElement('div');
+      controls.className = 'zoom-controls';
+      controls.innerHTML = `
+        <button class="zoom-btn" data-action="expand" title="Expand View">⛶</button>
+      `;
+      
+      diagram.style.position = 'relative';
+      diagram.insertBefore(controls, diagram.firstChild);
+      
+      // Expand to modal
+      controls.addEventListener('click', (e) => {
+        const btn = e.target.closest('.zoom-btn');
+        if (!btn) return;
+        
+        openDiagramModal(diagram);
+      });
+    }
+
+    // Open diagram in modal
+    function openDiagramModal(diagram) {
+      // Create modal if it doesn't exist
+      let modal = document.getElementById('diagram-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'diagram-modal';
+        modal.className = 'diagram-modal';
+        modal.innerHTML = `
+          <button class="modal-close" id="modal-close">×</button>
+          <div class="diagram-modal-content" id="modal-diagram-content"></div>
+          <div class="modal-zoom-controls">
+            <button class="modal-zoom-btn" data-action="zoom-in" title="Zoom In">+</button>
+            <button class="modal-zoom-btn" data-action="zoom-out" title="Zoom Out">−</button>
+            <button class="modal-zoom-btn" data-action="reset" title="Reset Zoom">⟲</button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Close modal handlers
+        modal.querySelector('#modal-close').addEventListener('click', closeDiagramModal);
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeDiagramModal();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeDiagramModal();
+          }
+        });
+        
+        // Zoom controls in modal
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        
+        modal.querySelector('.modal-zoom-controls').addEventListener('click', (e) => {
+          const btn = e.target.closest('.modal-zoom-btn');
+          if (!btn) return;
+          
+          const action = btn.dataset.action;
+          const svg = modal.querySelector('svg');
+          if (!svg) return;
+          
+          if (action === 'zoom-in') {
+            scale = Math.min(scale + 0.1, 5);
+          } else if (action === 'zoom-out') {
+            scale = Math.max(scale - 0.1, 0.5);
+          } else if (action === 'reset') {
+            scale = 1;
+            translateX = 0;
+            translateY = 0;
+          }
+          
+          svg.style.transform = `scale(${scale}) translate(${translateX / scale}px, ${translateY / scale}px)`;
+        });
+      }
+      
+      // Clone diagram content
+      const svg = diagram.querySelector('svg');
+      if (svg) {
+        const content = modal.querySelector('#modal-diagram-content');
+        content.innerHTML = '';
+        const clonedSvg = svg.cloneNode(true);
+        clonedSvg.style.transform = 'scale(1)';
+        clonedSvg.style.maxWidth = '100%';
+        clonedSvg.style.height = 'auto';
+        content.appendChild(clonedSvg);
+      }
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDiagramModal() {
+      const modal = document.getElementById('diagram-modal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    
+    // Re-render on theme change
+    window.rerenderMermaid = async function() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: isDark ? 'base' : 'base',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis',
+        },
+        sequence: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          diagramMarginX: 50,
+          diagramMarginY: 10
+        }
+      });
+      
+      const diagrams = document.querySelectorAll('.mermaid[data-processed="true"]');
+      for (let i = 0; i < diagrams.length; i++) {
+        const diagram = diagrams[i];
+        const code = diagram.getAttribute('data-original-code');
+        
+        if (code) {
+          try {
+            const { svg } = await mermaid.render('mermaid-diagram-rerender-' + i + '-' + Date.now(), code);
+            diagram.innerHTML = svg;
+          } catch (error) {
+            console.error('Mermaid re-rendering error:', error);
+          }
+        }
+      }
+    };
+
+    // Code blocks are now simple static blocks - no collapse functionality needed
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg sticky-top" aria-label="Top bar">
+    <div class="container-fluid d-flex align-items-center">
+      <button class="navbar-toggler me-2" id="toggleSidebar" type="button" aria-label="Toggle sidebar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <span class="navbar-brand mb-0 h1 me-auto">📝 Markdown and Mermaid - In a Nutshell</span>
+      <span class="contact-info mb-0">🤝 Curated by Murthy Vepa</span>
+    </div>      
+  </nav>
+
+  <div id="appContainer">
+    <div class="row g-0" id="mainRow">
+      <nav class="col-lg-3 border-end sidebar" id="sidebar" aria-label="Table of contents">
+        <div class="menu-header py-2">Contents</div>
+        <ul class="list-group list-group-flush toc" id="toc"></ul>
+      </nav>
+
+      <main id="main" class="col-lg-9 d-flex flex-column" tabindex="-1">
+        <div class="content" id="content">
+        
+        <!-- Welcome Section -->
+        <section id="welcome" role="article">
+          <h1>🏠 Welcome to Markdown & Mermaid - In a Nutshell</h1>
+          <span class="badge">intro</span>
+          <span class="badge">overview</span>
+          <span class="badge">getting-started</span>
+          
+          <p>Welcome to your comprehensive guide to Markdown and Mermaid diagrams! This interactive resource will help you master both of these powerful tools for creating beautiful documentation and visualizations.</p>
+          
+          <h2>📝 What is Markdown?</h2>
+          <p>Markdown is a lightweight markup language that you can use to add formatting elements to plaintext text documents. Created by John Gruber in 2004, Markdown is now one of the world's most popular markup languages.</p>
+          
+          <h2>📊 What is Mermaid?</h2>
+          <p>Mermaid is a JavaScript-based diagramming and charting tool that uses Markdown-inspired text definitions to create and modify complex diagrams. Turn text into beautiful diagrams instantly!</p>
+          
+          <h2>✨ Features of This Guide</h2>
+          <ul>
+            <li><strong>Complete Markdown Syntax</strong> - Learn all standard and extended Markdown features</li>
+            <li><strong>Comprehensive Mermaid Guide</strong> - Master flowcharts, sequence diagrams, and more</li>
+            <li><strong>Interactive Examples</strong> - See live examples of all concepts</li>
+            <li><strong>Best Practices</strong> - Learn recommended approaches and common pitfalls to avoid</li>
+            <li><strong>Easy Navigation</strong> - Use the left sidebar or arrow keys to navigate</li>
+          </ul>
+          
+          <h2>🚀 Getting Started</h2>
+          <p>Use the navigation menu on the left to explore different topics. Each section includes:</p>
+          <ul>
+            <li>Clear explanations and examples</li>
+            <li>Syntax demonstrations</li>
+            <li>Best practices and tips</li>
+            <li>Common use cases</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>💡 Pro Tip:</strong> Use the arrow keys (← →) or navigation buttons at the bottom to move between sections quickly!
+          </div>
+        </section>
+
+        <!-- About Markdown Section -->
+        <section id="about-markdown" role="article">
+          <h1>📝 About Markdown</h1>
+          <span class="badge">markdown</span>
+          <span class="badge">about</span>
+          <span class="badge">intro</span>
+          
+          <h2>What is Markdown?</h2>
+          <p>Markdown is a lightweight markup language that you can use to add formatting elements to plaintext text documents. Created by <a href="https://daringfireball.net/projects/markdown/" target="_blank">John Gruber</a> in 2004, Markdown is now one of the world's most popular markup languages.</p>
+          
+          <p>You can add Markdown formatting elements to a plaintext file using a text editor application. Or you can use one of the many Markdown applications for macOS, Windows, Linux, iOS, and Android operating systems.</p>
+          
+          <h2>Why Use Markdown?</h2>
+          <p>You might be wondering why people use Markdown instead of a WYSIWYG editor. Here are several compelling reasons:</p>
+          
+          <ul>
+            <li><strong>Universal</strong> - Markdown can be used for everything: websites, documents, notes, books, presentations, email messages, and technical documentation</li>
+            <li><strong>Portable</strong> - Files containing Markdown-formatted text can be opened using virtually any application</li>
+            <li><strong>Platform Independent</strong> - You can create Markdown-formatted text on any device running any operating system</li>
+            <li><strong>Future Proof</strong> - Even if the application you're using stops working, you'll still be able to read your Markdown-formatted text</li>
+            <li><strong>Everywhere</strong> - Websites like Reddit and GitHub support Markdown, and lots of desktop and web-based applications support it</li>
+          </ul>
+          
+          <h2>How Does It Work?</h2>
+          <p>Markdown applications use a <em>Markdown processor</em> (also commonly referred to as a "parser" or an "implementation") to take the Markdown-formatted text and output it to HTML format.</p>
+          
+          <p>This is a four-part process:</p>
+          <ol>
+            <li>Create a Markdown file using a text editor with a <code>.md</code> or <code>.markdown</code> extension</li>
+            <li>Open the Markdown file in a Markdown application</li>
+            <li>Use the Markdown application to convert the Markdown file to an HTML document</li>
+            <li>View the HTML file in a web browser or use the Markdown application to convert it to another file format, like PDF</li>
+          </ol>
+          
+          <h2>What's Markdown Good For?</h2>
+          <p>Markdown is a fast and easy way to take notes, create content for a website, and produce print-ready documents. Here are some common uses:</p>
+          
+          <h3>Websites</h3>
+          <p>Markdown was designed for the web, so it should come as no surprise that there are plenty of applications specifically designed for creating website content.</p>
+          
+          <h3>Documents</h3>
+          <p>Markdown doesn't have all the bells and whistles of word processors like Microsoft Word, but it's good enough for creating basic documents like assignments and letters.</p>
+          
+          <h3>Notes</h3>
+          <p>In nearly every way, Markdown is the ideal syntax for taking notes. Popular note-taking applications like Obsidian, Simplenote, Notable, Bear, and Joplin all support Markdown.</p>
+          
+          <h3>Documentation</h3>
+          <p>Markdown is a natural fit for technical documentation. Companies like GitHub are increasingly switching to Markdown for their documentation.</p>
+          
+          <div class="callout">
+            <strong>📚 Learn More:</strong> Ready to dive into the syntax? Check out the Markdown Guide section for comprehensive examples!
+          </div>
+        </section>
+
+        <!-- Markdown Guide Section -->
+        <section id="markdown-guide" role="article">
+          <h1>📖 Complete Markdown Guide</h1>
+          <span class="badge">guide</span>
+          <span class="badge">syntax</span>
+          <span class="badge">reference</span>
+          
+          <p>This comprehensive guide covers all Markdown syntax elements, from basic formatting to advanced features. Use the sub-sections in the menu to jump to specific topics.</p>
+          
+          <h2>📑 What's Covered</h2>
+          <ul>
+            <li><strong>Headings</strong> - Create document structure with heading levels</li>
+            <li><strong>Emphasis</strong> - Bold, italic, strikethrough, and combined styles</li>
+            <li><strong>Lists</strong> - Ordered, unordered, and nested lists</li>
+            <li><strong>Links</strong> - Hyperlinks, URLs, and reference-style links</li>
+            <li><strong>Images</strong> - Embed and link images</li>
+            <li><strong>Code</strong> - Inline code and code blocks with syntax highlighting</li>
+            <li><strong>Blockquotes</strong> - Quote text and create callouts</li>
+            <li><strong>Tables</strong> - Create formatted data tables</li>
+            <li><strong>Task Lists</strong> - Interactive checklists</li>
+            <li><strong>Extended Syntax</strong> - Footnotes, definition lists, and more</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>💡 Navigation Tip:</strong> Each sub-section in the left menu contains detailed examples and best practices for that specific Markdown feature.
+          </div>
+        </section>
+
+        <!-- Markdown: Headings -->
+        <section id="markdown-headings" role="article">
+          <h1>Headings</h1>
+          <span class="badge">headings</span>
+          <span class="badge">h1-h6</span>
+          
+          <p>To create a heading, add number signs (<code>#</code>) in front of a word or phrase. The number of number signs corresponds to the heading level.</p>
+          
+          <h2>Syntax Examples</h2>
+          <pre><code># H1 Heading
+## H2 Heading
+### H3 Heading
+#### H4 Heading
+##### H5 Heading
+###### H6 Heading</code></pre>
+          
+          <h2>Rendered Output</h2>
+          <h1 style="font-size: 2em;">H1 Heading</h1>
+          <h2 style="font-size: 1.5em;">H2 Heading</h2>
+          <h3 style="font-size: 1.25em;">H3 Heading</h3>
+          <h4 style="font-size: 1em;">H4 Heading</h4>
+          <h5 style="font-size: 0.875em;">H5 Heading</h5>
+          <h6 style="font-size: 0.75em;">H6 Heading</h6>
+          
+          <h2>Alternate Syntax</h2>
+          <p>For H1 and H2, you can use underlines:</p>
+          <pre><code>Heading Level 1
+===============
+
+Heading Level 2
+---------------</code></pre>
+          
+          <div class="callout">
+            <strong>✅ Best Practices:</strong>
+            <ul>
+              <li>Always put a space between <code>#</code> and the heading text</li>
+              <li>Put blank lines before and after headings</li>
+              <li>Don't use <code>#Here's a Heading</code> (missing space)</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Markdown: Emphasis -->
+        <section id="markdown-emphasis" role="article">
+          <h1>Emphasis</h1>
+          <span class="badge">bold</span>
+          <span class="badge">italic</span>
+          <span class="badge">strikethrough</span>
+          
+          <p>Add emphasis by making text bold, italic, or both.</p>
+          
+          <h2>Italic</h2>
+          <pre><code>*Italic text* or _italic text_
+A*cat*meow</code></pre>
+          <p><strong>Rendered:</strong> <em>Italic text</em> or <em>italic text</em></p>
+          
+          <h2>Bold</h2>
+          <pre><code>**Bold text** or __bold text__
+Love**is**bold</code></pre>
+          <p><strong>Rendered:</strong> <strong>Bold text</strong> or <strong>bold text</strong></p>
+          
+          <h2>Bold and Italic</h2>
+          <pre><code>***Bold and italic*** or ___bold and italic___
+This is really***very***important text</code></pre>
+          <p><strong>Rendered:</strong> <strong><em>Bold and italic</em></strong></p>
+          
+          <h2>Strikethrough</h2>
+          <pre><code>~~Strikethrough text~~
+~~The world is flat.~~ We now know that the world is round.</code></pre>
+          <p><strong>Rendered:</strong> <del>Strikethrough text</del></p>
+          
+          <div class="callout">
+            <strong>✅ Best Practice:</strong> Use asterisks (<code>*</code>) instead of underscores for emphasis within words. Example: <code>Love**is**bold</code> ✅ instead of <code>Love__is__bold</code> ❌
+          </div>
+        </section>
+
+        <!-- Markdown: Lists -->
+        <section id="markdown-lists" role="article">
+          <h1>Lists</h1>
+          <span class="badge">lists</span>
+          <span class="badge">ordered</span>
+          <span class="badge">unordered</span>
+          
+          <h2>Unordered Lists</h2>
+          <p>Use dashes (<code>-</code>), asterisks (<code>*</code>), or plus signs (<code>+</code>):</p>
+          <pre><code>- First item
+- Second item
+  - Nested item 2.1
+  - Nested item 2.2
+- Third item</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <ul>
+            <li>First item</li>
+            <li>Second item
+              <ul>
+                <li>Nested item 2.1</li>
+                <li>Nested item 2.2</li>
+              </ul>
+            </li>
+            <li>Third item</li>
+          </ul>
+          
+          <h2>Ordered Lists</h2>
+          <pre><code>1. First item
+2. Second item
+3. Third item
+   1. Nested item
+   2. Another nested item
+4. Fourth item</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <ol>
+            <li>First item</li>
+            <li>Second item</li>
+            <li>Third item
+              <ol>
+                <li>Nested item</li>
+                <li>Another nested item</li>
+              </ol>
+            </li>
+            <li>Fourth item</li>
+          </ol>
+          
+          <div class="callout">
+            <strong>✅ Best Practices:</strong>
+            <ul>
+              <li>Use periods (<code>.</code>) only for ordered lists, not parentheses</li>
+              <li>Keep list items aligned properly for readability</li>
+              <li>Use consistent markers throughout your document</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Markdown: Links -->
+        <section id="markdown-links" role="article">
+          <h1>Links</h1>
+          <span class="badge">links</span>
+          <span class="badge">urls</span>
+          <span class="badge">hyperlinks</span>
+          
+          <h2>Basic Link</h2>
+          <pre><code>[Link text](https://example.com)
+[Link with title](https://example.com "Hover title")</code></pre>
+          <p><strong>Rendered:</strong> <a href="https://example.com">Link text</a></p>
+          
+          <h2>URLs and Email Addresses</h2>
+          <pre><code>&lt;https://www.example.com&gt;
+&lt;email@example.com&gt;</code></pre>
+          <p><strong>Rendered:</strong> <a href="https://www.example.com">https://www.example.com</a></p>
+          
+          <h2>Reference Links</h2>
+          <pre><code>[Link text][reference]
+
+[reference]: https://example.com "Optional title"</code></pre>
+          <p><strong>Rendered:</strong> <a href="https://example.com">Link text</a></p>
+          
+          <h2>Heading Links</h2>
+          <pre><code>[Jump to Headings](#markdown-headings)</code></pre>
+          <p><strong>Rendered:</strong> <a href="#markdown-headings">Jump to Headings</a></p>
+          
+          <div class="callout">
+            <strong>💡 Tip:</strong> Reference-style links are great for keeping your Markdown source clean and readable when you have many links in a document.
+          </div>
+        </section>
+
+        <!-- Markdown: Images -->
+        <section id="markdown-images" role="article">
+          <h1>Images</h1>
+          <span class="badge">images</span>
+          <span class="badge">pictures</span>
+          <span class="badge">media</span>
+          
+          <h2>Basic Image</h2>
+          <pre><code>![Alt text](https://www.markdownguide.org/assets/images/tux.png)</code></pre>
+          <p><strong>Rendered:</strong></p>
+          <img src="https://www.markdownguide.org/assets/images/tux.png" alt="Tux, the Linux mascot" style="max-width: 200px;">
+          
+          <h2>Image with Link</h2>
+          <pre><code>[![Alt text](image-url.png)](link-url.com)</code></pre>
+          
+          <h2>Image Sizing</h2>
+          <p>Standard Markdown doesn't support image sizing, but you can use HTML:</p>
+          <pre><code>&lt;img src="image.png" alt="Alt text" width="200"&gt;</code></pre>
+          
+          <div class="callout">
+            <strong>✅ Best Practice:</strong> Always include descriptive alt text for accessibility and SEO purposes.
+          </div>
+        </section>
+
+        <!-- Markdown: Code -->
+        <section id="markdown-code" role="article">
+          <h1>Code</h1>
+          <span class="badge">code</span>
+          <span class="badge">syntax</span>
+          <span class="badge">highlighting</span>
+          
+          <h2>Inline Code</h2>
+          <p>Use single backticks:</p>
+          <pre><code>Inline `code` with backticks
+Use `console.log()` to print</code></pre>
+          <p><strong>Rendered:</strong> Inline <code>code</code> with backticks</p>
+          
+          <h2>Code Blocks</h2>
+          <p>Use triple backticks with optional language specification:</p>
+          <pre><code>```javascript
+function greet(name) {
+  console.log(`Hello, ${name}!`);
+}
+```</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <pre><code class="language-javascript">function greet(name) {
+  console.log(`Hello, ${name}!`);
+}</code></pre>
+          
+          <h2>Supported Languages</h2>
+          <p>Most Markdown processors support syntax highlighting for:</p>
+          <ul>
+            <li>JavaScript, TypeScript</li>
+            <li>Python, Java, C#, C++</li>
+            <li>HTML, CSS, SQL</li>
+            <li>JSON, YAML, XML</li>
+            <li>Bash, PowerShell</li>
+            <li>And many more!</li>
+          </ul>
+          
+          <h2>JSON Example</h2>
+          <pre><code class="language-json">{
+  "name": "John Doe",
+  "age": 30,
+  "email": "john@example.com",
+  "active": true
+}</code></pre>
+          
+          <div class="callout">
+            <strong>💡 Tip:</strong> Specify the language after the opening backticks for proper syntax highlighting!
+          </div>
+        </section>
+
+        <!-- Markdown: Blockquotes -->
+        <section id="markdown-blockquotes" role="article">
+          <h1>Blockquotes</h1>
+          <span class="badge">quotes</span>
+          <span class="badge">blockquotes</span>
+          
+          <h2>Basic Blockquote</h2>
+          <pre><code>&gt; This is a blockquote
+&gt; It can span multiple lines</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <blockquote>
+            <p>This is a blockquote<br>It can span multiple lines</p>
+          </blockquote>
+          
+          <h2>Multiple Paragraphs</h2>
+          <pre><code>&gt; First paragraph in blockquote.
+&gt;
+&gt; Second paragraph in blockquote.</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <blockquote>
+            <p>First paragraph in blockquote.</p>
+            <p>Second paragraph in blockquote.</p>
+          </blockquote>
+          
+          <h2>Nested Blockquotes</h2>
+          <pre><code>&gt; Outer blockquote
+&gt;&gt; Nested blockquote
+&gt;&gt;&gt; Even deeper</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <blockquote>
+            <p>Outer blockquote</p>
+            <blockquote>
+              <p>Nested blockquote</p>
+            </blockquote>
+          </blockquote>
+          
+          <h2>Blockquotes with Other Elements</h2>
+          <pre><code>&gt; #### The quarterly results look great!
+&gt;
+&gt; - Revenue was off the chart
+&gt; - Profits were higher than ever
+&gt;
+&gt; *Everything* is going according to **plan**.</code></pre>
+          
+          <div class="callout">
+            <strong>✅ Best Practice:</strong> Use blockquotes for quotes, callouts, or to highlight important information.
+          </div>
+        </section>
+
+        <!-- Markdown: Tables -->
+        <section id="markdown-tables" role="article">
+          <h1>Tables</h1>
+          <span class="badge">tables</span>
+          <span class="badge">data</span>
+          
+          <h2>Basic Table</h2>
+          <pre><code>| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Cell 1   | Cell 2   | Cell 3   |
+| Cell 4   | Cell 5   | Cell 6   |</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Header 1</th>
+                <th>Header 2</th>
+                <th>Header 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Cell 1</td>
+                <td>Cell 2</td>
+                <td>Cell 3</td>
+              </tr>
+              <tr>
+                <td>Cell 4</td>
+                <td>Cell 5</td>
+                <td>Cell 6</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h2>Alignment</h2>
+          <pre><code>| Left    | Center  | Right   |
+|:--------|:-------:|--------:|
+| Text    | Text    | Text    |
+| Aligned | Aligned | Aligned |</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="text-align: left;">Left</th>
+                <th style="text-align: center;">Center</th>
+                <th style="text-align: right;">Right</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: left;">Text</td>
+                <td style="text-align: center;">Text</td>
+                <td style="text-align: right;">Text</td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">Aligned</td>
+                <td style="text-align: center;">Aligned</td>
+                <td style="text-align: right;">Aligned</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="callout">
+            <strong>💡 Tip:</strong> You can use <strong>bold</strong>, <em>italic</em>, <code>code</code>, and <a href="#">links</a> within table cells!
+          </div>
+        </section>
+
+        <!-- Markdown: Task Lists -->
+        <section id="markdown-task-lists" role="article">
+          <h1>Task Lists</h1>
+          <span class="badge">tasks</span>
+          <span class="badge">checklists</span>
+          <span class="badge">todo</span>
+          
+          <p>Create interactive checklists using task list syntax:</p>
+          
+          <h2>Syntax</h2>
+          <pre><code>- [x] Completed task
+- [x] Another completed task
+- [ ] Incomplete task
+- [ ] Another incomplete task</code></pre>
+          
+          <p><strong>Rendered:</strong></p>
+          <ul style="list-style-type: none; padding-left: 0;">
+            <li>☑ Completed task</li>
+            <li>☑ Another completed task</li>
+            <li>☐ Incomplete task</li>
+            <li>☐ Another incomplete task</li>
+          </ul>
+          
+          <h2>Use Cases</h2>
+          <ul>
+            <li>Project planning and tracking</li>
+            <li>Meeting agendas and action items</li>
+            <li>Personal to-do lists</li>
+            <li>Documentation checklists</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>💡 Note:</strong> Task lists are particularly useful in GitHub Issues and Pull Requests where they become interactive checkboxes!
+          </div>
+        </section>
+
+        <!-- Markdown: Extended Syntax -->
+        <section id="markdown-extended" role="article">
+          <h1>Extended Syntax</h1>
+          <span class="badge">extended</span>
+          <span class="badge">advanced</span>
+          
+          <p>Extended syntax features build upon the basic Markdown syntax. These features are supported by GitHub Flavored Markdown (GFM) and many other processors, though availability varies by platform.</p>
+          
+          <h2>Tables</h2>
+          <p>Create tables using hyphens and pipes:</p>
+          <pre><code>| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <table>
+            <thead>
+              <tr>
+                <th>Syntax</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Header</td>
+                <td>Title</td>
+              </tr>
+              <tr>
+                <td>Paragraph</td>
+                <td>Text</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h3>Column Alignment</h3>
+          <p>Align text using colons in the header row:</p>
+          <pre><code>| Left Aligned | Center Aligned | Right Aligned |
+| :---         |     :----:     |          ---: |
+| Left         | Center         | Right         |
+| Text         | Text           | Text          |</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align: left">Left Aligned</th>
+                <th style="text-align: center">Center Aligned</th>
+                <th style="text-align: right">Right Aligned</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: left">Left</td>
+                <td style="text-align: center">Center</td>
+                <td style="text-align: right">Right</td>
+              </tr>
+              <tr>
+                <td style="text-align: left">Text</td>
+                <td style="text-align: center">Text</td>
+                <td style="text-align: right">Text</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="callout">
+            <strong>💡 Tip:</strong> Use the <a href="https://www.tablesgenerator.com/markdown_tables" target="_blank">Markdown Tables Generator</a> to build tables with a graphical interface.
+          </div>
+          
+          <h2>Fenced Code Blocks</h2>
+          <p>Use three backticks or tildes to create code blocks without indentation:</p>
+          <pre><code>```
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "age": 25
+}
+```</code></pre>
+          
+          <h3>Syntax Highlighting</h3>
+          <p>Specify a language for color highlighting:</p>
+          <pre><code>```javascript
+function greet(name) {
+  console.log(`Hello, ${name}!`);
+}
+```</code></pre>
+          
+          <h2>Footnotes</h2>
+          <p>Add notes and references without cluttering the document body:</p>
+          <pre><code>Here's a sentence with a footnote.[^1]
+
+Here's a longer footnote.[^bignote]
+
+[^1]: This is the first footnote.
+
+[^bignote]: Here's one with multiple paragraphs.
+
+    Indent paragraphs to include them.</code></pre>
+          
+          <p><strong>Rendered output:</strong> Here's a sentence with a footnote.<sup>[1]</sup> Readers can click to jump to the footnote content at the bottom.</p>
+          
+          <h2>Heading IDs</h2>
+          <p>Create custom IDs for direct linking:</p>
+          <pre><code>### My Great Heading {#custom-id}
+
+Now you can link: [Jump to heading](#custom-id)</code></pre>
+          
+          <p>This allows you to create anchor links that navigate directly to specific sections.</p>
+          
+          <h2>Definition Lists</h2>
+          <p>Create glossaries and term definitions:</p>
+          <pre><code>First Term
+: This is the definition of the first term.
+
+Second Term
+: This is one definition of the second term.
+: This is another definition of the second term.</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <dl>
+            <dt><strong>First Term</strong></dt>
+            <dd>This is the definition of the first term.</dd>
+            <dt><strong>Second Term</strong></dt>
+            <dd>This is one definition of the second term.</dd>
+            <dd>This is another definition of the second term.</dd>
+          </dl>
+          
+          <h2>Strikethrough</h2>
+          <p>Show deleted or incorrect text:</p>
+          <pre><code>~~The world is flat.~~ We now know that the world is round.</code></pre>
+          
+          <p><strong>Rendered output:</strong> <del>The world is flat.</del> We now know that the world is round.</p>
+          
+          <h2>Task Lists</h2>
+          <p>Create interactive checklists and todo lists:</p>
+          <pre><code>- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <ul style="list-style: none; padding-left: 0;">
+            <li>✅ Write the press release</li>
+            <li>☐ Update the website</li>
+            <li>☐ Contact the media</li>
+          </ul>
+          
+          <h2>Emoji</h2>
+          <p>Two ways to add emoji to your Markdown:</p>
+          
+          <h3>1. Copy and Paste</h3>
+          <p>Simply copy emoji from sources like <a href="https://emojipedia.org/" target="_blank">Emojipedia</a>:</p>
+          <p>🎉 ✨ 🚀 💡 ⭐ 🔥 💻 📚 ✅ ❌</p>
+          
+          <h3>2. Emoji Shortcodes</h3>
+          <p>Use colon-wrapped shortcodes:</p>
+          <pre><code>Gone camping! :tent: Be back soon.
+That is so funny! :joy:</code></pre>
+          
+          <p><strong>Rendered output:</strong> Gone camping! ⛺ Be back soon. That is so funny! 😂</p>
+          
+          <div class="callout">
+            <strong>⚠️ Note:</strong> Emoji shortcode support varies by platform. GitHub, GitLab, and Slack support them, but not all processors do.
+          </div>
+          
+          <h2>Highlight</h2>
+          <p>Mark important text (not widely supported):</p>
+          <pre><code>I need to highlight these ==very important words==.</code></pre>
+          
+          <p>Alternatively, use the HTML <code>&lt;mark&gt;</code> tag:</p>
+          <pre><code>I need to highlight these &lt;mark&gt;very important words&lt;/mark&gt;.</code></pre>
+          
+          <p><strong>Rendered output:</strong> I need to highlight these <mark>very important words</mark>.</p>
+          
+          <h2>Subscript</h2>
+          <p>Position characters below the normal line:</p>
+          <pre><code>H~2~O</code></pre>
+          
+          <p>Or use HTML tags:</p>
+          <pre><code>H&lt;sub&gt;2&lt;/sub&gt;O</code></pre>
+          
+          <p><strong>Rendered output:</strong> H<sub>2</sub>O</p>
+          
+          <h2>Superscript</h2>
+          <p>Position characters above the normal line:</p>
+          <pre><code>X^2^</code></pre>
+          
+          <p>Or use HTML tags:</p>
+          <pre><code>X&lt;sup&gt;2&lt;/sup&gt;</code></pre>
+          
+          <p><strong>Rendered output:</strong> X<sup>2</sup></p>
+          
+          <h2>Automatic URL Linking</h2>
+          <p>Many processors automatically convert URLs to clickable links:</p>
+          <pre><code>http://www.example.com</code></pre>
+          
+          <p><strong>Rendered output:</strong> <a href="http://www.example.com">http://www.example.com</a></p>
+          
+          <h3>Disabling Automatic URL Linking</h3>
+          <p>Wrap URLs in backticks to display them as plain text:</p>
+          <pre><code>`http://www.example.com`</code></pre>
+          
+          <p><strong>Rendered output:</strong> <code>http://www.example.com</code></p>
+          
+          <h2>Horizontal Rules</h2>
+          <p>Create visual dividers with three or more of these characters:</p>
+          <pre><code>---
+***
+___</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <hr>
+          
+          <div class="callout">
+            <strong>📚 Availability:</strong> Extended syntax support varies by platform and processor. Always check your Markdown processor's documentation for specific feature support. Popular processors include CommonMark, GitHub Flavored Markdown (GFM), Markdown Extra, and MultiMarkdown.
+          </div>
+        </section>
+
+        <!-- Markdown Hacks Section -->
+        <section id="markdown-hacks" role="article">
+          <h1>🔧 Markdown Hacks</h1>
+          <span class="badge">hacks</span>
+          <span class="badge">workarounds</span>
+          <span class="badge">tips</span>
+          
+          <div class="callout">
+            <strong>⚠️ Important:</strong> These hacks aren't guaranteed to work in every Markdown application. If you need to use these frequently, consider using a different markup language or a processor with better support.
+          </div>
+          
+          <p>While basic and extended Markdown syntax cover most needs, you may encounter situations where Markdown doesn't natively support something you need. Here are proven workarounds for common limitations.</p>
+          
+          <h2>Underline</h2>
+          <p>Underlined text isn't common in web writing (often confused with links), but may be needed for papers or reports. Use the HTML <code>&lt;ins&gt;</code> tag:</p>
+          <pre><code>Some of these words &lt;ins&gt;will be underlined&lt;/ins&gt;.</code></pre>
+          
+          <p><strong>Rendered output:</strong> Some of these words <ins>will be underlined</ins>.</p>
+          
+          <h2>Indent (Tab)</h2>
+          <p>Markdown uses tabs for code blocks, making traditional paragraph indentation tricky. Two workarounds:</p>
+          
+          <h3>Option 1: Use a Markdown Editor</h3>
+          <p>Some editors like iA Writer allow customizing indentation settings in preferences.</p>
+          
+          <h3>Option 2: Non-Breaking Spaces</h3>
+          <p>Use HTML entity <code>&amp;nbsp;</code> (four times for standard indent):</p>
+          <pre><code>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;This is an indented paragraph.</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;This is an indented paragraph.</p>
+          
+          <h2>Center Text</h2>
+          <p>Markdown has no text alignment concept (except in tables). Use HTML:</p>
+          
+          <h3>Method 1: Center Tag (Deprecated but Works)</h3>
+          <pre><code>&lt;center&gt;This text is centered.&lt;/center&gt;</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <center>This text is centered.</center>
+          
+          <h3>Method 2: CSS Style (Recommended)</h3>
+          <pre><code>&lt;p style="text-align:center"&gt;Center this text&lt;/p&gt;</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <p style="text-align:center">Center this text</p>
+          
+          <h2>Color Text</h2>
+          <p>Markdown doesn't support colored text, but HTML does:</p>
+          
+          <h3>Method 1: Font Tag (Deprecated but Works)</h3>
+          <pre><code>&lt;font color="red"&gt;This text is red!&lt;/font&gt;</code></pre>
+          
+          <p><strong>Rendered output:</strong> <font color="red">This text is red!</font></p>
+          
+          <h3>Method 2: CSS Style (Recommended)</h3>
+          <pre><code>&lt;p style="color:blue"&gt;Make this text blue.&lt;/p&gt;</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <p style="color:blue">Make this text blue.</p>
+          
+          <h2>Comments</h2>
+          <p>Add hidden comments that won't appear in rendered output. Use this format with blank lines before and after:</p>
+          <pre><code>Here's a paragraph that will be visible.
+
+[This is a comment that will be hidden.]: # 
+
+And here's another paragraph that's visible.</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <p>Here's a paragraph that will be visible.</p>
+          
+          [This is a hidden comment example]: #
+          
+          <p>And here's another paragraph that's visible.</p>
+          
+          <div class="callout">
+            <strong>💡 Tip:</strong> This technique comes from Stack Overflow and has been peer-reviewed by thousands of users!
+          </div>
+          
+          <h2>Admonitions</h2>
+          <p>Create attention-grabbing callouts using blockquotes with emoji and emphasis:</p>
+          <pre><code>&gt; :warning: **Warning:** Do not push the big red button.
+
+&gt; :memo: **Note:** Sunrises are beautiful.
+
+&gt; :bulb: **Tip:** Remember to appreciate the little things in life.</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <blockquote>
+            <p>⚠️ <strong>Warning:</strong> Do not push the big red button.</p>
+          </blockquote>
+          
+          <blockquote>
+            <p>📝 <strong>Note:</strong> Sunrises are beautiful.</p>
+          </blockquote>
+          
+          <blockquote>
+            <p>💡 <strong>Tip:</strong> Remember to appreciate the little things in life.</p>
+          </blockquote>
+          
+          <h2>Image Size</h2>
+          <p>Control image dimensions using HTML <code>img</code> tag with width and height attributes:</p>
+          <pre><code>&lt;img src="image.png" width="200" height="100"&gt;</code></pre>
+          
+          <p>This resizes the image to exactly 200×100 pixels.</p>
+          
+          <h2>Image Captions</h2>
+          <p>Add captions to images using two methods:</p>
+          
+          <h3>Method 1: HTML Figure Tags</h3>
+          <pre><code>&lt;figure&gt;
+    &lt;img src="/path/to/image.jpg" alt="Description"&gt;
+    &lt;figcaption&gt;This is the image caption.&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+          
+          <h3>Method 2: Emphasis Below Image</h3>
+          <pre><code>![Alt text](/path/to/image.jpg)
+*This is the image caption in italics.*</code></pre>
+          
+          <h2>Link Targets</h2>
+          <p>Open links in new tabs/windows using HTML anchor tag with <code>target</code> attribute:</p>
+          <pre><code>&lt;a href="https://example.com" target="_blank"&gt;Open in new tab!&lt;/a&gt;</code></pre>
+          
+          <p><strong>Rendered output:</strong> <a href="https://example.com" target="_blank">Open in new tab!</a></p>
+          
+          <h2>Symbols</h2>
+          <p>Insert special symbols by copying/pasting or using HTML entities:</p>
+          
+          <h3>Common HTML Entities</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Entity Code</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Copyright</td><td><code>&amp;copy;</code></td><td>&copy;</td></tr>
+              <tr><td>Registered</td><td><code>&amp;reg;</code></td><td>&reg;</td></tr>
+              <tr><td>Trademark</td><td><code>&amp;trade;</code></td><td>&trade;</td></tr>
+              <tr><td>Euro</td><td><code>&amp;euro;</code></td><td>&euro;</td></tr>
+              <tr><td>Left Arrow</td><td><code>&amp;larr;</code></td><td>&larr;</td></tr>
+              <tr><td>Right Arrow</td><td><code>&amp;rarr;</code></td><td>&rarr;</td></tr>
+              <tr><td>Up Arrow</td><td><code>&amp;uarr;</code></td><td>&uarr;</td></tr>
+              <tr><td>Down Arrow</td><td><code>&amp;darr;</code></td><td>&darr;</td></tr>
+              <tr><td>Degree</td><td><code>&amp;#176;</code></td><td>&#176;</td></tr>
+              <tr><td>Pi</td><td><code>&amp;#960;</code></td><td>&#960;</td></tr>
+            </tbody>
+          </table>
+          
+          <p>For a complete list, see <a href="https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references" target="_blank">Wikipedia's HTML entities reference</a>.</p>
+          
+          <h2>Table Formatting</h2>
+          
+          <h3>Line Breaks in Table Cells</h3>
+          <p>Use <code>&lt;br&gt;</code> HTML tags to create multiple paragraphs in a cell:</p>
+          <pre><code>| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title |
+| Paragraph   | First paragraph. &lt;br&gt;&lt;br&gt; Second paragraph. |</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <table>
+            <thead>
+              <tr><th>Syntax</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Header</td><td>Title</td></tr>
+              <tr><td>Paragraph</td><td>First paragraph. <br><br> Second paragraph.</td></tr>
+            </tbody>
+          </table>
+          
+          <h3>Lists in Table Cells</h3>
+          <p>Use HTML list tags inside table cells:</p>
+          <pre><code>| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title |
+| List        | Here's a list! &lt;ul&gt;&lt;li&gt;Item one.&lt;/li&gt;&lt;li&gt;Item two.&lt;/li&gt;&lt;/ul&gt; |</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <table>
+            <thead>
+              <tr><th>Syntax</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Header</td><td>Title</td></tr>
+              <tr><td>List</td><td>Here's a list! <ul><li>Item one.</li><li>Item two.</li></ul></td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Table of Contents</h2>
+          <p>Create manual TOC using lists and heading ID links:</p>
+          <pre><code>#### Table of Contents
+
+- [Underline](#underline)
+- [Center](#center)
+- [Color](#color)
+- [Comments](#comments)</code></pre>
+          
+          <p><strong>Rendered output:</strong></p>
+          <h4>Table of Contents</h4>
+          <ul>
+            <li><a href="#markdown-hacks">Underline</a></li>
+            <li><a href="#markdown-hacks">Center</a></li>
+            <li><a href="#markdown-hacks">Color</a></li>
+            <li><a href="#markdown-hacks">Comments</a></li>
+          </ul>
+          
+          <h2>Embedding Videos</h2>
+          <p>Two approaches for including videos:</p>
+          
+          <h3>Method 1: HTML Embed (Best)</h3>
+          <p>Copy the embed code from YouTube, Vimeo, etc.:</p>
+          <pre><code>&lt;iframe width="560" height="315" 
+  src="https://www.youtube.com/embed/VIDEO-ID" 
+  frameborder="0" allowfullscreen&gt;
+&lt;/iframe&gt;</code></pre>
+          
+          <h3>Method 2: Linked Thumbnail (Fallback)</h3>
+          <p>Link to the video using its auto-generated thumbnail:</p>
+          <pre><code>[![Alt Text](https://img.youtube.com/vi/VIDEO-ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO-ID)</code></pre>
+          
+          <p>Replace <code>VIDEO-ID</code> with the actual YouTube video ID.</p>
+          
+          <div class="callout">
+            <strong>📖 Learn More:</strong> For additional hacks and workarounds, visit the <a href="https://www.markdownguide.org/hacks/" target="_blank">Markdown Guide Hacks page</a>.
+          </div>
+        </section>
+
+        <!-- Mermaid Guide Section -->
+        <section id="mermaid-guide" role="article">
+          <h1>📊 Mermaid Diagram Guide</h1>
+          <span class="badge">mermaid</span>
+          <span class="badge">diagrams</span>
+          <span class="badge">visualization</span>
+          
+          <p>Mermaid is a powerful tool for creating diagrams and visualizations using text and code. This guide covers everything you need to know to create beautiful diagrams.</p>
+          
+          <h2>🎯 What You'll Learn</h2>
+          <ul>
+            <li><strong>About Mermaid</strong> - Introduction and key concepts</li>
+            <li><strong>How to Include</strong> - Integration in Markdown and HTML</li>
+            <li><strong>Configuration & Initialization</strong> - Setup, themes, and API options</li>
+            <li><strong>Flowcharts</strong> - Process flows and decision trees</li>
+            <li><strong>Sequence Diagrams</strong> - Interaction and communication flows</li>
+            <li><strong>Class Diagrams</strong> - Object-oriented design</li>
+            <li><strong>State Diagrams</strong> - State machines and transitions</li>
+            <li><strong>Pie Charts</strong> - Data visualization</li>
+            <li><strong>Git Graphs</strong> - Version control workflows</li>
+            <li><strong>ER Diagrams</strong> - Database relationships</li>
+            <li><strong>Gantt Diagrams</strong> - Project schedules and timelines</li>
+            <li><strong>User Journey</strong> - User experience mapping</li>
+            <li><strong>Quadrant Charts</strong> - Priority matrices and analysis</li>
+            <li><strong>Timeline</strong> - Chronological events and milestones</li>
+            <li><strong>Mindmap</strong> - Brainstorming and concept organization</li>
+            <li><strong>Sankey Diagrams</strong> - Flow visualization 🔥</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>💡 Interactive Diagrams:</strong> All diagrams in this guide are fully interactive. You can click the expand button to view them in full screen!
+          </div>
+        </section>
+
+        <!-- Mermaid: About -->
+        <section id="mermaid-about" role="article">
+          <h1>About Mermaid</h1>
+          <span class="badge">mermaid</span>
+          <span class="badge">intro</span>
+          
+          <h2>What is Mermaid?</h2>
+          <p>Mermaid is a JavaScript-based diagramming and charting tool that uses Markdown-inspired text definitions and a renderer to create and modify complex diagrams.</p>
+          
+          <h2>Why Use Mermaid?</h2>
+          <ul>
+            <li><strong>Text-based</strong> - Write diagrams using simple text syntax</li>
+            <li><strong>Version Control Friendly</strong> - Store diagrams as text in your repository</li>
+            <li><strong>No Special Tools</strong> - Works in Markdown, documentation, and web pages</li>
+            <li><strong>Fast Updates</strong> - Modify diagrams by editing text, not dragging shapes</li>
+            <li><strong>Consistent Style</strong> - Automatic layout and styling</li>
+          </ul>
+          
+          <h2>Key Features</h2>
+          <ul>
+            <li>Multiple diagram types (flowcharts, sequence, class, state, etc.)</li>
+            <li>Automatic layout and rendering</li>
+            <li>Customizable themes and styling</li>
+            <li>Wide platform support (GitHub, GitLab, VS Code, etc.)</li>
+            <li>Active community and development</li>
+          </ul>
+          
+          <blockquote>
+            <p><strong>The main purpose of Mermaid</strong> is to help documentation catch up with development by enabling users to create easily modifiable diagrams.</p>
+          </blockquote>
+          
+          <div class="callout">
+            <strong>🚀 Getting Started:</strong> The best way to learn Mermaid is to see examples. Check out the diagram types in the following sections!
+          </div>
+        </section>
+
+        <!-- Mermaid: How to Include -->
+        <section id="mermaid-include" role="article">
+          <h1>How to Include Mermaid</h1>
+          <span class="badge">setup</span>
+          <span class="badge">integration</span>
+          
+          <h2>In Markdown</h2>
+          <p>To include Mermaid diagrams in Markdown documents, use fenced code blocks with the <code>mermaid</code> language identifier:</p>
+          
+          <pre><code>```mermaid
+graph TD
+    A[Start] --> B[Process]
+    B --> C[End]
+```</code></pre>
+          
+          <p>Most modern Markdown processors (GitHub, GitLab, Obsidian, VS Code extensions) support Mermaid natively and will automatically render these diagrams.</p>
+          
+          <h2>In HTML</h2>
+          <p>To use Mermaid in HTML pages, include the Mermaid library and initialize it:</p>
+          
+          <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        mermaid.initialize({ startOnLoad: true });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="mermaid"&gt;
+        graph TD
+            A[Start] --> B[End]
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          
+          <h2>Configuration Options</h2>
+          <pre><code class="language-javascript">mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default', // 'default', 'dark', 'forest', 'neutral'
+    securityLevel: 'loose',
+    logLevel: 'error',
+    flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+    }
+});</code></pre>
+          
+          <h2>Platform Support</h2>
+          <ul>
+            <li><strong>GitHub</strong> - Native support in Markdown files</li>
+            <li><strong>GitLab</strong> - Native support in Markdown</li>
+            <li><strong>VS Code</strong> - Via Markdown preview extensions</li>
+            <li><strong>Obsidian</strong> - Native support</li>
+            <li><strong>Notion</strong> - Via embeds</li>
+            <li><strong>Confluence</strong> - Via macros or plugins</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>💡 Pro Tip:</strong> Use the Mermaid Live Editor at <a href="https://mermaid.live" target="_blank">mermaid.live</a> to test and preview your diagrams!
+          </div>
+        </section>
+
+        <!-- Mermaid: Configuration & Initialization -->
+        <section id="mermaid-config" role="article">
+          <h1>Configuration & Initialization</h1>
+          <span class="badge">config</span>
+          <span class="badge">setup</span>
+          <span class="badge">api</span>
+          
+          <p>Learn how to configure and customize Mermaid for your specific needs.</p>
+          
+          <h2>Basic Initialization</h2>
+          <p>Initialize Mermaid with default settings:</p>
+          <pre><code class="language-html">&lt;script type="module"&gt;
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true });
+&lt;/script&gt;</code></pre>
+          
+          <h2>Core Configuration Options</h2>
+          <pre><code class="language-javascript">mermaid.initialize({
+  // Core Settings
+  startOnLoad: true,              // Auto-render on page load
+  theme: 'default',               // Theme: 'default', 'dark', 'forest', 'neutral', 'base'
+  logLevel: 'error',              // Log level: 'debug', 'info', 'warn', 'error', 'fatal'
+  securityLevel: 'strict',        // 'strict', 'loose', 'antiscript', 'sandbox'
+  
+  // Layout & Rendering
+  useMaxWidth: true,              // Fit diagram to container width
+  fontFamily: '"trebuchet ms", verdana, arial, sans-serif',
+  
+  // Diagram-Specific Configs
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+    curve: 'basis'                // 'basis', 'linear', 'cardinal'
+  },
+  sequence: {
+    diagramMarginX: 50,
+    diagramMarginY: 10,
+    actorMargin: 50,
+    width: 150,
+    height: 65,
+    boxMargin: 10,
+    noteMargin: 10,
+    messageMargin: 35
+  },
+  gantt: {
+    titleTopMargin: 25,
+    barHeight: 20,
+    barGap: 4,
+    topPadding: 50,
+    leftPadding: 75,
+    gridLineStartPadding: 35,
+    fontSize: 11,
+    numberSectionStyles: 4,
+    displayMode: 'compact'        // 'compact' or 'normal'
+  }
+});</code></pre>
+          
+          <h2>Theme Configuration</h2>
+          <p>Mermaid provides built-in themes that can be easily switched:</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Theme</th>
+                <th>Description</th>
+                <th>Best For</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>default</code></td>
+                <td>Standard theme with blue/gray colors</td>
+                <td>General documentation</td>
+              </tr>
+              <tr>
+                <td><code>dark</code></td>
+                <td>Dark background with light text</td>
+                <td>Dark mode interfaces</td>
+              </tr>
+              <tr>
+                <td><code>forest</code></td>
+                <td>Green color scheme</td>
+                <td>Natural/environmental topics</td>
+              </tr>
+              <tr>
+                <td><code>neutral</code></td>
+                <td>Minimal grayscale theme</td>
+                <td>Professional documents</td>
+              </tr>
+              <tr>
+                <td><code>base</code></td>
+                <td>Base theme for custom styling</td>
+                <td>Custom theme development</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h2>Custom Theme Variables</h2>
+          <pre><code class="language-javascript">mermaid.initialize({
+  theme: 'base',
+  themeVariables: {
+    primaryColor: '#BB86FC',
+    primaryTextColor: '#fff',
+    primaryBorderColor: '#7c00c9',
+    lineColor: '#F8B229',
+    secondaryColor: '#03DAC6',
+    tertiaryColor: '#CF6679',
+    background: '#1E1E1E',
+    mainBkg: '#6200EE',
+    secondBkg: '#3700B3',
+    mainContrastColor: '#ffffff',
+    darkMode: true,
+    fontFamily: 'Consolas, Monaco, monospace',
+    fontSize: '16px'
+  }
+});</code></pre>
+          
+          <h2>Security Levels</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Description</th>
+                <th>Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>strict</code></td>
+                <td>Disables all HTML tags, only text allowed</td>
+                <td>User-generated content</td>
+              </tr>
+              <tr>
+                <td><code>loose</code></td>
+                <td>Allows HTML tags in diagram definitions</td>
+                <td>Trusted content only</td>
+              </tr>
+              <tr>
+                <td><code>antiscript</code></td>
+                <td>Removes script tags but allows other HTML</td>
+                <td>Mixed trust environments</td>
+              </tr>
+              <tr>
+                <td><code>sandbox</code></td>
+                <td>Renders in sandboxed iframe</td>
+                <td>Maximum security</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h2>CDN Options</h2>
+          <p>Mermaid can be included from various CDNs:</p>
+          <pre><code class="language-html">&lt;!-- Latest version --&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- Specific version --&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/mermaid@11.0.0/dist/mermaid.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- ES Module --&gt;
+&lt;script type="module"&gt;
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+&lt;/script&gt;
+
+&lt;!-- UNPKG alternative --&gt;
+&lt;script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"&gt;&lt;/script&gt;</code></pre>
+          
+          <h2>NPM Installation</h2>
+          <pre><code class="language-bash"># Install via npm
+npm install mermaid
+
+# Install via yarn
+yarn add mermaid
+
+# Install via pnpm
+pnpm add mermaid</code></pre>
+          
+          <h2>Programmatic Rendering</h2>
+          <pre><code class="language-javascript">// Render a specific element
+const element = document.getElementById('my-diagram');
+const diagram = 'graph TD; A-->B; B-->C;';
+
+const { svg } = await mermaid.render('diagram-id', diagram);
+element.innerHTML = svg;
+
+// Render all diagrams manually
+await mermaid.run();
+
+// Render with specific config
+await mermaid.run({
+  querySelector: '.custom-mermaid-class'
+});</code></pre>
+          
+          <h2>Directives (Inline Configuration)</h2>
+          <p>Configure individual diagrams using directives:</p>
+          <pre><code>```mermaid
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor': '#ff0000'}}}%%
+graph TD
+    A[Red themed diagram] --> B[Dark background]
+```</code></pre>
+          
+          <div class="callout">
+            <strong>🔒 Security Note:</strong> Always use <code>securityLevel: 'strict'</code> when rendering user-generated content to prevent XSS attacks!
+          </div>
+          
+          <div class="callout">
+            <strong>📚 Documentation:</strong> For complete API reference, visit the <a href="https://mermaid.js.org/config/setup/modules/mermaidAPI.html" target="_blank">official Mermaid API documentation</a>.
+          </div>
+        </section>
+
+        <!-- Mermaid: Flowchart -->
+        <section id="mermaid-flowchart" role="article">
+          <h1>Flowchart Diagrams</h1>
+          <span class="badge">flowchart</span>
+          <span class="badge">flow</span>
+          <span class="badge">process</span>
+          
+          <p>Flowcharts are used to represent workflows, processes, and decision trees.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+flowchart TD
+    A[Start] --> B{Is it?}
+    B -->|Yes| C[OK]
+    C --> D[Rethink]
+    D --> B
+    B ---->|No| E[End]
+```</code></pre>
+          
+          <h2>Example: User Login Flow</h2>
+          <div class="mermaid">
+graph TD
+    Start[User Login] --> Auth{Authenticated?}
+    Auth -->|Yes| Dashboard[Show Dashboard]
+    Auth -->|No| Login[Show Login Page]
+    Login --> Credentials[Enter Credentials]
+    Credentials --> Verify{Valid?}
+    Verify -->|Yes| Dashboard
+    Verify -->|No| Error[Show Error]
+    Error --> Login
+    Dashboard --> Actions[User Actions]
+          </div>
+          
+          <h2>Comprehensive Node Shapes (v11.3.0+)</h2>
+          <p>Mermaid supports 30+ node shapes for different use cases:</p>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Shape</th><th>Syntax</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td>Rectangle</td><td><code>id[Text]</code></td><td>Process, activity</td></tr>
+              <tr><td>Rounded</td><td><code>id(Text)</code></td><td>Start/end, state</td></tr>
+              <tr><td>Stadium</td><td><code>id([Text])</code></td><td>Subroutine</td></tr>
+              <tr><td>Subroutine</td><td><code>id[[Text]]</code></td><td>Predefined process</td></tr>
+              <tr><td>Cylindrical</td><td><code>id[(Text)]</code></td><td>Database</td></tr>
+              <tr><td>Circle</td><td><code>id((Text))</code></td><td>Junction, connector</td></tr>
+              <tr><td>Diamond</td><td><code>id{Text}</code></td><td>Decision</td></tr>
+              <tr><td>Hexagon</td><td><code>id{{Text}}</code></td><td>Preparation</td></tr>
+              <tr><td>Parallelogram</td><td><code>id[/Text/]</code></td><td>Input/Output</td></tr>
+              <tr><td>Parallelogram (alt)</td><td><code>id[\Text\]</code></td><td>Input/Output</td></tr>
+              <tr><td>Trapezoid</td><td><code>id[/Text\]</code></td><td>Manual operation</td></tr>
+              <tr><td>Trapezoid (alt)</td><td><code>id[\Text/]</code></td><td>Manual operation</td></tr>
+              <tr><td>Double Circle</td><td><code>id(((Text)))</code></td><td>Stop state</td></tr>
+              <tr><td>Bang 🆕</td><td><code>id@{ shape: flag }</code></td><td>Flag, alert</td></tr>
+              <tr><td>Card 🆕</td><td><code>id@{ shape: card }</code></td><td>Card element</td></tr>
+              <tr><td>Cloud 🆕</td><td><code>id@{ shape: cloud }</code></td><td>Cloud service</td></tr>
+              <tr><td>Comment 🆕</td><td><code>id@{ shape: comment }</code></td><td>Annotation</td></tr>
+              <tr><td>Delay 🆕</td><td><code>id@{ shape: delay }</code></td><td>Time delay</td></tr>
+              <tr><td>Document 🆕</td><td><code>id@{ shape: doc }</code></td><td>Document</td></tr>
+              <tr><td>Document (many) 🆕</td><td><code>id@{ shape: docs }</code></td><td>Multiple documents</td></tr>
+              <tr><td>Fork/Join 🆕</td><td><code>id@{ shape: fork }</code></td><td>Parallel process</td></tr>
+              <tr><td>Junction 🆕</td><td><code>id@{ shape: junction }</code></td><td>Merge point</td></tr>
+              <tr><td>Paper Tape 🆕</td><td><code>id@{ shape: paper-tape }</code></td><td>Legacy I/O</td></tr>
+              <tr><td>Subprocess 🆕</td><td><code>id@{ shape: subprocess }</code></td><td>Subprocess</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Special Shapes 🆕</h2>
+          <h3>Icon Shape (Font Awesome)</h3>
+          <pre><code>flowchart TD
+    A@{ shape: icon, icon: "fa:user", label: "User Profile" }</code></pre>
+          
+          <h3>Image Shape</h3>
+          <pre><code>flowchart TD
+    A@{ 
+      shape: image, 
+      img: "https://example.com/logo.png",
+      label: "Company Logo",
+      w: 50,
+      h: 50,
+      constraint: "on"
+    }</code></pre>
+          
+          <h2>Arrow Types & Edges</h2>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Type</th><th>Syntax</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>Solid</td><td><code>--></code></td><td>Normal flow</td></tr>
+              <tr><td>Dotted</td><td><code>-.-></code></td><td>Optional/alternate</td></tr>
+              <tr><td>Thick</td><td><code>==></code></td><td>Emphasized flow</td></tr>
+              <tr><td>Open</td><td><code>---</code></td><td>No arrow</td></tr>
+              <tr><td>With text</td><td><code>-->|Text|</code></td><td>Labeled edge</td></tr>
+              <tr><td>With ID</td><td><code>--id-->  </code></td><td>For styling</td></tr>
+              <tr><td>Cross</td><td><code>--x</code></td><td>Termination</td></tr>
+              <tr><td>Half-arrows 🆕</td><td><code>~>-</code> or <code>-~></code></td><td>16 combinations (v11.12.3+)</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Half-Arrows (v11.12.3+) 🆕</h2>
+          <p>Combine <code>&lt;</code>, <code>&gt;</code>, <code>o</code>, <code>x</code> on either end:</p>
+          <ul>
+            <li><code>o--o</code>, <code>x--x</code>, <code>&lt;--&gt;</code> - Bidirectional variants</li>
+            <li><code>o--&gt;</code>, <code>&lt;--o</code> - One-sided circle</li>
+            <li><code>x--&gt;</code>, <code>&lt;--x</code> - One-sided cross</li>
+            <li><em>And 10+ more combinations...</em></li>
+          </ul>
+          
+          <h2>Central Connections (v11.12.3+) 🆕</h2>
+          <p>Connect multiple nodes from/to a single point:</p>
+          <pre><code>flowchart LR
+    A ~~~ M ~~~ B
+    C ~~~ M ~~~ D</code></pre>
+          
+          <h2>Markdown Strings in Labels 🆕</h2>
+          <pre><code>flowchart LR
+    id1["`**Bold** and *italic* text
+    Line breaks work
+    Unicode: 🎉`"]</code></pre>
+          
+          <h2>Interaction & Callbacks</h2>
+          <pre><code>flowchart LR
+    A-->B
+    click A callback "Tooltip"
+    click B "https://example.com" "Open link" _blank
+    click C call myFunction()</code></pre>
+          
+          <h2>Styling</h2>
+          <pre><code>flowchart TD
+    A[Default] --> B[Styled]
+    style B fill:#f9f,stroke:#333,stroke-width:4px
+    
+    classDef urgent fill:#f96,stroke:#f33,color:#fff
+    C[Normal] --> D:::urgent</code></pre>
+          
+          <h2>Direction</h2>
+          <ul>
+            <li><code>TD</code> or <code>TB</code> - Top to bottom</li>
+            <li><code>BT</code> - Bottom to top</li>
+            <li><code>LR</code> - Left to right</li>
+            <li><code>RL</code> - Right to left</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>💡 Pro Tip:</strong> Use <code>flowchart</code> keyword (not <code>graph</code>) for access to latest features like special shapes and half-arrows!
+          </div>
+        </section>
+
+        <!-- Mermaid: Sequence Diagram -->
+        <section id="mermaid-sequence" role="article">
+          <h1>Sequence Diagrams</h1>
+          <span class="badge">sequence</span>
+          <span class="badge">interaction</span>
+          <span class="badge">communication</span>
+          
+          <p>Sequence diagrams show how objects interact in a time sequence.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    John-->>Alice: Great!
+```</code></pre>
+          
+          <h2>Example: API Request Flow</h2>
+          <div class="mermaid">
+sequenceDiagram
+    participant Client
+    participant API
+    participant Database
+    Client->>API: HTTP Request
+    activate API
+    API->>Database: Query Data
+    activate Database
+    Database-->>API: Return Results
+    deactivate Database
+    API-->>Client: HTTP Response
+    deactivate API
+          </div>
+          
+          <h2>Participant Types 🆕</h2>
+          <p>Mermaid supports 8 participant shapes to represent different architectural components:</p>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Type</th><th>Syntax</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td>Participant</td><td><code>participant A</code></td><td>Generic actor/system</td></tr>
+              <tr><td>Actor</td><td><code>actor A</code></td><td>Human user (stick figure)</td></tr>
+              <tr><td>Boundary 🆕</td><td><code>boundary A</code></td><td>System boundary</td></tr>
+              <tr><td>Control 🆕</td><td><code>control A</code></td><td>Controller logic</td></tr>
+              <tr><td>Entity 🆕</td><td><code>entity A</code></td><td>Business entity</td></tr>
+              <tr><td>Database 🆕</td><td><code>database A</code></td><td>Data store</td></tr>
+              <tr><td>Collections 🆕</td><td><code>collections A</code></td><td>Multiple instances</td></tr>
+              <tr><td>Queue 🆕</td><td><code>queue A</code></td><td>Message queue</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Message Arrow Types</h2>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Type</th><th>Syntax</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>Solid arrow</td><td><code>-&gt;&gt;</code></td><td>Synchronous message</td></tr>
+              <tr><td>Dotted arrow</td><td><code>--&gt;&gt;</code></td><td>Asynchronous/return</td></tr>
+              <tr><td>Solid cross</td><td><code>-x</code></td><td>Sync message, no return</td></tr>
+              <tr><td>Dotted cross</td><td><code>--x</code></td><td>Async message, no return</td></tr>
+              <tr><td>Solid open</td><td><code>-)</code></td><td>Async message</td></tr>
+              <tr><td>Dotted open</td><td><code>--)</code></td><td>Async response</td></tr>
+              <tr><td>Half-arrows 🆕</td><td><code>~&gt;-</code> or <code>-~&gt;</code></td><td>16 combinations (v11.12.3+)</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Actor Creation/Destruction (v10.3.0+) 🆕</h2>
+          <pre><code>sequenceDiagram
+    participant A
+    create participant B
+    A->>B: Create new instance
+    
+    B->>A: Process complete
+    destroy B
+    A-xB: Destroy instance</code></pre>
+          
+          <h2>Grouping with Box 🆕</h2>
+          <pre><code>sequenceDiagram
+    box Purple Backend Services
+        participant API
+        participant DB
+    end
+    box rgb(200,150,255) Frontend
+        participant UI
+    end
+    UI->>API: Request
+    API->>DB: Query</code></pre>
+          
+          <h2>Central Connections (v11.12.3+) 🆕</h2>
+          <p>Connect multiple participants from a single message:</p>
+          <pre><code>sequenceDiagram
+    A ~~ M ~~ B
+    C ~~ M ~~ D</code></pre>
+          
+          <h2>Advanced Control Flow</h2>
+          <h3>Loops and Alternatives</h3>
+          <pre><code>sequenceDiagram
+    loop Every minute
+        A->>B: Check status
+    end
+    
+    alt is available
+        B-->>A: Available
+    else is unavailable  
+        B-->>A: Unavailable
+    end
+    
+    opt Extra response
+        B-->>A: Optional data
+    end</code></pre>
+          
+          <h3>Critical Region 🆕</h3>
+          <pre><code>critical Establish connection
+    Service->>DB: Connect
+    DB-->>Service: Ack
+option Network timeout
+    Service->>Service: Log timeout
+end</code></pre>
+          
+          <h3>Break 🆕</h3>
+          <pre><code>break When timeout occurs
+    Service->>User: Timeout error
+end</code></pre>
+          
+          <h2>Actor Menus with Links 🆕</h2>
+          <pre><code>sequenceDiagram
+    participant A
+    participant B
+    links A: {"Dashboard": "https://dashboard.com", "Support": "https://support.com"}
+    link B: API Docs @ https://api-docs.com</code></pre>
+          
+          <h2>Activation & Lifelines</h2>
+          <pre><code>sequenceDiagram
+    A->>+B: Request (activate)
+    B->>+C: Sub-request
+    C-->>-B: Response (deactivate)
+    B-->>-A: Final response</code></pre>
+          
+          <h2>Notes</h2>
+          <pre><code>sequenceDiagram
+    Note right of A: Right side note
+    Note left of B: Left side note
+    Note over A,B: Spanning note</code></pre>
+          
+          <h2>Styling 🆕</h2>
+          <pre><code>%%{init: {'theme':'base', 'themeVariables': {
+  'actorBkg':'#f4f4f4',
+  'actorBorder':'#999',
+  'actorTextColor':'#333',
+  'actorLineColor':'#666',
+  'signalColor':'#333',
+  'signalTextColor':'#000'
+}}}%%
+sequenceDiagram
+    A->>B: Styled message</code></pre>
+          
+          <div class="callout">
+            <strong>💡 Pro Tip:</strong> Use <code>autonumber</code> to automatically number messages, and <code>participant</code> declarations to control display order!
+          </div>
+        </section>
+
+        <!-- Mermaid: Class Diagram -->
+        <section id="mermaid-class" role="article">
+          <h1>Class Diagrams</h1>
+          <span class="badge">class</span>
+          <span class="badge">uml</span>
+          <span class="badge">oop</span>
+          
+          <p>Class diagrams show the structure of a system by depicting classes, attributes, operations, and relationships.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+classDiagram
+    Animal <|-- Duck
+    Animal <|-- Fish
+    Animal : +int age
+    Animal : +String gender
+    Animal: +isMammal()
+    Animal: +mate()
+```</code></pre>
+          
+          <h2>Example: Animal Hierarchy</h2>
+          <div class="mermaid">
+classDiagram
+    Animal <|-- Duck
+    Animal <|-- Fish
+    Animal <|-- Zebra
+    Animal : +int age
+    Animal : +String gender
+    Animal: +isMammal()
+    Animal: +mate()
+    class Duck{
+        +String beakColor
+        +swim()
+        +quack()
+    }
+    class Fish{
+        -int sizeInFeet
+        -canEat()
+    }
+    class Zebra{
+        +bool is_wild
+        +run()
+    }
+          </div>
+          
+          <h2>Relationships</h2>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Type</th><th>Syntax</th><th>Cardinality</th></tr></thead>
+            <tbody>
+              <tr><td>Inheritance</td><td><code>&lt;|--</code></td><td>-</td></tr>
+              <tr><td>Composition</td><td><code>*--</code></td><td><code>"1" *-- "many"</code></td></tr>
+              <tr><td>Aggregation</td><td><code>o--</code></td><td><code>"1" o-- "0..*"</code></td></tr>
+              <tr><td>Association</td><td><code>--></code></td><td><code>"1" --> "1..*"</code></td></tr>
+              <tr><td>Realization</td><td><code>..|></code></td><td>-</td></tr>
+              <tr><td>Lollipop 🆕</td><td><code>()--</code></td><td>Interface implementation</td></tr>
+              <tr><td>Two-way</td><td><code>--</code></td><td>Bidirectional</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Cardinality Notation</h2>
+          <ul>
+            <li><code>1</code> - Exactly one</li>
+            <li><code>0..1</code> - Zero or one</li>
+            <li><code>1..*</code> - One or more</li>
+            <li><code>*</code> or <code>0..*</code> - Zero or more</li>
+            <li><code>n</code> - Specific number</li>
+            <li><code>n..m</code> - Range</li>
+          </ul>
+          
+          <h2>Visibility</h2>
+          <ul>
+            <li><code>+</code> - Public</li>
+            <li><code>-</code> - Private</li>
+            <li><code>#</code> - Protected</li>
+            <li><code>~</code> - Package/Internal</li>
+          </ul>
+          
+          <h2>Generic Types (Generics) 🆕</h2>
+          <pre><code>classDiagram
+    class List~T~{
+        +add(T item)
+        +get(int index) T
+    }
+    class Map~K,V~{
+        +put(K key, V value)
+        +get(K key) V
+    }
+    List~String~ --> Map~String,Integer~</code></pre>
+          
+          <h2>Namespaces 🆕</h2>
+          <pre><code>classDiagram
+    namespace Core {
+        class User
+        class Session
+    }
+    namespace Services {
+        class AuthService
+        class DataService
+    }
+    User --> AuthService</code></pre>
+          
+          <h2>Annotations</h2>
+          <pre><code>classDiagram
+    class Shape
+    <<interface>> Shape
+    class Circle
+    <<enumeration>> Color</code></pre>
+          
+          <div class="callout">
+            <strong>💡 Pro Tip:</strong> Use <code>direction LR</code> or <code>direction TB</code> to control diagram orientation!
+          </div>
+        </section>
+
+        <!-- Mermaid: State Diagram -->
+        <section id="mermaid-state" role="article">
+          <h1>State Diagrams</h1>
+          <span class="badge">state</span>
+          <span class="badge">machine</span>
+          <span class="badge">fsm</span>
+          
+          <p>State diagrams describe the behavior of a system by showing states and transitions.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+stateDiagram-v2
+    [*] --> Still
+    Still --> [*]
+    Still --> Moving
+    Moving --> Still
+    Moving --> Crash
+    Crash --> [*]
+```</code></pre>
+          
+          <h2>Example: Movement States</h2>
+          <div class="mermaid">
+stateDiagram-v2
+    [*] --> Still
+    Still --> [*]
+    Still --> Moving
+    Moving --> Still
+    Moving --> Crash
+    Crash --> [*]
+          </div>
+          
+          <h2>Features</h2>
+          <ul>
+            <li><strong>Initial State</strong> - <code>[*]</code></li>
+            <li><strong>Transitions</strong> - <code>State1 --> State2 : Event</code></li>
+            <li><strong>Composite States</strong> - Nested states with <code>state { }</code></li>
+            <li><strong>Choice States</strong> - <code>&lt;&lt;choice&gt;&gt;</code> for conditional branches</li>
+            <li><strong>Fork/Join</strong> - <code>&lt;&lt;fork&gt;&gt;</code> and <code>&lt;&lt;join&gt;&gt;</code> for parallel processing</li>
+            <li><strong>Concurrency</strong> - Use <code>--</code> to separate parallel regions</li>
+          </ul>
+          
+          <h2>With Descriptions</h2>
+          <pre><code>```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Processing : Start
+    Processing --> Complete : Success
+    Processing --> Error : Failure
+    Complete --> [*]
+    Error --> [*]
+```</code></pre>
+          
+          <h2>Choice Nodes 🆕</h2>
+          <pre><code>stateDiagram-v2
+    state if_state &lt;&lt;choice&gt;&gt;
+    [*] --> IsPositive
+    IsPositive --> if_state
+    if_state --> False: if n < 0
+    if_state --> True : if n >= 0</code></pre>
+          
+          <h2>Fork/Join 🆕</h2>
+          <pre><code>stateDiagram-v2
+    state fork_state &lt;&lt;fork&gt;&gt;
+    [*] --> fork_state
+    fork_state --> State1
+    fork_state --> State2
+    
+    state join_state &lt;&lt;join&gt;&gt;
+    State1 --> join_state
+    State2 --> join_state
+    join_state --> [*]</code></pre>
+          
+          <h2>Concurrency 🆕</h2>
+          <pre><code>stateDiagram-v2
+    [*] --> Active
+    state Active {
+        [*] --> NumLockOff
+        NumLockOff --> NumLockOn : EvNumLockPressed
+        --
+        [*] --> CapsLockOff
+        CapsLockOff --> CapsLockOn : EvCapsLockPressed
+    }</code></pre>
+          
+          <h2>Styling 🆕</h2>
+          <pre><code>stateDiagram-v2
+    classDef errorState fill:#f96,stroke:#f33,color:#fff
+    classDef successState fill:#9f6,stroke:#3f3,color:#000
+    
+    [*] --> Idle
+    Idle --> Processing
+    Processing --> Success:::successState
+    Processing --> Error:::errorState</code></pre>
+          
+          <div class="callout">
+            <strong>💡 Use v2:</strong> Always use <code>stateDiagram-v2</code> for access to latest features like choice nodes and fork/join!
+          </div>
+        </section>
+
+        <!-- Mermaid: Pie Chart -->
+        <section id="mermaid-pie" role="article">
+          <h1>Pie Charts</h1>
+          <span class="badge">pie</span>
+          <span class="badge">chart</span>
+          <span class="badge">data</span>
+          
+          <p>Pie charts display data as proportional slices of a circle.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+pie title Pets adopted by volunteers
+    "Dogs" : 386
+    "Cats" : 85
+    "Rats" : 15
+```</code></pre>
+          
+          <h2>Example: Pet Adoptions</h2>
+          <div class="mermaid">
+pie title Pets adopted by volunteers
+    "Dogs" : 386
+    "Cats" : 85
+    "Rats" : 15
+          </div>
+          
+          <h2>Features</h2>
+          <ul>
+            <li>Optional title with <code>title</code> keyword</li>
+            <li>Automatic percentage calculation</li>
+            <li>Automatic color assignment</li>
+            <li>Clear visual representation of proportions</li>
+            <li><code>showData</code> 🆕 - Display actual values alongside percentages</li>
+          </ul>
+          
+          <h2>Show Data Values 🆕</h2>
+          <pre><code>%%{init: {"pie": {"showData": true}}}%%
+pie title Sales by Region
+    "North" : 450
+    "South" : 320
+    "East" : 280
+    "West" : 150</code></pre>
+          
+          <h2>Text Position 🆕</h2>
+          <pre><code>%%{init: {"pie": {"textPosition": 0.75}}}%%
+pie
+    "A" : 40
+    "B" : 30
+    "C" : 30</code></pre>
+          <p><code>textPosition</code> ranges from 0.0 (center) to 1.0 (edge), default is 0.75</p>
+          
+          <h2>Styling 🆕</h2>
+          <pre><code>%%{init: {'theme':'base', 'themeVariables': {
+  'pieOuterStrokeWidth': '3px',
+  'pieStrokeColor': '#000000'
+}}}%%
+pie
+    "Item 1" : 30
+    "Item 2" : 70</code></pre>
+          
+          <h2>Example: Browser Market Share</h2>
+          <div class="mermaid">
+pie title Browser Market Share
+    "Chrome" : 65
+    "Safari" : 20
+    "Firefox" : 8
+    "Edge" : 5
+    "Others" : 2
+          </div>
+          
+          <div class="callout">
+            <strong>💡 Use Case:</strong> Great for showing distribution, market share, survey results, budget breakdowns, and resource allocation!
+          </div>
+        </section>
+
+        <!-- Mermaid: Git Graph -->
+        <section id="mermaid-git" role="article">
+          <h1>Git Graphs</h1>
+          <span class="badge">git</span>
+          <span class="badge">version-control</span>
+          <span class="badge">branches</span>
+          
+          <p>Git graphs visualize branching and merging in version control workflows.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+gitGraph
+    commit
+    commit
+    branch develop
+    checkout develop
+    commit
+    commit
+    checkout main
+    merge develop
+    commit
+```</code></pre>
+          
+          <h2>Example: Feature Branch Workflow</h2>
+          <div class="mermaid">
+gitGraph
+    commit id: "Initial commit"
+    commit id: "Add feature A"
+    branch develop
+    checkout develop
+    commit id: "Dev work"
+    commit id: "More dev work"
+    checkout main
+    merge develop
+    commit id: "Release v1.0"
+    branch hotfix
+    checkout hotfix
+    commit id: "Fix bug"
+    checkout main
+    merge hotfix
+    commit id: "Release v1.0.1"
+          </div>
+          
+          <h2>Commands</h2>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Command</th><th>Description</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td><code>commit</code></td><td>Create a commit</td><td><code>commit id: "Initial"</code></td></tr>
+              <tr><td><code>branch</code></td><td>Create a branch</td><td><code>branch develop</code></td></tr>
+              <tr><td><code>checkout</code></td><td>Switch branches</td><td><code>checkout main</code></td></tr>
+              <tr><td><code>merge</code></td><td>Merge branches</td><td><code>merge develop</code></td></tr>
+              <tr><td><code>cherry-pick</code> 🆕</td><td>Cherry-pick commit</td><td><code>cherry-pick id:"abc"</code></td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Cherry-Pick with Parent 🆕</h2>
+          <pre><code>gitGraph
+    commit id: "A"
+    branch feature
+    commit id: "B"
+    checkout main
+    commit id: "C"
+    cherry-pick id: "B" parent: "A"</code></pre>
+          
+          <h2>Branch Ordering 🆕</h2>
+          <pre><code>gitGraph
+    commit
+    branch develop order: 2
+    branch hotfix order: 1
+    checkout main</code></pre>
+          
+          <h2>Commit Customization</h2>
+          <ul>
+            <li><code>commit id: "msg"</code> - Commit with message</li>
+            <li><code>commit tag: "v1.0"</code> - Tag a commit</li>
+            <li><code>commit type: HIGHLIGHT</code> - Highlight commit</li>
+            <li><code>commit type: REVERSE</code> - Reverse highlight</li>
+          </ul>
+          
+          <h2>Theming 🆕</h2>
+          <pre><code>%%{init: {'theme':'base', 'themeVariables': {
+  'git0': '#ff0000',
+  'git1': '#00ff00',
+  'gitBranchLabel0': '#ffffff'
+}}}%%
+gitGraph
+    commit</code></pre>
+          
+          <h2>Theme Variables</h2>
+          <ul>
+            <li><code>git0</code> through <code>git7</code> - Branch colors (cyclic)</li>
+            <li><code>gitBranchLabel0-7</code> - Branch label colors</li>
+            <li><code>commitLabelColor</code>, <code>commitLabelBackground</code></li>
+            <li><code>tagLabelColor</code>, <code>tagLabelBackground</code></li>
+            <li><code>gitInv0-7</code> - Highlight colors for commits</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>💡 Pro Tip:</strong> Use <code>mainBranchName</code> and <code>mainBranchOrder</code> in config to customize the main branch appearance and position!
+          </div>
+        </section>
+
+        <!-- Mermaid: ER Diagram -->
+        <section id="mermaid-er" role="article">
+          <h1>ER Diagrams</h1>
+          <span class="badge">er</span>
+          <span class="badge">database</span>
+          <span class="badge">entity-relationship</span>
+          
+          <p>Entity-Relationship diagrams model database structures and relationships between entities.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ LINE-ITEM : contains
+    CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+```</code></pre>
+          
+          <h2>Example: E-commerce Database</h2>
+          <div class="mermaid">
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ LINE-ITEM : contains
+    CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+    CUSTOMER {
+        string name
+        string email
+        string phone
+    }
+    ORDER {
+        int orderNumber
+        date orderDate
+        string status
+    }
+    LINE-ITEM {
+        int quantity
+        decimal price
+    }
+    DELIVERY-ADDRESS {
+        string street
+        string city
+        string zipCode
+    }
+          </div>
+          
+          <h2>Relationship Cardinality</h2>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Syntax</th><th>Meaning</th><th>Alias</th></tr></thead>
+            <tbody>
+              <tr><td><code>||--||</code></td><td>One to one</td><td><code>"only one"</code></td></tr>
+              <tr><td><code>||--o{</code></td><td>One to many</td><td><code>"one or more"</code></td></tr>
+              <tr><td><code>}|--o{</code></td><td>Many to many</td><td><code>"many(0)"</code></td></tr>
+              <tr><td><code>||..|{</code></td><td>Zero or more (dotted)</td><td><code>"0+"</code></td></tr>
+              <tr><td><code>|o--o|</code></td><td>Zero or one to zero or one</td><td><code>"zero or one"</code></td></tr>
+              <tr><td><code>}o--o{</code></td><td>Zero or more to zero or more</td><td><code>"many(0)"</code></td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Relationship Types 🆕</h2>
+          <ul>
+            <li><strong>Identifying</strong> - Solid line <code>--</code> or <code>to</code> keyword</li>
+            <li><strong>Non-identifying</strong> - Dotted line <code>..</code> or <code>optionally to</code></li>
+          </ul>
+          
+          <h2>Attributes with Keys 🆕</h2>
+          <pre><code>erDiagram
+    CUSTOMER {
+        string id PK "Primary Key"
+        string email UK "Unique"
+        string name
+        date birthDate
+    }
+    ORDER {
+        int orderNumber PK
+        string customerId FK "Foreign Key"
+        date orderDate
+        decimal total
+    }
+    CUSTOMER ||--o{ ORDER : places</code></pre>
+          
+          <h2>Attribute Keys 🆕</h2>
+          <ul>
+            <li><code>PK</code> - Primary Key</li>
+            <li><code>FK</code> - Foreign Key</li>
+            <li><code>UK</code> - Unique Key</li>
+            <li>Combine with comma: <code>PK, FK</code></li>
+          </ul>
+          
+          <h2>Entity Aliases 🆕</h2>
+          <pre><code>erDiagram
+    c[Customer] ||--o{ o[Order] : places
+    c {
+        string name
+    }</code></pre>
+          
+          <h2>Styling & Layout</h2>
+          <pre><code>%%{init: {'theme':'base'}}%%
+erDiagram
+    direction LR
+    CUSTOMER ||--o{ ORDER : places</code></pre>
+          
+          <div class="callout">
+            <strong>💡 Pro Tip:</strong> Use <code>direction TB/BT/LR/RL</code> to control diagram orientation, and <code>elk</code> layout for complex diagrams!
+          </div>
+        </section>
+
+        <!-- Mermaid: Gantt Diagram -->
+        <section id="mermaid-gantt" role="article">
+          <h1>Gantt Diagrams</h1>
+          <span class="badge">gantt</span>
+          <span class="badge">timeline</span>
+          <span class="badge">project-management</span>
+          
+          <p>Gantt diagrams illustrate project schedules, showing task durations and dependencies over time.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+gantt
+    title Project Schedule
+    dateFormat YYYY-MM-DD
+    section Planning
+    Requirements    :a1, 2024-01-01, 30d
+    Design          :a2, after a1, 20d
+    section Development
+    Backend         :b1, after a2, 45d
+    Frontend        :b2, after a2, 40d
+```</code></pre>
+          
+          <h2>Example: Software Development Timeline</h2>
+          <div class="mermaid">
+gantt
+    title Software Development Project
+    dateFormat YYYY-MM-DD
+    section Planning
+    Requirements Analysis    :done,    req, 2024-01-01, 2024-01-15
+    System Design           :done,    des, 2024-01-16, 2024-02-05
+    section Development
+    Backend API             :active,  bck, 2024-02-06, 45d
+    Frontend UI             :         frt, 2024-02-20, 40d
+    Database Setup          :done,    db,  2024-02-06, 2024-02-15
+    section Testing
+    Unit Testing            :         ut,  after bck, 10d
+    Integration Testing     :         it,  after frt, 15d
+    section Deployment
+    Staging Deployment      :         std, after it, 5d
+    Production Release      :crit,    prd, after std, 3d
+          </div>
+          
+          <h2>Date Formats</h2>
+          <ul>
+            <li><code>YYYY-MM-DD</code> - ISO format (2024-01-15)</li>
+            <li><code>DD-MM-YYYY</code> - European format</li>
+            <li><code>MM-DD-YYYY</code> - US format</li>
+            <li><code>YYYY-MM-DD HH:mm</code> - With time</li>
+          </ul>
+          
+          <h2>Task States</h2>
+          <ul>
+            <li><code>:done</code> - Completed tasks</li>
+            <li><code>:active</code> - Currently active</li>
+            <li><code>:crit</code> - Critical path items</li>
+            <li><code>:milestone</code> - Project milestones</li>
+          </ul>
+          
+          <h2>Task Dependencies</h2>
+          <ul>
+            <li><code>after taskId</code> - Start after specific task</li>
+            <li><code>until taskId</code> 🆕 (v10.9.0+) - End when task starts</li>
+            <li><code>2024-01-01, 30d</code> - Start date and duration</li>
+            <li><code>2024-01-01, 2024-02-01</code> - Start and end dates</li>
+          </ul>
+          
+          <h2>Weekend Customization 🆕 (v11.0.0+)</h2>
+          <pre><code>gantt
+    title Project with Custom Weekend
+    dateFormat YYYY-MM-DD
+    weekend friday
+    section Tasks
+    Task 1: 2024-01-01, 5d</code></pre>
+          <p>Options: <code>weekend friday</code>, <code>weekend saturday</code>, <code>weekend sunday</code></p>
+          
+          <h2>Vertical Markers 🆕</h2>
+          <pre><code>gantt
+    title Project Milestones
+    dateFormat YYYY-MM-DD
+    section Tasks
+    Task 1: 2024-01-01, 30d
+    Task 2: 2024-02-01, 20d
+    vert, Launch Date, 2024-02-15, 1d</code></pre>
+          
+          <h2>Axis Ticks 🆕 (v10.3.0+)</h2>
+          <pre><code>gantt
+    tickInterval 1week
+    axisFormat %m-%d</code></pre>
+          <p>Intervals: <code>millisecond</code>, <code>second</code>, <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>month</code></p>
+          
+          <h2>Compact Mode 🆕</h2>
+          <pre><code>---
+displayMode: compact
+---
+gantt
+    title Compact Display
+    Task 1: 2024-01-01, 10d</code></pre>
+          
+          <h2>Configuration Options</h2>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Option</th><th>Description</th><th>Default</th></tr></thead>
+            <tbody>
+              <tr><td><code>titleTopMargin</code></td><td>Title top margin</td><td>25</td></tr>
+              <tr><td><code>barHeight</code></td><td>Task bar height</td><td>20</td></tr>
+              <tr><td><code>barGap</code></td><td>Gap between bars</td><td>4</td></tr>
+              <tr><td><code>topPadding</code></td><td>Top padding</td><td>50</td></tr>
+              <tr><td><code>leftPadding</code></td><td>Left padding</td><td>75</td></tr>
+              <tr><td><code>gridLineStartPadding</code></td><td>Grid line start</td><td>35</td></tr>
+              <tr><td><code>fontSize</code></td><td>Base font size</td><td>11</td></tr>
+              <tr><td><code>numberSectionStyles</code></td><td>Section color count</td><td>4</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Today Marker 🆕</h2>
+          <pre><code>%%{init: {'theme':'base', 'themeVariables': {
+  'todayMarker': 'stroke:#ff0000,stroke-width:3px'
+}}}%%
+gantt
+    title Project</code></pre>
+          <p>Or disable: <code>todayMarker off</code></p>
+          
+          <div class="callout">
+            <strong>💡 Pro Tip:</strong> Use <code>excludes weekends</code> or <code>excludes 2024-12-25</code> to skip non-working days, and <code>click taskId href URL</code> for interactive diagrams!
+          </div>
+        </section>
+
+        <!-- Mermaid: User Journey -->
+        <section id="mermaid-journey" role="article">
+          <h1>User Journey Diagrams</h1>
+          <span class="badge">journey</span>
+          <span class="badge">ux</span>
+          <span class="badge">user-experience</span>
+          
+          <p>User journey diagrams visualize user interactions and satisfaction levels across different touchpoints.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+journey
+    title My Working Day
+    section Go to work
+      Make tea: 5: Me
+      Go upstairs: 3: Me
+      Do work: 1: Me, Cat
+    section Go home
+      Go downstairs: 5: Me
+      Sit down: 5: Me
+```</code></pre>
+          
+          <h2>Example: Customer Shopping Experience</h2>
+          <div class="mermaid">
+journey
+    title Online Shopping Experience
+    section Discovery
+      Search for product: 5: Customer
+      Browse results: 4: Customer
+      Read reviews: 3: Customer
+    section Purchase
+      Add to cart: 5: Customer
+      Apply discount: 4: Customer
+      Checkout: 3: Customer, System
+      Payment: 2: Customer, Payment Gateway
+    section Post-Purchase
+      Order confirmation: 5: Customer, System
+      Track shipment: 4: Customer
+      Receive product: 5: Customer
+      Leave review: 4: Customer
+          </div>
+          
+          <h2>Satisfaction Scores</h2>
+          <p>Rate user satisfaction from 1 (worst) to 5 (best):</p>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Score</th><th>Meaning</th><th>Visualization</th></tr></thead>
+            <tbody>
+              <tr><td><code>5</code></td><td>Very satisfied/Easy</td><td>😄 Green peak</td></tr>
+              <tr><td><code>4</code></td><td>Satisfied</td><td>🙂 Light green</td></tr>
+              <tr><td><code>3</code></td><td>Neutral</td><td>😐 Yellow</td></tr>
+              <tr><td><code>2</code></td><td>Dissatisfied</td><td>😟 Orange</td></tr>
+              <tr><td><code>1</code></td><td>Very dissatisfied/Difficult</td><td>😞 Red valley</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Syntax Format 🆕</h2>
+          <pre><code>journey
+    title Journey Title
+    section Section Name
+      Task Name: Score: Actor1, Actor2
+      Another Task: Score: Actor1</code></pre>
+          
+          <h2>Multiple Actors</h2>
+          <p>Include multiple actors by separating them with commas:</p>
+          <pre><code>Do work: 1: Me, Cat
+Checkout: 3: Customer, System</code></pre>
+          <p>Each actor is displayed below the journey graph with its own color</p>
+          
+          <div class="callout">
+            <strong>💡 Use Case:</strong> Perfect for UX design, customer experience mapping, identifying pain points in user flows, and service blueprinting!
+          </div>
+        </section>
+
+        <!-- Mermaid: Quadrant Chart -->
+        <section id="mermaid-quadrant" role="article">
+          <h1>Quadrant Charts</h1>
+          <span class="badge">quadrant</span>
+          <span class="badge">analysis</span>
+          <span class="badge">matrix</span>
+          
+          <p>Quadrant charts help visualize data points across two dimensions, commonly used for priority matrices and strategic analysis.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+quadrantChart
+    title Reach and engagement of campaigns
+    x-axis Low Reach --> High Reach
+    y-axis Low Engagement --> High Engagement
+    quadrant-1 We should expand
+    quadrant-2 Need to promote
+    quadrant-3 Re-evaluate
+    quadrant-4 May be improved
+    Campaign A: [0.3, 0.6]
+    Campaign B: [0.45, 0.23]
+```</code></pre>
+          
+          <h2>Example: Technology Investment Matrix</h2>
+          <div class="mermaid">
+quadrantChart
+    title Technology Investment Priority
+    x-axis Low Impact --> High Impact
+    y-axis Low Effort --> High Effort
+    quadrant-1 Strategic Investments
+    quadrant-2 Quick Wins
+    quadrant-3 Fill-ins
+    quadrant-4 Time Sinks
+    Cloud Migration: [0.8, 0.7]
+    UI Redesign: [0.6, 0.8]
+    API Gateway: [0.75, 0.5]
+    Bug Fixes: [0.3, 0.2]
+    Analytics: [0.7, 0.3]
+    Legacy Refactor: [0.5, 0.85]
+    Mobile App: [0.85, 0.75]
+    Documentation: [0.4, 0.25]
+          </div>
+          
+          <h2>Quadrant Positioning</h2>
+          <ul>
+            <li><strong>Quadrant 1</strong> (Top-Right) - High X, High Y</li>
+            <li><strong>Quadrant 2</strong> (Top-Left) - Low X, High Y</li>
+            <li><strong>Quadrant 3</strong> (Bottom-Left) - Low X, Low Y</li>
+            <li><strong>Quadrant 4</strong> (Bottom-Right) - High X, Low Y</li>
+          </ul>
+          
+          <h2>Coordinate System</h2>
+          <p>Data points use normalized coordinates [x, y] where values range from 0.0 to 1.0:</p>
+          <ul>
+            <li><code>[0.0, 0.0]</code> - Bottom-left corner</li>
+            <li><code>[1.0, 1.0]</code> - Top-right corner</li>
+            <li><code>[0.5, 0.5]</code> - Center point</li>
+          </ul>
+          
+          <h2>Point Styling 🆕</h2>
+          <h3>Direct Styling</h3>
+          <pre><code>quadrantChart
+    Point A: [0.9, 0.8] radius: 15, color: #ff3300, stroke-width: 3, stroke-color: #000</code></pre>
+          
+          <h3>Class-Based Styling</h3>
+          <pre><code>quadrantChart
+    classDef urgent color: #ff0000, radius: 12
+    Point A:::urgent: [0.9, 0.8]
+    Point B:::urgent: [0.7, 0.6]</code></pre>
+          
+          <h2>Style Properties 🆕</h2>
+          <ul>
+            <li><code>color</code> - Fill color (hex or CSS color)</li>
+            <li><code>radius</code> - Point radius in pixels</li>
+            <li><code>stroke-width</code> - Border width</li>
+            <li><code>stroke-color</code> - Border color</li>
+          </ul>
+          <p><strong>Precedence:</strong> Direct styling > Class styling > Theme defaults</p>
+          
+          <h2>Configuration Options 🆕</h2>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Option</th><th>Description</th><th>Default</th></tr></thead>
+            <tbody>
+              <tr><td><code>chartWidth</code></td><td>Total width</td><td>500</td></tr>
+              <tr><td><code>chartHeight</code></td><td>Total height</td><td>500</td></tr>
+              <tr><td><code>titlePadding</code></td><td>Title padding</td><td>10</td></tr>
+              <tr><td><code>titleFontSize</code></td><td>Title font size</td><td>20</td></tr>
+              <tr><td><code>quadrantPadding</code></td><td>Quadrant padding</td><td>5</td></tr>
+              <tr><td><code>quadrantLabelFontSize</code></td><td>Label font size</td><td>16</td></tr>
+              <tr><td><code>quadrantInternalBorderStrokeWidth</code></td><td>Internal borders</td><td>1</td></tr>
+              <tr><td><code>quadrantExternalBorderStrokeWidth</code></td><td>External borders</td><td>2</td></tr>
+              <tr><td><code>xAxisLabelPadding</code></td><td>X-axis label pad</td><td>5</td></tr>
+              <tr><td><code>yAxisLabelPadding</code></td><td>Y-axis label pad</td><td>5</td></tr>
+              <tr><td><code>xAxisPosition</code></td><td>X-axis position</td><td>top</td></tr>
+              <tr><td><code>yAxisPosition</code></td><td>Y-axis position</td><td>left</td></tr>
+              <tr><td><code>pointTextPadding</code></td><td>Point text pad</td><td>5</td></tr>
+              <tr><td><code>pointLabelFontSize</code></td><td>Point font size</td><td>12</td></tr>
+              <tr><td><code>pointRadius</code></td><td>Default radius</td><td>5</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Theme Variables 🆕</h2>
+          <pre><code>%%{init: {'theme':'base', 'themeVariables': {
+  'quadrant1Fill': '#f0f0f0',
+  'quadrant2Fill': '#e0f7fa',
+  'quadrant3Fill': '#fff3e0',
+  'quadrant4Fill': '#f1f8e9',
+  'quadrantPointFill': '#ff6b6b',
+  'quadrantPointTextFill': '#333333'
+}}}%%
+quadrantChart</code></pre>
+          
+          <div class="callout">
+            <strong>💡 Common Uses:</strong> Eisenhower Matrix (urgency/importance), Cost-Benefit Analysis, Risk Assessment, Product Portfolio Analysis, Technology Investment Priority!
+          </div>
+        </section>
+
+        <!-- Mermaid: Timeline -->
+        <section id="mermaid-timeline" role="article">
+          <h1>Timeline Diagrams</h1>
+          <span class="badge">timeline</span>
+          <span class="badge">history</span>
+          <span class="badge">chronology</span>
+          
+          <p>Timeline diagrams display events in chronological order, perfect for project milestones, company history, or process evolution.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+timeline
+    title History of Social Media
+    2002 : Friendster launched
+    2003 : Myspace launched : LinkedIn launched
+    2004 : Facebook launched
+    2005 : YouTube launched
+    2006 : Twitter launched
+```</code></pre>
+          
+          <h2>Example: Software Release Timeline</h2>
+          <div class="mermaid">
+timeline
+    title Product Release History
+    section 2022
+      Q1 : Alpha Release : Internal Testing
+      Q2 : Beta Launch : User Feedback Collection
+      Q3 : Release 1.0 : Public Launch
+      Q4 : Version 1.1 : Bug Fixes : Performance Improvements
+    section 2023
+      Q1 : Version 2.0 : New Features : API Integration
+      Q2 : Version 2.1 : Mobile Support
+      Q3 : Version 2.2 : Security Patches : UI Refresh
+      Q4 : Version 3.0 : Major Rewrite : Cloud Native
+    section 2024
+      Q1 : Version 3.1 : AI Integration : Analytics Dashboard
+      Q2 : Version 3.2 : Multi-tenancy : SSO Support
+          </div>
+          
+          <h2>Sections & Events</h2>
+          <p>Organize timelines with sections:</p>
+          <pre><code>timeline
+    title My Timeline
+    section Period 1
+      Event A : Description
+      Event B : Detail 1 : Detail 2
+    section Period 2
+      Event C : More info</code></pre>
+          
+          <h2>Multiple Events</h2>
+          <p>Add multiple events to the same time period using colons:</p>
+          <ul>
+            <li><code>2024 : Event One</code> - Single event</li>
+            <li><code>2024 : Event One : Event Two</code> - Multiple events</li>
+            <li><code>2024 : Event : Detail 1 : Detail 2</code> - Event with details</li>
+          </ul>
+          
+          <h2>Line Breaks 🆕</h2>
+          <p>Use <code>&lt;br&gt;</code> for multi-line events:</p>
+          <pre><code>timeline
+    2024 : Major Release<br>Version 3.0</code></pre>
+          
+          <h2>Configuration 🆕</h2>
+          <pre><code>%%{init: {'theme':'base', 'themeVariables': {
+  'cScale0': '#ff6b6b',
+  'cScale1': '#4ecdc4',
+  'cScale2': '#45b7d1',
+  'cScaleLabel0': '#ffffff'
+}}}%%
+timeline
+    title My Timeline</code></pre>
+          
+          <h2>Color Customization 🆕</h2>
+          <ul>
+            <li><code>cScale0</code> through <code>cScale11</code> - Section background colors (cyclic)</li>
+            <li><code>cScaleLabel0</code> through <code>cScaleLabel11</code> - Section text colors</li>
+            <li><code>disableMultiColor: true</code> - Use single color for all sections</li>
+          </ul>
+          
+          <h2>Built-in Themes</h2>
+          <p>5 themes available: <code>base</code>, <code>forest</code>, <code>dark</code>, <code>default</code>, <code>neutral</code></p>
+          
+          <div class="callout">
+            <strong>🆓 Experimental:</strong> Timeline is an experimental diagram type. Syntax may change in future versions!
+          </div>
+          
+          <div class="callout">
+            <strong>💡 Use Case:</strong> Project roadmaps, company milestones, historical events, product evolution, and agile sprint planning!
+          </div>
+        </section>
+
+        <!-- Mermaid: Mindmap -->
+        <section id="mermaid-mindmap" role="article">
+          <h1>Mindmap Diagrams</h1>
+          <span class="badge">mindmap</span>
+          <span class="badge">brainstorm</span>
+          <span class="badge">ideas</span>
+          
+          <p>Mindmaps help organize information hierarchically, showing relationships between concepts radiating from a central idea.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+mindmap
+  root((Central Idea))
+    Topic 1
+      Subtopic 1.1
+      Subtopic 1.2
+    Topic 2
+      Subtopic 2.1
+      Subtopic 2.2
+        Detail 2.2.1
+```</code></pre>
+          
+          <h2>Example: Software Architecture Planning</h2>
+          <div class="mermaid">
+mindmap
+  root((E-commerce Platform))
+    Frontend
+      Web App
+        React
+        TypeScript
+        Tailwind CSS
+      Mobile App
+        React Native
+        Expo
+    Backend
+      API Layer
+        REST API
+        GraphQL
+      Services
+        Auth Service
+        Payment Service
+        Inventory Service
+      Database
+        PostgreSQL
+        Redis Cache
+    Infrastructure
+      Cloud Platform
+        AWS
+        Azure
+      CI/CD
+        GitHub Actions
+        Docker
+        Kubernetes
+      Monitoring
+        Prometheus
+        Grafana
+          </div>
+          
+          <h2>Node Shapes</h2>
+          <p>Different shapes convey different meanings:</p>
+          <table class="table table-striped table-sm">
+            <thead><tr><th>Syntax</th><th>Shape</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td><code>root((Text))</code></td><td>Circle</td><td>Root/central node</td></tr>
+              <tr><td><code>Node</code></td><td>Rectangle</td><td>Default node</td></tr>
+              <tr><td><code>[Node]</code></td><td>Square</td><td>Structured data</td></tr>
+              <tr><td><code>(Node)</code></td><td>Rounded rect</td><td>Process/action</td></tr>
+              <tr><td><code>))Node((</code></td><td>Cloud</td><td>Abstract concept</td></tr>
+              <tr><td><code>)Node(</code></td><td>Bang</td><td>Important point</td></tr>
+              <tr><td><code>{{Node}}</code></td><td>Hexagon</td><td>Decision/special</td></tr>
+            </tbody>
+          </table>
+          
+          <h2>Icons 🆕</h2>
+          <p>Add Font Awesome or MDI icons to nodes:</p>
+          <pre><code>mindmap
+  root((Project))
+    Planning::icon(fa fa-calendar)
+    Development::icon(fa fa-code)
+    Testing::icon(mdi mdi-test-tube)</code></pre>
+          
+          <h2>Classes & Styling 🆕</h2>
+          <pre><code>%%{init: {'theme':'base'}}%%
+mindmap
+  root((Core)):::urgent
+    Task 1:::completed
+    Task 2:::inProgress
+  
+  classDef urgent fill:#f96,stroke:#f33,color:#fff
+  classDef completed fill:#9f6,stroke:#3f3
+  classDef inProgress fill:#ff6,stroke:#f90</code></pre>
+          
+          <h2>Markdown Strings 🆕</h2>
+          <pre><code>mindmap
+  root((`**Bold** and *italic*`))
+    `Line 1<br>Line 2`</code></pre>
+          
+          <h2>Layout Options 🆕</h2>
+          <pre><code>---
+layout: tidy-tree
+---
+mindmap
+  root((Ideas))</code></pre>
+          <p>Layouts: <code>default</code>, <code>tidy-tree</code></p>
+          
+          <div class="callout">
+            <strong>🆓 Experimental:</strong> Mindmap is an experimental diagram with evolving syntax!
+          </div>
+          
+          <div class="callout">
+            <strong>💡 Use Case:</strong> Brainstorming sessions, knowledge organization, project planning, learning concepts, and decision trees!
+          </div>
+        </section>
+
+        <!-- Mermaid: Sankey Diagram -->
+        <section id="mermaid-sankey" role="article">
+          <h1>Sankey Diagrams 🔥</h1>
+          <span class="badge">sankey</span>
+          <span class="badge">flow</span>
+          <span class="badge">data-viz</span>
+          <span class="badge">new</span>
+          
+          <p>Sankey diagrams visualize flow quantities between stages or categories, with flow width representing magnitude.</p>
+          
+          <h2>Basic Syntax</h2>
+          <pre><code>```mermaid
+%%{init: {"theme": "default", "sankey": {"width": 600}}}%%
+sankey-beta
+
+Source A, Target 1, 100
+Source A, Target 2, 50
+Source B, Target 1, 75
+Target 1, Output, 175
+Target 2, Output, 50
+```</code></pre>
+          
+          <h2>Example: Website Traffic Flow</h2>
+          <div class="mermaid">
+%%{init: {"theme": "default"}}%%
+sankey-beta
+
+Organic Search, Homepage, 5000
+Paid Ads, Homepage, 3000
+Social Media, Homepage, 2000
+Direct, Homepage, 1500
+Homepage, Product Pages, 6500
+Homepage, Blog, 3000
+Homepage, Exit, 2000
+Product Pages, Checkout, 2000
+Product Pages, Exit, 4500
+Blog, Product Pages, 1000
+Blog, Exit, 2000
+Checkout, Purchase, 1500
+Checkout, Exit, 500
+          </div>
+          
+          <h2>Syntax Format</h2>
+          <p>Each line represents a flow with three components (CSV format):</p>
+          <pre><code>Source, Target, Value
+Source, Target, Value</code></pre>
+          
+          <h2>CSV Features 🆕</h2>
+          <ul>
+            <li><strong>Empty lines</strong> - Ignored, use for organization</li>
+            <li><strong>Comma escaping</strong> - Use double quotes: <code>"Heating, cooling", Output, 50</code></li>
+            <li><strong>Quote escaping</strong> - Double quotes within quotes: <code>"The ""best"" option", Next, 10</code></li>
+          </ul>
+          
+          <h2>Configuration 🆕 (v10.3.0+)</h2>
+          <pre><code>%%{init: {"sankey": {
+  "width": 800,
+  "height": 600,
+  "linkColor": "gradient",
+  "nodeAlignment": "justify",
+  "showValues": true
+}}}%%
+sankey-beta
+
+A, B, 100</code></pre>
+          
+          <h2>Link Colors 🆕</h2>
+          <ul>
+            <li><code>"source"</code> - Use source node color</li>
+            <li><code>"target"</code> - Use target node color</li>
+            <li><code>"gradient"</code> - Gradient from source to target (default)</li>
+            <li><code>#ff0000</code> - Specific hex color</li>
+          </ul>
+          
+          <h2>Node Alignment 🆕</h2>
+          <ul>
+            <li><code>"justify"</code> - Spread nodes evenly (default)</li>
+            <li><code>"center"</code> - Center nodes vertically</li>
+            <li><code>"left"</code> - Align nodes to left</li>
+            <li><code>"right"</code> - Align nodes to right</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>🆕 Version:</strong> Sankey diagrams require Mermaid v10.3.0 or later!
+          </div>
+          
+          <div class="callout">
+            <strong>💡 Use Cases:</strong> Energy flow, website analytics, budget allocation, supply chain, network traffic, customer journey flows!
+          </div>
+          </ul>
+          
+          <h2>Configuration</h2>
+          <pre><code>%%{init: {
+  "theme": "default",
+  "sankey": {
+    "width": 800,
+    "height": 400,
+    "linkColor": "gradient",
+    "nodeAlignment": "justify"
+  }
+}}%%</code></pre>
+          
+          <div class="callout">
+            <strong>🔥 New Feature:</strong> Sankey diagrams are a recent addition to Mermaid. Perfect for visualizing complex flows and conversions!
+          </div>
+        </section>
+
+        <!-- Best Practices Section -->
+        <section id="best-practices" role="article">
+          <h1>✨ Best Practices</h1>
+          <span class="badge">best-practices</span>
+          <span class="badge">guidelines</span>
+          <span class="badge">tips</span>
+          
+          <div class="callout">
+            <strong>🎯 Professional Guidelines:</strong> Follow these curated best practices to create clear, maintainable, and accessible documentation using Markdown and Mermaid diagrams.
+          </div>
+          
+          <h2>📝 Markdown Best Practices</h2>
+          
+          <h3>1. Document Structure & Organization</h3>
+          <ul>
+            <li><strong>Use Semantic Headings:</strong> Structure content hierarchically (H1 → H2 → H3) without skipping levels</li>
+            <li><strong>One H1 Per Document:</strong> Use a single H1 as the document title, followed by H2s for major sections</li>
+            <li><strong>Consistent Spacing:</strong> Add blank lines before headings, after paragraphs, and around code blocks for readability</li>
+            <li><strong>Logical Flow:</strong> Organize content from general to specific, using headings as an outline</li>
+            <li><strong>Table of Contents:</strong> Include TOC for documents longer than 500 lines or with 5+ major sections</li>
+          </ul>
+          
+          <h3>2. Formatting & Readability</h3>
+          <ul>
+            <li><strong>Line Length:</strong> Keep lines under 80-100 characters for better readability in editors</li>
+            <li><strong>Sentence Per Line:</strong> Consider one sentence per line for easier version control diffs</li>
+            <li><strong>Consistent Emphasis:</strong> Choose either asterisks (*) or underscores (_) for emphasis and stick to it</li>
+            <li><strong>List Markers:</strong> Use consistent markers (-, *, +) throughout the document</li>
+            <li><strong>Horizontal Rules:</strong> Use <code>---</code> for consistency and avoid <code>***</code> or <code>___</code></li>
+          </ul>
+          
+          <h3>3. Links & References</h3>
+          <ul>
+            <li><strong>Descriptive Link Text:</strong> Use meaningful text instead of "click here" or bare URLs</li>
+            <li><strong>Reference-Style Links:</strong> For repeated links, use reference-style to improve maintainability</li>
+            <li><strong>Relative Paths:</strong> Use relative paths for internal links (e.g., <code>./docs/guide.md</code>)</li>
+            <li><strong>Link Validation:</strong> Regularly check and update links to prevent dead references</li>
+            <li><strong>External Links:</strong> Consider adding <code>target="_blank"</code> and <code>rel="noopener"</code> in HTML for security</li>
+          </ul>
+          
+          <h3>4. Code Documentation</h3>
+          <ul>
+            <li><strong>Language Identifiers:</strong> Always specify language in fenced code blocks (<code>```javascript</code>, not <code>```</code>)</li>
+            <li><strong>Inline Code:</strong> Use backticks for commands, file names, variables, and short code snippets</li>
+            <li><strong>Complete Examples:</strong> Provide runnable, self-contained code examples when possible</li>
+            <li><strong>Comments:</strong> Include explanatory comments in complex code blocks</li>
+            <li><strong>Syntax Highlighting:</strong> Leverage syntax highlighting by using correct language identifiers</li>
+          </ul>
+          
+          <h3>5. Tables & Data</h3>
+          <ul>
+            <li><strong>Alignment:</strong> Left-align text columns, right-align numeric columns, center-align short labels</li>
+            <li><strong>Header Row:</strong> Always include a header row for table clarity</li>
+            <li><strong>Keep Simple:</strong> For complex data, consider using CSV files or dedicated data formats</li>
+            <li><strong>Formatting:</strong> Align pipes for readability in source, but remember rendering doesn't require it</li>
+          </ul>
+          
+          <h3>6. Accessibility</h3>
+          <ul>
+            <li><strong>Alt Text:</strong> Always provide descriptive alt text for images: <code>![Descriptive text](image.png)</code></li>
+            <li><strong>Emoji Accessibility:</strong> Follow emoji with text description or use sparingly</li>
+            <li><strong>Link Context:</strong> Ensure link text is meaningful without surrounding context</li>
+            <li><strong>Color Contrast:</strong> Don't rely solely on color to convey meaning</li>
+            <li><strong>Clear Language:</strong> Use plain language and define technical terms</li>
+          </ul>
+          
+          <h3>7. Version Control & Collaboration</h3>
+          <ul>
+            <li><strong>Meaningful Commits:</strong> Write clear commit messages for documentation changes</li>
+            <li><strong>Line Breaks:</strong> Use line breaks to make diffs more readable (one sentence per line)</li>
+            <li><strong>Consistent Style:</strong> Follow team or project style guides (e.g., Google, Microsoft, GitLab)</li>
+            <li><strong>Change History:</strong> Consider maintaining a CHANGELOG.md for significant updates</li>
+            <li><strong>Reviews:</strong> Treat documentation like code—request reviews and use pull requests</li>
+          </ul>
+          
+          <h2>📊 Mermaid Best Practices</h2>
+          
+          <h3>1. Diagram Design Principles</h3>
+          <ul>
+            <li><strong>Single Responsibility:</strong> Each diagram should illustrate one concept or process</li>
+            <li><strong>Clear Direction:</strong> Use top-to-bottom (TB) or left-to-right (LR) flow consistently</li>
+            <li><strong>Limit Complexity:</strong> Keep diagrams to 7-15 nodes for optimal comprehension</li>
+            <li><strong>Descriptive Labels:</strong> Use clear, concise labels that explain the node or relationship</li>
+            <li><strong>Consistent Styling:</strong> Apply uniform colors, shapes, and line styles within a diagram</li>
+          </ul>
+          
+          <h3>2. Node & Edge Guidelines</h3>
+          <ul>
+            <li><strong>ID Naming:</strong> Use meaningful IDs (e.g., <code>userAuth</code> not <code>node1</code>)</li>
+            <li><strong>Label Format:</strong> Keep labels short (3-5 words), use line breaks for longer text</li>
+            <li><strong>Arrow Types:</strong> Use appropriate arrow types to show relationship strength/type</li>
+            <li><strong>Grouped Nodes:</strong> Use subgraphs to group related components logically</li>
+            <li><strong>Avoid Crossing:</strong> Minimize line crossings by reorganizing node placement</li>
+          </ul>
+          
+          <h3>3. Specific Diagram Types</h3>
+          
+          <h4>Flowcharts</h4>
+          <ul>
+            <li>Use rectangles for processes, diamonds for decisions, rounded rectangles for start/end</li>
+            <li>Ensure all decision branches are labeled (Yes/No, True/False)</li>
+            <li>Follow a consistent flow direction throughout</li>
+            <li>Use colors to highlight critical paths or error conditions</li>
+          </ul>
+          
+          <h4>Sequence Diagrams</h4>
+          <ul>
+            <li>Order participants logically (e.g., client → server → database)</li>
+            <li>Use activation boxes to show when objects are active</li>
+            <li>Group related interactions with notes or boxes</li>
+            <li>Limit to 5-7 participants for clarity</li>
+          </ul>
+          
+          <h4>Class Diagrams</h4>
+          <ul>
+            <li>Show only relevant attributes and methods (not every property)</li>
+            <li>Use appropriate visibility markers (+, -, #)</li>
+            <li>Group related classes together visually</li>
+            <li>Indicate relationships clearly (inheritance, composition, aggregation)</li>
+          </ul>
+          
+          <h4>State Diagrams</h4>
+          <ul>
+            <li>Include clear start ([*]) and end ([*]) states</li>
+            <li>Label all transitions with triggering events</li>
+            <li>Use composite states for complex state hierarchies</li>
+            <li>Avoid too many transitions from a single state (max 5-6)</li>
+          </ul>
+          
+          <h3>4. Performance & Rendering</h3>
+          <ul>
+            <li><strong>Optimize Size:</strong> Large diagrams (20+ nodes) may render slowly—split into multiple diagrams</li>
+            <li><strong>Test Rendering:</strong> Preview diagrams in target environment (GitHub, VS Code, browser)</li>
+            <li><strong>Version Compatibility:</strong> Specify Mermaid version if using cutting-edge features</li>
+            <li><strong>Fallback Content:</strong> Provide text description or static image as fallback</li>
+            <li><strong>CDN Choice:</strong> Use stable CDN versions in production, not <code>@latest</code></li>
+          </ul>
+          
+          <h3>5. Maintainability</h3>
+          <ul>
+            <li><strong>Comments:</strong> Use <code>%%</code> comments to explain diagram sections and business logic</li>
+            <li><strong>Version Control:</strong> Keep diagrams in version control with appropriate commit messages</li>
+            <li><strong>Documentation:</strong> Add context before diagrams explaining what they illustrate</li>
+            <li><strong>Reusability:</strong> Consider extracting common patterns into reusable templates</li>
+            <li><strong>Updates:</strong> Review and update diagrams when the system they document changes</li>
+          </ul>
+          
+          <h3>6. Styling & Themes</h3>
+          <ul>
+            <li><strong>Theme Consistency:</strong> Use consistent theme (default, forest, dark, neutral) across projects</li>
+            <li><strong>Custom Styles:</strong> Apply CSS classes for consistent custom styling</li>
+            <li><strong>Color Meaning:</strong> Use colors semantically (red for errors, green for success, etc.)</li>
+            <li><strong>Dark Mode:</strong> Test diagrams in both light and dark themes</li>
+            <li><strong>Accessibility:</strong> Ensure sufficient contrast ratios (WCAG 2.1 AA standard: 4.5:1)</li>
+          </ul>
+          
+          <h2>🎯 General Documentation Best Practices</h2>
+          
+          <h3>Content Strategy</h3>
+          <ul>
+            <li><strong>Audience-First:</strong> Write for your target audience's technical level and needs</li>
+            <li><strong>Show, Don't Tell:</strong> Use examples, diagrams, and code snippets over abstract descriptions</li>
+            <li><strong>Progressive Disclosure:</strong> Start with basics, then add advanced topics</li>
+            <li><strong>Consistency:</strong> Use consistent terminology, voice, and formatting throughout</li>
+            <li><strong>Update Regularly:</strong> Treat documentation as living content that evolves with the project</li>
+          </ul>
+          
+          <h3>Quality Checks</h3>
+          <ul>
+            <li>✅ Spell check and grammar review</li>
+            <li>✅ All links functional and relevant</li>
+            <li>✅ Code examples tested and working</li>
+            <li>✅ Images and diagrams display correctly</li>
+            <li>✅ Formatting renders properly on target platforms</li>
+            <li>✅ Mobile-responsive for web documentation</li>
+            <li>✅ Accessibility standards met</li>
+          </ul>
+          
+          <h3>Common Anti-Patterns to Avoid</h3>
+          <ul>
+            <li>❌ Using "here", "this", or "click here" as link text</li>
+            <li>❌ Inconsistent heading hierarchy (H1 → H3 without H2)</li>
+            <li>❌ Overly complex diagrams (15+ nodes without subgraphs)</li>
+            <li>❌ Outdated screenshots or examples</li>
+            <li>❌ Missing alt text for images</li>
+            <li>❌ Bare URLs instead of formatted links</li>
+            <li>❌ Inconsistent code formatting or language tags</li>
+            <li>❌ Writing for yourself instead of your audience</li>
+          </ul>
+          
+          <h3>Tools & Linters</h3>
+          <ul>
+            <li><strong>markdownlint:</strong> VS Code extension and CLI tool for Markdown style consistency</li>
+            <li><strong>Prettier:</strong> Code formatter with Markdown support</li>
+            <li><strong>Vale:</strong> Prose linter for style guides and writing quality</li>
+            <li><strong>Mermaid Live Editor:</strong> <a href="https://mermaid.live" target="_blank">mermaid.live</a> for testing diagrams</li>
+            <li><strong>Link Checkers:</strong> Tools like markdown-link-check to validate URLs</li>
+            <li><strong>Accessibility Checkers:</strong> Pa11y, axe, or Lighthouse for testing</li>
+          </ul>
+          
+          <div class="callout">
+            <strong>📚 Further Reading:</strong>
+            <ul style="margin-bottom: 0;">
+              <li><a href="https://www.writethedocs.org/guide/" target="_blank">Write the Docs - Documentation Guide</a></li>
+              <li><a href="https://developers.google.com/style" target="_blank">Google Developer Documentation Style Guide</a></li>
+              <li><a href="https://learn.microsoft.com/en-us/style-guide/welcome/" target="_blank">Microsoft Writing Style Guide</a></li>
+              <li><a href="https://docs.github.com/en/contributing/style-guide-and-content-model/style-guide" target="_blank">GitHub Documentation Style Guide</a></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" role="article">
+          <h1>📚 Resources</h1>
+          <span class="badge">docs</span>
+          <span class="badge">community</span>
+          <span class="badge">learning</span>
+          
+          <div class="callout">
+            <strong>🌟 Curated Collection:</strong> This comprehensive resource guide is inspired by the <a href="https://github.com/mundimark/awesome-markdown" target="_blank">Awesome Markdown</a> repository - a community-curated list of 1.8k+ starred Markdown tools, libraries, and resources.
+          </div>
+          
+          <h2>📝 Markdown Specifications & Standards</h2>
+          <h3>Official Specifications</h3>
+          <ul>
+            <li><a href="https://daringfireball.net/projects/markdown/" target="_blank">Original Markdown</a> - The original specification by John Gruber (2004)</li>
+            <li><a href="https://commonmark.org/" target="_blank">CommonMark</a> - Strongly specified, highly compatible implementation with <a href="https://spec.commonmark.org/" target="_blank">formal spec</a> and <a href="https://spec.commonmark.org/dingus/" target="_blank">live editor</a></li>
+            <li><a href="https://github.github.com/gfm/" target="_blank">GitHub Flavored Markdown (GFM)</a> - CommonMark with GitHub extensions (tables, task lists, strikethrough, autolinks)</li>
+            <li><a href="http://www.vfmd.org/" target="_blank">Vanilla Flavored Markdown (VFMD)</a> - Unambiguous specification variant</li>
+          </ul>
+          
+          <h3>Extended Syntax Variants</h3>
+          <ul>
+            <li><a href="https://michelf.ca/projects/php-markdown/extra/" target="_blank">Markdown Extra</a> - PHP Markdown with additional features (<a href="https://michelf.ca/projects/php-markdown/dingus/" target="_blank">Try it online</a>)</li>
+            <li><a href="http://fletcherpenney.net/multimarkdown" target="_blank">MultiMarkdown (MMD)</a> - Adds footnotes, tables, metadata, and more (<a href="https://rawgit.com/fletcher/human-markdown-reference/master/index.html" target="_blank">Cheatsheet</a>)</li>
+            <li><a href="http://aboutmde.org/" target="_blank">Markdown Extended (MDE)</a> - Extended syntax with <a href="http://cheatsheet.aboutmde.org/" target="_blank">side-by-side examples</a></li>
+          </ul>
+          
+          <h2>📖 Learning Resources & Documentation</h2>
+          <h3>Guides & Tutorials</h3>
+          <ul>
+            <li><a href="https://www.markdownguide.org/" target="_blank">Markdown Guide</a> - Comprehensive free and open-source reference guide</li>
+            <li><a href="https://www.markdowntutorial.com/" target="_blank">Markdown Tutorial</a> - Interactive tutorial to learn Markdown in your browser</li>
+            <li><a href="https://guides.github.com/features/mastering-markdown/" target="_blank">Mastering Markdown</a> - GitHub's official guide</li>
+            <li><a href="https://en.wikipedia.org/wiki/Markdown" target="_blank">Markdown @ Wikipedia</a> - Historical context and overview</li>
+          </ul>
+          
+          <h3>Cheatsheets & Quick References</h3>
+          <ul>
+            <li><a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown Cheatsheet</a> - Comprehensive syntax reference (GitHub)</li>
+            <li><a href="https://github.com/lifeparticle/Markdown-Cheatsheet" target="_blank">Ultimate Markdown Cheat Sheet</a> - Feature-rich quick reference</li>
+            <li><a href="https://www.emoji-cheat-sheet.com/" target="_blank">Emoji Cheat Sheet</a> - Complete emoji shortcode reference</li>
+          </ul>
+          
+          <h2>🛠️ Markdown Libraries & Parsers</h2>
+          <h3>JavaScript / Node.js</h3>
+          <ul>
+            <li><a href="https://marked.js.org/" target="_blank">marked</a> - Fast markdown parser and compiler built for speed</li>
+            <li><a href="https://markdown-it.github.io/" target="_blank">markdown-it</a> - 100% CommonMark support with plugins and extensions</li>
+            <li><a href="https://github.com/quantizor/markdown-to-jsx" target="_blank">markdown-to-jsx</a> - Fast markdown toolchain for React, Vue, HTML, and more</li>
+            <li><a href="https://deftio.github.io/quikdown/" target="_blank">quikdown</a> - Lightweight (10KB) with bidirectional HTML conversion</li>
+          </ul>
+          
+          <h3>Multi-Language</h3>
+          <ul>
+            <li><a href="http://pandoc.org/" target="_blank">Pandoc</a> - Universal document converter supporting 40+ formats (Haskell)</li>
+            <li><a href="http://kramdown.gettalong.org/" target="_blank">kramdown</a> - Fast, pure Ruby markdown parser with extensions</li>
+          </ul>
+          
+          <h2>🔄 Conversion Tools</h2>
+          <h3>HTML to Markdown</h3>
+          <ul>
+            <li><a href="https://github.com/domchristie/turndown" target="_blank">turndown</a> - JavaScript HTML to Markdown converter (<a href="http://domchristie.github.io/turndown/" target="_blank">demo</a>)</li>
+            <li><a href="https://github.com/xijo/reverse_markdown" target="_blank">reverse_markdown</a> - Ruby gem for mapping HTML back to Markdown</li>
+            <li><a href="http://heckyesmarkdown.com/" target="_blank">Heck Yes Markdown</a> - Convert any webpage to Markdown instantly</li>
+          </ul>
+          
+          <h3>PDF/Office to Markdown</h3>
+          <ul>
+            <li><a href="https://file2markdown.ai/" target="_blank">file2markdown.ai</a> - AI-powered converter for PDFs, Word docs, and images</li>
+            <li><a href="https://github.com/orangefineblue/doc2md" target="_blank">doc2md</a> - High-fidelity PDF/DOCX/PPTX to Markdown pipeline</li>
+            <li><a href="https://github.com/benbalter/word-to-markdown" target="_blank">word-to-markdown</a> - Ruby gem to convert Word documents to Markdown</li>
+          </ul>
+          
+          <h3>Source Code to Markdown</h3>
+          <ul>
+            <li><a href="https://github.com/Mermade/widdershins" target="_blank">widdershins</a> - OpenAPI/Swagger to Markdown documentation</li>
+            <li><a href="https://github.com/jsdoc2md/jsdoc-to-markdown" target="_blank">jsdoc-to-markdown</a> - JavaScript API documentation via JSDoc</li>
+            <li><a href="https://github.com/sourcey/moxygen" target="_blank">Moxygen</a> - Doxygen (C++) documentation to Markdown</li>
+          </ul>
+          
+          <h2>🚀 Markdown to X Tools</h2>
+          <h3>Markdown to Website/Blog</h3>
+          <ul>
+            <li><a href="http://jekyllrb.com/" target="_blank">Jekyll</a> - Transform plain text into static websites (Ruby)</li>
+            <li><a href="https://middlemanapp.com/" target="_blank">Middleman</a> - Static site generator for modern web development (Ruby)</li>
+            <li><a href="https://github.com/lord/slate" target="_blank">Slate</a> - Beautiful API documentation generator</li>
+            <li><a href="https://github.com/compiiile/compiiile" target="_blank">Compiiile</a> - Preview folders with full-text search and slides</li>
+          </ul>
+          
+          <h3>Markdown to Presentation</h3>
+          <ul>
+            <li><a href="https://sli.dev/" target="_blank">Slidev</a> - Create slideshows with Markdown, HTML, and Vue components</li>
+            <li><a href="http://www.decksetapp.com/" target="_blank">Deckset</a> - macOS app for beautiful Markdown presentations</li>
+            <li><a href="http://gitpitch.com/" target="_blank">GitPitch</a> - Markdown presentations for GitHub/GitLab/Bitbucket</li>
+            <li><a href="https://github.com/gamell/markpress" target="_blank">Markpress</a> - Convert Markdown to impress.js presentations</li>
+          </ul>
+          
+          <h3>Markdown to PDF</h3>
+          <ul>
+            <li><a href="https://github.com/alanshaw/markdown-pdf" target="_blank">markdown-pdf</a> - Node.js package to convert Markdown to PDF</li>
+            <li><a href="https://github.com/brendandebeasi/em-dee-pdf" target="_blank">em-dee-pdf</a> - Styled PDFs using Typst with 18 built-in themes</li>
+          </ul>
+          
+          <h3>Markdown to Books</h3>
+          <ul>
+            <li><a href="https://www.gitbook.com/" target="_blank">GitBook</a> - Write and publish books with Markdown and Git</li>
+            <li><a href="https://www.softcover.io/" target="_blank">Softcover.io</a> - Publish books from the command line</li>
+            <li><a href="http://manuscripts.github.io/" target="_blank">Manuscripts</a> - Free book format for Markdown with metadata support</li>
+          </ul>
+          
+          <h2>✅ Quality & Linting Tools</h2>
+          <ul>
+            <li><a href="https://github.com/DavidAnson/markdownlint" target="_blank">markdownlint</a> - Node.js style checker with customizable rules</li>
+            <li><a href="https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint" target="_blank">vscode-markdownlint</a> - VS Code extension for in-place linting</li>
+            <li><a href="https://github.com/executablebooks/mdformat" target="_blank">mdformat</a> - CommonMark compliant Markdown formatter</li>
+            <li><a href="https://github.com/hougesen/mdsf" target="_blank">mdsf</a> - Format markdown code snippets with your preferred formatter</li>
+            <li><a href="https://github.com/akiomik/mado" target="_blank">mado</a> - Fast Markdown linter in Rust with GitHub Actions support</li>
+          </ul>
+          
+          <h2>🧰 Utility Tools</h2>
+          <h3>Table of Contents Generators</h3>
+          <ul>
+            <li><a href="https://github.com/jonschlinkert/markdown-toc" target="_blank">markdown-toc</a> - Generate TOC with remarkable</li>
+            <li><a href="https://github.com/tallclair/mdtoc" target="_blank">mdtoc</a> - Standalone TOC generator for CI pipelines</li>
+          </ul>
+          
+          <h3>Preprocessors & Enhancers</h3>
+          <ul>
+            <li><a href="https://github.com/commenthol/markedpp" target="_blank">markedpp</a> - TOC, numbered headings, file includes, reference lists</li>
+            <li><a href="https://github.com/ozum/concat-md" target="_blank">concat-md</a> - Concatenate and modify markdown files with FrontMatter</li>
+            <li><a href="https://github.com/szkiba/mdcode" target="_blank">mdcode</a> - Testable code blocks with two-way synchronization</li>
+            <li><a href="https://mqlang.org/" target="_blank">mq</a> - Command-line tool to process Markdown like jq (Rust)</li>
+          </ul>
+          
+          <h3>Browser Extensions</h3>
+          <ul>
+            <li><a href="http://markdown-here.com/" target="_blank">Markdown Here</a> - Render email in Markdown (Chrome, Firefox, Safari, Thunderbird)</li>
+            <li><a href="https://github.com/MarketingPipeline/Markdown-Tag" target="_blank">Markdown-Tag</a> - Web component to render Markdown using &lt;md&gt; tag</li>
+          </ul>
+          
+          <h2>📝 Editors & Development Tools</h2>
+          <h3>Desktop Editors</h3>
+          <ul>
+            <li><strong>VS Code</strong> - Built-in Markdown preview with extensive extensions</li>
+            <li><strong>Obsidian</strong> - Knowledge base and note-taking with bidirectional links</li>
+            <li><strong>Typora</strong> - Minimal WYSIWYG Markdown editor with live preview</li>
+            <li><strong>MarkText</strong> - Simple, elegant, open-source Markdown editor</li>
+          </ul>
+          
+          <h3>Online Editors</h3>
+          <ul>
+            <li><a href="https://spec.commonmark.org/dingus/" target="_blank">CommonMark Dingus</a> - Test CommonMark spec in browser</li>
+            <li><a href="http://dingus.aboutmde.org/" target="_blank">Markdown Extended Dingus</a> - Try MDE syntax online</li>
+            <li><a href="https://babelmark.github.io/" target="_blank">Babelmark 2</a> - Compare output across Markdown implementations</li>
+          </ul>
+          
+          <h2>📊 Mermaid Resources</h2>
+          <h3>Official Documentation</h3>
+          <ul>
+            <li><a href="https://mermaid.js.org/" target="_blank">Mermaid Official Documentation</a> - Complete documentation and API reference</li>
+            <li><a href="https://mermaid.live/" target="_blank">Mermaid Live Editor</a> - Online editor to create and test diagrams</li>
+            <li><a href="https://github.com/mermaid-js/mermaid" target="_blank">Mermaid GitHub Repository</a> - Source code, issues, and contributions</li>
+            <li><a href="https://mermaid.js.org/syntax/examples.html" target="_blank">Example Gallery</a> - Comprehensive examples of all diagram types</li>
+          </ul>
+          
+          <h3>Tutorials & Guides</h3>
+          <ul>
+            <li><a href="https://mermaid.js.org/intro/" target="_blank">Getting Started with Mermaid</a> - Official introduction</li>
+            <li><a href="https://mermaid.js.org/config/setup/modules/mermaidAPI.html" target="_blank">Mermaid API</a> - Advanced configuration and integration</li>
+            <li><a href="https://github.com/mermaid-js/mermaid/blob/develop/docs/syntax/README.md" target="_blank">Syntax Reference</a> - Complete syntax documentation</li>
+            <li><a href="https://mermaid.js.org/config/theming.html" target="_blank">Theming Guide</a> - Customize diagram appearance</li>
+          </ul>
+          
+          <h3>Platform Integration</h3>
+          <ul>
+            <li><strong>GitHub</strong> - Native support in Markdown files and Gists</li>
+            <li><strong>GitLab</strong> - Native support in Markdown</li>
+            <li><strong>VS Code</strong> - Markdown Preview Mermaid Support extension</li>
+            <li><strong>Confluence</strong> - Mermaid diagrams macro available</li>
+            <li><strong>Notion</strong> - Via embed blocks and code blocks</li>
+            <li><strong>Obsidian</strong> - Built-in support with live preview</li>
+          </ul>
+          
+          <h2>🎓 Learning Paths</h2>
+          <h3>For Beginners</h3>
+          <ol>
+            <li>Start with <a href="#markdown-headings">basic Markdown syntax</a> (headings, lists, links)</li>
+            <li>Practice with simple documents and notes</li>
+            <li>Learn <a href="#markdown-code">code blocks</a> and <a href="#markdown-tables">tables</a></li>
+            <li>Explore <a href="#markdown-extended">extended syntax</a> features</li>
+            <li>Try simple <a href="#mermaid-flowchart">Mermaid flowcharts</a></li>
+            <li>Progress to more <a href="#mermaid-sequence">complex diagrams</a></li>
+          </ol>
+          
+          <h3>For Advanced Users</h3>
+          <ul>
+            <li>Master extended syntax and platform-specific features (GFM, MDE)</li>
+            <li>Learn all <a href="#mermaid-guide">Mermaid diagram types</a></li>
+            <li>Customize themes and styling for documentation</li>
+            <li>Integrate into CI/CD and documentation pipelines</li>
+            <li>Contribute to open-source projects and tools</li>
+            <li>Build custom parsers or extensions</li>
+          </ul>
+          
+          <h2>🤝 Community & Support</h2>
+          <h3>Forums & Discussions</h3>
+          <ul>
+            <li><a href="https://github.com/mermaid-js/mermaid/discussions" target="_blank">Mermaid Discussions</a> - Official Q&A and community support</li>
+            <li><a href="https://talk.commonmark.org/" target="_blank">CommonMark Forum</a> - Discuss specification and implementations</li>
+            <li><a href="https://stackoverflow.com/questions/tagged/markdown" target="_blank">Stack Overflow - Markdown</a> - Q&A with 45k+ questions</li>
+            <li><a href="https://stackoverflow.com/questions/tagged/mermaid" target="_blank">Stack Overflow - Mermaid</a> - Q&A for diagram issues</li>
+          </ul>
+          
+          <h3>News & Updates</h3>
+          <ul>
+            <li><a href="https://twitter.com/manuscriptsnews" target="_blank">@manuscriptsnews</a> - Latest news, tools, and tips about Markdown</li>
+            <li><a href="https://github.com/mundimark/awesome-markdown" target="_blank">Awesome Markdown Repository</a> - Curated list with 1.8k+ stars</li>
+          </ul>
+          
+          <h2>📚 Additional Resources</h2>
+          <h3>Articles & Essays</h3>
+          <ul>
+            <li><a href="http://daringfireball.net/2004/03/introducing_markdown" target="_blank">Introducing Markdown</a> - John Gruber's original announcement (2004)</li>
+            <li><a href="http://www.aaronsw.com/weblog/001189" target="_blank">Markdown</a> - Aaron Swartz on the genesis of Markdown</li>
+            <li><a href="https://medium.com/towards-data-science/the-ultimate-markdown-cheat-sheet-3d3976b31a0" target="_blank">The Ultimate Markdown Cheat Sheet</a> - Comprehensive tutorial</li>
+          </ul>
+          
+          <h3>Extensions & Plugins</h3>
+          <ul>
+            <li><a href="http://daringfireball.net/projects/smartypants" target="_blank">SmartyPants</a> - Convert (c) into ©, quotes into smart quotes</li>
+            <li><a href="http://criticmarkup.com/" target="_blank">CriticMarkup</a> - Track changes and editorial comments in plain text</li>
+            <li><a href="https://www.npmjs.com/search?q=keywords:markdown-it-plugin" target="_blank">markdown-it plugins</a> - Extensible plugins for markdown-it parser</li>
+          </ul>
+          
+          <hr />
+          <div class="document-footer">
+            <p>
+              <strong>Last Updated:</strong> March 2026 | 
+              <strong>Curated by:</strong> Murthy Vepa with ❤️ | 
+              <strong>Powered by:</strong> GitHub Copilot | 
+              <strong>Inspired by:</strong> <a href="https://github.com/mundimark/awesome-markdown" target="_blank">Awesome Markdown</a>
+            </p>
+          </div>         
+        </section>
+        </div>
+      </main>
+    </div>
+    
+    <nav class="controls" role="navigation" aria-label="Pagination">
+      <div class="btn-group" role="group">
+        <button class="btn btn-outline-info btn-sm" id="prevBtn" title="Previous" aria-label="Previous concept">&nbsp;&lt;&nbsp;</button>
+        <button class="btn btn-outline-info btn-sm" id="nextBtn" title="Next" aria-label="Next concept">&nbsp;&gt;&nbsp;</button>
+      </div>
+    </nav>
+  </div>  <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="sidebarLabel">Contents</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <ul class="list-group list-group-flush w-100" id="tocMobile"></ul>
+    </div>
+  </div>
+
+  <script>
+    // ---- Configuration ----
+    const sectionConfig = [
+      { id: "welcome", title: "🏠 Welcome", tags: ["intro", "overview", "welcome"] },
+      { id: "markdown-guide", title: "📖 Markdown Guide", tags: ["markdown", "guide", "syntax"] },
+      { id: "about-markdown", title: "About Markdown", parent: "markdown-guide", tags: ["markdown", "about", "intro"] },
+      { id: "markdown-headings", title: "Headings", parent: "markdown-guide", tags: ["headings", "h1", "h2"] },
+      { id: "markdown-emphasis", title: "Emphasis", parent: "markdown-guide", tags: ["bold", "italic", "emphasis"] },
+      { id: "markdown-lists", title: "Lists", parent: "markdown-guide", tags: ["lists", "ordered", "unordered"] },
+      { id: "markdown-links", title: "Links", parent: "markdown-guide", tags: ["links", "urls", "hyperlinks"] },
+      { id: "markdown-images", title: "Images", parent: "markdown-guide", tags: ["images", "pictures", "media"] },
+      { id: "markdown-code", title: "Code", parent: "markdown-guide", tags: ["code", "blocks", "syntax"] },
+      { id: "markdown-blockquotes", title: "Blockquotes", parent: "markdown-guide", tags: ["quotes", "blockquotes"] },
+      { id: "markdown-tables", title: "Tables", parent: "markdown-guide", tags: ["tables", "data"] },
+      { id: "markdown-task-lists", title: "Task Lists", parent: "markdown-guide", tags: ["tasks", "checklists"] },
+      { id: "markdown-extended", title: "Extended Syntax", parent: "markdown-guide", tags: ["extended", "advanced"] },
+      { id: "markdown-hacks", title: "Hacks & Workarounds", parent: "markdown-guide", tags: ["hacks", "tips", "workarounds"] },
+      { id: "mermaid-guide", title: "📊 Mermaid Guide", tags: ["mermaid", "diagrams", "visualization"] },
+      { id: "mermaid-about", title: "About Mermaid", parent: "mermaid-guide", tags: ["mermaid", "about", "intro"] },
+      { id: "mermaid-include", title: "How to Include", parent: "mermaid-guide", tags: ["include", "setup", "integration"] },
+      { id: "mermaid-config", title: "Configuration & Initialization", parent: "mermaid-guide", tags: ["config", "setup", "api"] },
+      { id: "mermaid-flowchart", title: "Flowchart", parent: "mermaid-guide", tags: ["flowchart", "flow", "diagram"] },
+      { id: "mermaid-sequence", title: "Sequence Diagram", parent: "mermaid-guide", tags: ["sequence", "interaction"] },
+      { id: "mermaid-class", title: "Class Diagram", parent: "mermaid-guide", tags: ["class", "uml", "diagram"] },
+      { id: "mermaid-state", title: "State Diagram", parent: "mermaid-guide", tags: ["state", "machine"] },
+      { id: "mermaid-pie", title: "Pie Chart", parent: "mermaid-guide", tags: ["pie", "chart", "data"] },
+      { id: "mermaid-git", title: "Git Graph", parent: "mermaid-guide", tags: ["git", "graph", "version"] },
+      { id: "mermaid-er", title: "ER Diagram", parent: "mermaid-guide", tags: ["er", "database", "entity"] },
+      { id: "mermaid-gantt", title: "Gantt Diagram", parent: "mermaid-guide", tags: ["gantt", "timeline", "project"] },
+      { id: "mermaid-journey", title: "User Journey", parent: "mermaid-guide", tags: ["journey", "ux", "user-experience"] },
+      { id: "mermaid-quadrant", title: "Quadrant Chart", parent: "mermaid-guide", tags: ["quadrant", "analysis", "matrix"] },
+      { id: "mermaid-timeline", title: "Timeline", parent: "mermaid-guide", tags: ["timeline", "history", "chronology"] },
+      { id: "mermaid-mindmap", title: "Mindmap", parent: "mermaid-guide", tags: ["mindmap", "brainstorm", "ideas"] },
+      { id: "mermaid-sankey", title: "Sankey Diagram 🔥", parent: "mermaid-guide", tags: ["sankey", "flow", "data-viz"] },
+      { id: "best-practices", title: "✨ Best Practices", tags: ["best-practices", "guidelines", "tips", "quality"] },
+      { id: "resources", title: "📚 Resources", tags: ["docs", "community", "learning"] }
+    ];
+
+    // ---- State & rendering ----
+    const state = {
+      index: 0,
+      filtered: sectionConfig.map((_, i) => i), // indices
+    };
+
+    const els = {
+      toc: document.getElementById('toc'),
+      tocMobile: document.getElementById('tocMobile'),
+      prev: document.getElementById('prevBtn'),
+      next: document.getElementById('nextBtn'),
+      toggleSidebar: document.getElementById('toggleSidebar'),
+      themeToggle: document.getElementById('themeToggle'),
+      main: document.getElementById('main'),
+      sidebar: document.querySelector('nav.sidebar'),
+      sidebarOffcanvas: document.getElementById('sidebarOffcanvas')
+    };
+
+    // Track collapsed state for each parent
+    const collapsedState = {};
+    
+    function buildTOC(){
+      // Clear both TOC lists
+      els.toc.innerHTML = '';
+      els.tocMobile.innerHTML = '';
+      
+      // First pass: identify parents and their children
+      const parentMap = new Map();
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        if (s.parent) {
+          if (!parentMap.has(s.parent)) {
+            parentMap.set(s.parent, []);
+          }
+          parentMap.get(s.parent).push(s.id);
+        }
+      });
+      
+      // Initialize collapsed state for parents (default: collapsed)
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        if (!s.parent && parentMap.has(s.id)) {
+          if (collapsedState[s.id] === undefined) {
+            collapsedState[s.id] = true; // collapsed by default
+          }
+        }
+      });
+      
+      state.filtered.forEach((idx) => {
+        const s = sectionConfig[idx];
+        
+        // Check if this is a sub-item (has a parent section)
+        const isSubItem = !!s.parent;
+        const hasChildren = parentMap.has(s.id);
+        
+        // Desktop sidebar
+        const liDesktop = document.createElement('li');
+        liDesktop.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liDesktop.classList.add('has-children');
+          if (collapsedState[s.id]) {
+            liDesktop.classList.add('collapsed');
+          }
+        }
+        if (isSubItem && collapsedState[s.parent]) {
+          liDesktop.classList.add('collapsed');
+        }
+        liDesktop.dataset.sectionId = s.id;
+        
+        const aDesktop = document.createElement('a');
+        aDesktop.href = `#${s.id}`;
+        aDesktop.textContent = s.title;
+        aDesktop.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (hasChildren) {
+            // Toggle collapse/expand
+            toggleCollapse(s.id, 'desktop');
+          } else {
+            navigateToId(s.id);
+            closeSidebar();
+          }
+        });
+        liDesktop.appendChild(aDesktop);
+        els.toc.appendChild(liDesktop);
+        
+        // Mobile offcanvas
+        const liMobile = document.createElement('li');
+        liMobile.className = isSubItem ? 'list-group-sub-item' : 'list-group-item';
+        if (hasChildren) {
+          liMobile.classList.add('has-children');
+          if (collapsedState[s.id]) {
+            liMobile.classList.add('collapsed');
+          }
+        }
+        if (isSubItem && collapsedState[s.parent]) {
+          liMobile.classList.add('collapsed');
+        }
+        liMobile.dataset.sectionId = s.id;
+        
+        const aMobile = document.createElement('a');
+        aMobile.href = `#${s.id}`;
+        aMobile.textContent = s.title;
+        aMobile.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (hasChildren) {
+            // Toggle collapse/expand
+            toggleCollapse(s.id, 'mobile');
+          } else {
+            navigateToId(s.id);
+            closeSidebar();
+          }
+        });
+        liMobile.appendChild(aMobile);
+        els.tocMobile.appendChild(liMobile);
+      });
+      highlightActiveTOC();
+    }
+    
+    function toggleCollapse(parentId, context) {
+      // Toggle the collapsed state
+      collapsedState[parentId] = !collapsedState[parentId];
+      const isCollapsed = collapsedState[parentId];
+      
+      // Update both desktop and mobile TOCs
+      const containers = context === 'desktop' ? [els.toc] : context === 'mobile' ? [els.tocMobile] : [els.toc, els.tocMobile];
+      
+      containers.forEach(container => {
+        // Update parent item
+        const parentItem = container.querySelector(`li[data-section-id="${parentId}"]`);
+        if (parentItem) {
+          if (isCollapsed) {
+            parentItem.classList.add('collapsed');
+          } else {
+            parentItem.classList.remove('collapsed');
+          }
+        }
+        
+        // Update child items
+        const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+        childItems.forEach(child => {
+          const childId = child.dataset.sectionId;
+          const childSection = sectionConfig.find(s => s.id === childId);
+          if (childSection && childSection.parent === parentId) {
+            if (isCollapsed) {
+              child.classList.add('collapsed');
+            } else {
+              child.classList.remove('collapsed');
+            }
+          }
+        });
+      });
+    }
+
+    function setActiveByIndex(i){
+      const ids = state.filtered.map(idx => sectionConfig[idx].id);
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      const id = ids[i];
+      const active = document.getElementById(id);
+      if (active){
+        active.classList.add('active');
+        active.setAttribute('tabindex', '-1');
+        active.focus({preventScroll:true});
+      }
+      updateControls();
+      highlightActiveTOC();
+      updateURLHash(id);
+    }
+
+    function updateControls(){
+      const count = state.filtered.length;
+      els.prev.disabled = state.index <= 0;
+      els.next.disabled = state.index >= count - 1;
+    }
+
+    function filterTOC(query){
+      const q = query.trim().toLowerCase();
+      state.filtered = sectionConfig
+        .map((s, i) => ({s, i}))
+        .filter(({s}) => s.title.toLowerCase().includes(q) || s.tags.some(t => t.toLowerCase().includes(q)))
+        .map(({i}) => i);
+
+      state.index = Math.min(state.index, Math.max(0, state.filtered.length - 1));
+      buildTOC();
+      setActiveByIndex(state.index);
+    }
+
+    function navigate(delta){
+      const count = state.filtered.length;
+      const nextIndex = Math.min(Math.max(state.index + delta, 0), count - 1);
+      if (nextIndex !== state.index){
+        state.index = nextIndex;
+        setActiveByIndex(state.index);
+        // Scroll content to top
+        const contentEl = document.querySelector('.content');
+        if (contentEl) contentEl.scrollTop = 0;
+      }
+    }
+
+    function navigateToId(id){
+      const idxInFiltered = state.filtered.findIndex(fi => sectionConfig[fi].id === id);
+      if (idxInFiltered !== -1){
+        state.index = idxInFiltered;
+        setActiveByIndex(state.index);
+        // Scroll content to top
+        const contentEl = document.querySelector('.content');
+        if (contentEl) contentEl.scrollTop = 0;
+      } else {
+        state.filtered = sectionConfig.map((_, i) => i);
+        buildTOC();
+        navigateToId(id);
+      }
+    }
+
+    function updateURLHash(id){
+      const url = new URL(window.location);
+      url.hash = id;
+      history.replaceState(null, '', url);
+    }
+
+    function highlightActiveTOC(){
+      const ids = state.filtered.map(idx => sectionConfig[idx].id);
+      const activeId = ids[state.index];
+      // Highlight desktop sidebar
+      els.toc.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
+      // Highlight mobile offcanvas
+      els.tocMobile.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
+      
+      // Expand parent if active item is a child
+      expandParentOfActiveItem(activeId);
+      
+      // Scroll sidebar to active item
+      scrollToActiveItem(activeId);
+    }
+    
+    function expandParentOfActiveItem(activeId) {
+      // Find the section config for the active item
+      const activeSection = sectionConfig.find(s => s.id === activeId);
+      if (!activeSection) return;
+      
+      // If the active item has a parent, expand it
+      if (activeSection.parent) {
+        const parentId = activeSection.parent;
+        
+        // If the parent is currently collapsed, expand it
+        if (collapsedState[parentId]) {
+          collapsedState[parentId] = false;
+          
+          // Update both desktop and mobile TOCs
+          [els.toc, els.tocMobile].forEach(container => {
+            // Update parent item
+            const parentItem = container.querySelector(`li[data-section-id="${parentId}"]`);
+            if (parentItem) {
+              parentItem.classList.remove('collapsed');
+            }
+            
+            // Update all child items of this parent
+            const childItems = Array.from(container.querySelectorAll('li.list-group-sub-item'));
+            childItems.forEach(child => {
+              const childId = child.dataset.sectionId;
+              const childSection = sectionConfig.find(s => s.id === childId);
+              if (childSection && childSection.parent === parentId) {
+                child.classList.remove('collapsed');
+              }
+            });
+          });
+        }
+      }
+    }
+    
+    function scrollToActiveItem(activeId) {
+      // Scroll desktop sidebar to active item
+      const desktopActiveLink = els.toc.querySelector(`a[href="#${activeId}"]`);
+      if (desktopActiveLink && els.sidebar) {
+        // Wait a bit for expand animation to complete
+        setTimeout(() => {
+          const linkRect = desktopActiveLink.getBoundingClientRect();
+          const sidebarRect = els.sidebar.getBoundingClientRect();
+          const scrollTop = els.sidebar.scrollTop;
+          
+          // Calculate position to center the active item in viewport
+          const targetScroll = scrollTop + linkRect.top - sidebarRect.top - (sidebarRect.height / 2) + (linkRect.height / 2);
+          
+          // Smooth scroll to the active item
+          els.sidebar.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth'
+          });
+        }, 100);
+      }
+      
+      // Scroll mobile offcanvas to active item
+      const mobileActiveLink = els.tocMobile.querySelector(`a[href="#${activeId}"]`);
+      if (mobileActiveLink && els.sidebarOffcanvas) {
+        setTimeout(() => {
+          const offcanvasBody = els.sidebarOffcanvas.querySelector('.offcanvas-body');
+          if (offcanvasBody) {
+            const linkRect = mobileActiveLink.getBoundingClientRect();
+            const bodyRect = offcanvasBody.getBoundingClientRect();
+            const scrollTop = offcanvasBody.scrollTop;
+            
+            const targetScroll = scrollTop + linkRect.top - bodyRect.top - (bodyRect.height / 2) + (linkRect.height / 2);
+            
+            offcanvasBody.scrollTo({
+              top: targetScroll,
+              behavior: 'smooth'
+            });
+          }
+        }, 100);
+      }
+    }
+
+    function openSidebar(){
+      const offcanvas = new bootstrap.Offcanvas(document.getElementById('sidebarOffcanvas'));
+      offcanvas.show();
+    }
+    function closeSidebar(){
+      const offcanvasElement = document.getElementById('sidebarOffcanvas');
+      const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+      if(offcanvas) offcanvas.hide();
+    }
+
+    // ---- Events ----
+    els.prev.addEventListener('click', () => navigate(-1));
+    els.next.addEventListener('click', () => navigate(1));
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') navigate(-1);
+      else if (e.key === 'ArrowRight') navigate(1);
+      else if (e.key === 'Escape') closeSidebar();
+    });
+
+    // Deep linking on load/hash change
+    window.addEventListener('hashchange', () => {
+      const id = location.hash.replace('#','');
+      if (id) navigateToId(id);
+    });
+
+    // Sidebar toggle (mobile)
+    els.toggleSidebar.addEventListener('click', () => {
+      openSidebar();
+    });
+
+    // Restore theme
+    (function(){
+      try {
+        const saved = localStorage.getItem('concepts-theme');
+        if (saved) { 
+          document.documentElement.setAttribute('data-theme', saved);
+          els.themeToggle.textContent = saved === 'light' ? '🌗' : '🌙';
+        }
+      } catch {}
+    })();
+
+    // Initial render
+    buildTOC();
+    
+    // Navigate to hash if present, otherwise show first section
+    const initialId = location.hash.replace('#','');
+    if (initialId){ 
+    navigateToId(initialId); 
+    } else {
+    setActiveByIndex(0);
+    // Scroll content to top on initial load
+    const contentEl = document.querySelector('.content');
+    if (contentEl) contentEl.scrollTop = 0;
+    }
+
+  </script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
