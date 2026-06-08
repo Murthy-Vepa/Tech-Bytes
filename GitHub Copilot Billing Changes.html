@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>💰</text></svg>" />
+  <title>GitHub Copilot Billing Changes - In a Nutshell</title>
+  <meta name="description" content="GitHub Copilot billing model transition: from Premium Requests to token-based (AI Credits) usage billing effective June 1, 2026.">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #ffffff;
+      --fg: #0f172a;
+      --muted: #64748b;
+      --accent: #3b82f6;
+      --accent-light: #dbeafe;
+      --border: #e2e8f0;
+      --sidebar-bg: #ffffff;
+      --sidebar-fg: #0f172a;
+      --code-bg: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%);
+      --focus: #10b981;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 20px rgba(0,0,0,0.12), 0 6px 6px rgba(0,0,0,0.08);
+      --gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+
+    .bg-gradient-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important; }
+    .bg-gradient-green { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important; }
+    .bg-gradient-yellow { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important; }
+    .bg-gradient-pink { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%) !important; }
+    .bg-gradient-purple { background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%) !important; }
+    .bg-gradient-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%) !important; }
+    .bg-gradient-orange { background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%) !important; }
+    .bg-gradient-red { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important; }
+    .bg-gradient-blue-dark { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; }
+    .bg-gradient-green-dark { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+    .bg-gradient-red-dark { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important; }
+    .bg-gradient-orange-dark { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important; }
+    .bg-gradient-sky { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important; }
+    .bg-gradient-violet { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; }
+
+    body { background-color: var(--bg); color: var(--fg); overflow: hidden; }
+    .navbar { background-color: var(--fg) !important; border-bottom: none !important; box-shadow: var(--shadow-md) !important; }
+    .navbar-brand { cursor: pointer; color: var(--bg) !important; font-weight: 600; letter-spacing: 0px; }
+    .navbar-toggler-icon {
+      filter: invert(1);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2896, 165, 250, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    .btn-outline-secondary { border-color: var(--border) !important; color: var(--fg) !important; }
+    .btn-outline-secondary:hover { background-color: var(--accent-light) !important; border-color: var(--accent) !important; color: var(--accent) !important; }
+
+    nav.sidebar {
+      background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+      border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
+      overflow-y: auto;
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.06);
+      padding-top: 0;
+    }
+
+    .menu-header {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.1) 100%);
+      font-weight: bold;
+      padding: 1.25rem 1.25rem;
+      letter-spacing: 0px;
+      font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      border-bottom: 2px solid #a5aab3;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      color: #0c346c;
+      text-shadow: none;
+      margin: 0;
+      text-transform: none;
+    }
+    .menu-header::after {
+      content: '💰';
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.3rem;
+      opacity: 0.9;
+    }
+
+    .toc { list-style: none; padding: 0rem 0; margin: 0; background: transparent; }
+    .toc li { margin: 0; }
+
+    .list-group-item {
+      background: transparent;
+      border-color: transparent;
+      padding: 0;
+      margin: 0.25rem 0.75rem;
+      border-radius: 0rem;
+      transition: all 0.2s ease;
+    }
+    .list-group-item a {
+      color: #1f2937;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.4rem;
+      border-left: 3px solid transparent;
+      padding: 0.85rem 1.25rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+      border-radius: 0rem;
+      font-size: 0.95rem;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    .list-group-item a::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%; width: 4px;
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+    .list-group-item a::after {
+      content: '▶';
+      position: absolute;
+      right: 1rem; top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .list-group-item a:hover {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%);
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-item a:hover::before { transform: scaleY(1); }
+    .list-group-item a:hover::after { opacity: 1; transform: translateY(-50%) scale(1); color: #3b82f6; }
+    .list-group-item a.active {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%);
+      color: #1e40af;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-item a.active::before { transform: scaleY(1); width: 5px; box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); }
+    .list-group-item a.active::after { opacity: 1; color: #2563eb; transform: translateY(-50%) scale(1); }
+
+    .badge {
+      font-size: 0.6rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      margin-top: 0.5rem;
+      margin-right: 0.35rem;
+      border-radius: 0.25rem;
+    }
+    .badge-warning { background: #f59e0b !important; }
+    .badge-success { background: #10b981 !important; }
+    .badge-danger { background: #ef4444 !important; }
+
+    .content { width: 100%; max-width: 100%; margin: 0 auto; background: #ffffff; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+    section { display: none !important; margin-bottom: 2rem; }
+    section.active { display: block !important; }
+
+    h1 { font-size: 2rem; font-weight: 700; margin: 1rem 0 0.25rem 0; letter-spacing: -0.5px; color: var(--fg); display: block; border: none; }
+    h2 { font-size: 1.5rem; font-weight: 600; margin: 1.5rem 0 0.75rem 0; color: var(--fg); border-bottom: 2px solid var(--accent-light); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.1rem; color: var(--accent); font-weight: 600; margin: 1rem 0 0.5rem 0; }
+    h4 { font-size: 0.9rem; color: var(--fg); font-weight: 600; margin: 0.75rem 0 0.4rem 0; }
+    p { margin: 1rem 0; line-height: 1.65; color: var(--fg); }
+    ul, ol { margin: 1rem 0; padding-left: 2rem; }
+    li { margin: 0.5rem 0; color: var(--fg); }
+
+    code { background: var(--code-bg); border: 1px solid var(--border); padding: 0.2rem 0.5rem; font-family: ui-monospace, 'Cascadia Code', monospace; font-size: 0.9em; color: var(--accent); border-radius: 0.5rem; }
+    pre { background: var(--code-bg); border: 0px solid var(--border); padding: 1rem; border-radius: 0.5rem; overflow: auto; box-shadow: var(--shadow-sm); margin: 1rem 0; }
+    pre code { padding: 0; background: transparent; border: none; color: var(--fg); }
+
+    .callout { border-left: 5px solid var(--accent); background: var(--accent-light); padding: 1rem 1.2rem; margin: 1.5rem 0; border-radius: 0.5rem; box-shadow: var(--shadow-sm); font-weight: 500; color: var(--fg); }
+    .callout-warning { border-left-color: #f59e0b; background: #fef3c7; }
+    .callout-success { border-left-color: #10b981; background: #d1fae5; }
+    .callout-danger { border-left-color: #ef4444; background: #fee2e2; }
+    .callout-purple { border-left-color: #8b5cf6; background: #ede9fe; }
+
+    .table { color: var(--fg); }
+    .table thead th { background: var(--accent-light); color: var(--accent); border-color: var(--border); font-weight: 600; }
+    .table tbody td { border-color: var(--border); }
+    .table-striped tbody tr:nth-of-type(odd) { background-color: rgba(0,0,0,0.02); }
+    .table-striped tbody tr:hover { background-color: var(--accent-light); }
+
+    .controls { opacity: 0.5; position: fixed; bottom: 0.25rem; right: 1rem; width: auto; z-index: 1000; background: transparent; display: flex; align-items: center; justify-content: center; gap: 0rem; padding: 0; min-height: 40px; }
+    .controls:hover { opacity: 1; }
+    .page-indicator { color: var(--accent); font-weight: 600; font-size: 0.875rem; }
+    .btn-group .btn { margin: 0px 2px; padding: 0.2rem 0.5rem; background: var(--accent); color: white; border-color: var(--accent); font-size: 1rem; font-weight: bold; }
+
+    .offcanvas { background: var(--bg) !important; }
+    .offcanvas-header { border-bottom: 1px solid var(--border); }
+    .offcanvas-title { color: var(--fg); font-weight: 600; }
+
+    nav.sidebar::-webkit-scrollbar { width: 6px; }
+    nav.sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+    nav.sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 0px; }
+
+    .mermaid {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      position: relative;
+    }
+    .mermaid svg { max-width: 100%; height: auto; }
+    .zoom-controls { position: absolute; top: 10px; right: 10px; z-index: 10; opacity: 0.5; transition: opacity 0.3s ease; }
+    .mermaid:hover .zoom-controls { opacity: 1; }
+    .zoom-btn { background: var(--accent); color: white; border: none; border-radius: 0.25rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .zoom-btn:hover { background: #2563eb; transform: scale(1.1); }
+    .diagram-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; }
+    .diagram-modal.active { display: flex; }
+    .diagram-modal-content { position: relative; width: 100%; height: 100%; background: white; border-radius: 0; padding: 3rem; overflow: auto; display: flex; align-items: flex-start; justify-content: center; }
+    .diagram-modal-content svg { max-width: 100%; height: auto; }
+    .modal-close { position: fixed; top: 1.5rem; right: 1.5rem; background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: bold; z-index: 10000; }
+    .modal-close:hover { background: #dc2626; transform: scale(1.1); }
+    .modal-zoom-controls { position: fixed; bottom: 1.5rem; right: 1.5rem; display: flex; gap: 0.5rem; z-index: 10000; }
+    .modal-zoom-btn { background: var(--accent); color: white; border: none; border-radius: 0.25rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+    html, body { height: 100%; margin: 0; }
+    #appContainer { display: flex; flex-direction: column; height: calc(100vh - 50px); }
+    #mainRow { flex: 1; overflow: hidden; display: flex; }
+    nav.sidebar { overflow-y: auto; max-height: 100%; position: relative; padding-bottom: 0px; }
+    #main { overflow: hidden; display: flex; flex-direction: column; height: 100%; -webkit-tap-highlight-color: transparent; outline: none; border: none; }
+    #main:focus { outline: none; }
+    .content { overflow-y: auto; flex: 1; width: 100%; min-height: 0; padding: 0rem 1.5rem 0rem 1.5rem; }
+
+    .contact-info { font-weight: 400 !important; padding: 0.5rem 0.75rem; font-size: 0.75rem; color: var(--accent-light); margin: 0; opacity: 0.5; white-space: nowrap; cursor: pointer; }
+    .contact-info:hover { opacity: 0.9; text-decoration: none; }
+
+    @media (max-width: 991px) {
+      nav.sidebar { display: none; }
+      #main { width: 100%; }
+      .row { --bs-gutter-x: 0; }
+      .navbar-brand { font-size: 1rem !important; flex: 1; }
+      .contact-info { font-size: 0.7rem; padding: 0.25rem 0.5rem; }
+    }
+
+    a { color: var(--accent); }
+    a:hover { color: var(--accent); text-decoration: underline; }
+
+    ul { list-style-type: none; }
+
+    /* ─── Billing-specific custom components ─── */
+
+    /* Prompt/Response illustration cards */
+    .prompt-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 2px solid #0284c7;
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+    .prompt-card::before {
+      content: '👤 User Prompt';
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #0284c7;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+    .response-card {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid #16a34a;
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+    .response-card::before {
+      content: '🤖 Copilot Response';
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #16a34a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+    .token-breakdown {
+      background: #fff7ed;
+      border: 1px solid #f97316;
+      border-radius: 0.5rem;
+      padding: 0.85rem 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+    }
+    .token-breakdown strong { color: #c2410c; }
+    .token-chip {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 1rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin: 0.1rem 0.2rem;
+    }
+    .chip-input { background: #dbeafe; color: #1d4ed8; }
+    .chip-output { background: #d1fae5; color: #065f46; }
+    .chip-cached { background: #fef3c7; color: #92400e; }
+    .chip-cost { background: #f3e8ff; color: #6d28d9; }
+
+    /* Billing model comparison cards */
+    .billing-model-old {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 2px solid #dc2626;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+    .billing-model-new {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      border: 2px solid #059669;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+
+    /* Plan tier cards */
+    .plan-card {
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .plan-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .plan-price { font-size: 2rem; font-weight: 800; line-height: 1; }
+    .plan-unit { font-size: 0.8rem; color: var(--muted); }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #3b82f6 0%, #10b981 100%);
+      border-radius: 2px;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.6rem;
+      top: 0.4rem;
+      width: 1rem;
+      height: 1rem;
+      background: var(--accent);
+      border: 3px solid white;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .timeline-item.active-item::before { background: #10b981; box-shadow: 0 0 0 2px #10b981; }
+    .timeline-item.past-item::before { background: #94a3b8; box-shadow: 0 0 0 2px #94a3b8; }
+
+    /* Credit meter */
+    .credit-meter {
+      background: #e2e8f0;
+      border-radius: 1rem;
+      height: 1.5rem;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+    .credit-fill {
+      height: 100%;
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      padding-left: 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+      transition: width 0.8s ease;
+    }
+
+    /* Cost comparison */
+    .cost-box {
+      text-align: center;
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .document-footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .document-footer p { margin: 0; font-size: 14px; color: #6c757d; line-height: 1.6; }
+    .document-footer strong { color: #495057; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({ startOnLoad: false, theme: 'base', securityLevel: 'loose', logLevel: 'error', fontFamily: 'Segoe UI Semibold', fontSize: '18', flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' } });
+      renderMermaidDiagrams();
+    });
+
+    async function renderMermaidDiagrams() {
+      const diagrams = document.querySelectorAll('.mermaid');
+      for (let i = 0; i < diagrams.length; i++) {
+        const diagram = diagrams[i];
+        const code = diagram.textContent.trim();
+        if (!diagram.hasAttribute('data-original-code')) diagram.setAttribute('data-original-code', code);
+        try {
+          const { svg } = await mermaid.render('mermaid-diagram-' + i, code);
+          diagram.innerHTML = svg;
+          diagram.setAttribute('data-processed', 'true');
+          addZoomControls(diagram);
+        } catch (error) {
+          diagram.innerHTML = '<div class="text-danger p-3">Error rendering diagram: ' + error.message + '</div>';
+        }
+      }
+    }
+
+    function addZoomControls(diagram) {
+      const controls = document.createElement('div');
+      controls.className = 'zoom-controls';
+      controls.innerHTML = '<button class="zoom-btn" title="Expand">⛶</button>';
+      diagram.style.position = 'relative';
+      diagram.insertBefore(controls, diagram.firstChild);
+      controls.addEventListener('click', () => openDiagramModal(diagram));
+    }
+
+    function openDiagramModal(diagram) {
+      let modal = document.getElementById('diagram-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'diagram-modal';
+        modal.className = 'diagram-modal';
+        modal.innerHTML = `<button class="modal-close" id="modal-close">×</button><div class="diagram-modal-content" id="modal-diagram-content"></div><div class="modal-zoom-controls"><button class="modal-zoom-btn" data-action="zoom-in">+</button><button class="modal-zoom-btn" data-action="zoom-out">−</button><button class="modal-zoom-btn" data-action="reset">⟲</button></div>`;
+        document.body.appendChild(modal);
+        modal.querySelector('#modal-close').addEventListener('click', closeDiagramModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeDiagramModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) closeDiagramModal(); });
+        let scale = 1;
+        modal.querySelector('.modal-zoom-controls').addEventListener('click', (e) => {
+          const btn = e.target.closest('.modal-zoom-btn'); if (!btn) return;
+          const svg = modal.querySelector('svg'); if (!svg) return;
+          const action = btn.dataset.action;
+          if (action === 'zoom-in') scale = Math.min(scale + 0.1, 5);
+          else if (action === 'zoom-out') scale = Math.max(scale - 0.1, 0.5);
+          else scale = 1;
+          svg.style.transform = `scale(${scale})`;
+        });
+      }
+      const svg = diagram.querySelector('svg');
+      if (svg) {
+        const content = modal.querySelector('#modal-diagram-content');
+        content.innerHTML = '';
+        const cloned = svg.cloneNode(true);
+        cloned.style.maxWidth = '100%'; cloned.style.height = 'auto';
+        content.appendChild(cloned);
+      }
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDiagramModal() {
+      const modal = document.getElementById('diagram-modal');
+      if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; }
+    }
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg sticky-top" aria-label="Top bar">
+    <div class="container-fluid d-flex align-items-center">
+      <button class="navbar-toggler me-2" id="toggleSidebar" type="button" aria-label="Toggle sidebar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <span class="navbar-brand mb-0 h1 me-auto">💰 GitHub Copilot Billing Changes - In a Nutshell</span>
+      <span class="contact-info mb-0">🤝 Curated by Murthy Vepa</span>
+    </div>
+  </nav>
+
+  <div id="appContainer">
+    <div class="row g-0" id="mainRow">
+      <nav class="col-lg-3 border-end sidebar" id="sidebar" aria-label="Table of contents">
+        <div class="menu-header py-2">Contents</div>
+        <ul class="list-group list-group-flush toc" id="toc"></ul>
+      </nav>
+
+      <main id="main" class="col-lg-9 d-flex flex-column" tabindex="-1">
+        <div class="content" id="content">
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 1: Overview -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="overview" role="article">
+            <h1>📣 The Big Change</h1>
+            <span class="badge">overview</span>
+            <span class="badge badge-warning">breaking change</span>
+
+            <div class="callout callout-warning">
+              <strong>⚡ Effective June 1, 2026</strong><br>
+              GitHub is moving all Copilot plans from <strong>request-based (Premium Requests) billing</strong> to <strong>usage-based (GitHub AI Credits / token-based) billing</strong>. This is the most significant billing change since Copilot launched.
+            </div>
+
+            <h2>Why Is This Changing?</h2>
+            <p>The old model charged per <em>request</em>, regardless of whether a request was a simple one-liner or a complex 50-file agentic refactor. That created two problems:</p>
+            <ul>
+              <li>❌ <strong>Unfair pricing</strong> — a 10-token chat message cost the same as a 100,000-token agent session</li>
+              <li>❌ <strong>Hard limits</strong> — you hit your request cap and stopped, even if the task wasn't done</li>
+              <li>❌ <strong>Model-blind</strong> — using a cheap lightweight model and an expensive frontier model both counted as "1 request"</li>
+            </ul>
+            <p>The new model aligns cost with actual compute consumption, rewarding developers who use Copilot efficiently.</p>
+
+            <h2>At a Glance</h2>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="billing-model-old">
+                  <h4>🔴 Old Model — Premium Requests</h4>
+                  <ul>
+                    <li>Fixed monthly request quota (e.g. 300 requests/month)</li>
+                    <li>1 request = 1 unit, regardless of size</li>
+                    <li>Overage at <strong>$0.04 / request</strong></li>
+                    <li>No distinction by model used</li>
+                    <li>Simple to predict, but coarse-grained</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="billing-model-new">
+                  <h4>🟢 New Model — GitHub AI Credits (Tokens)</h4>
+                  <ul>
+                    <li>Monthly AI Credits allowance (pool)</li>
+                    <li>1 AI Credit = $0.01 USD</li>
+                    <li>Cost reflects actual token usage</li>
+                    <li>Model-sensitive — frontier models cost more</li>
+                    <li>Code completions remain <strong>unlimited & free</strong></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <h2>What Triggers This Migration?</h2>
+            <div class="row g-3 mt-1">
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-blue text-center">
+                  <div style="font-size:2rem">🗓️</div>
+                  <strong>Monthly Plan Users</strong>
+                  <p style="font-size:0.85rem;margin:0.5rem 0 0">Automatically migrated on June 1, 2026. No action required.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-yellow text-center">
+                  <div style="font-size:2rem">📋</div>
+                  <strong>Annual Plan Users</strong>
+                  <p style="font-size:0.85rem;margin:0.5rem 0 0">Plan will not auto-renew. Choose to cancel (prorated refund) or downgrade to Copilot Free.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-green text-center">
+                  <div style="font-size:2rem">🏢</div>
+                  <strong>Business / Enterprise</strong>
+                  <p style="font-size:0.85rem;margin:0.5rem 0 0">Migrated June 1, 2026. Promo credits provided for first 3 months.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 2: Old Billing Model -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="old-model" role="article">
+            <h1>🔴 Old Model: Premium Requests</h1>
+            <span class="badge badge-danger">deprecated June 2026</span>
+            <span class="badge">request-based</span>
+
+            <p>Under the Premium Requests model, every Copilot chat interaction that used a <em>premium</em> (non-base) model consumed one "Premium Request" from your monthly allowance.</p>
+
+            <h2>How It Worked</h2>
+
+            <div class="callout">
+              <strong>📌 Definition of a Premium Request</strong><br>
+              Any Copilot Chat message, Copilot CLI command, agent mode step, or cloud agent task that used a model above the included "base" tier consumed exactly <strong>1 Premium Request</strong> — no matter how long or complex.
+            </div>
+
+            <h2>Monthly Allowances (Old)</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Monthly Price</th>
+                  <th>Premium Requests / Month</th>
+                  <th>Overage Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🆓 Copilot Free</td>
+                  <td>$0</td>
+                  <td>50 requests</td>
+                  <td>Not available</td>
+                </tr>
+                <tr>
+                  <td>👤 Copilot Pro</td>
+                  <td>$10 / month</td>
+                  <td>300 requests</td>
+                  <td>$0.04 / request</td>
+                </tr>
+                <tr>
+                  <td>⚡ Copilot Pro+</td>
+                  <td>$39 / month</td>
+                  <td>1,500 requests</td>
+                  <td>$0.04 / request</td>
+                </tr>
+                <tr>
+                  <td>🏢 Copilot Business</td>
+                  <td>$19 / seat / month</td>
+                  <td>300 / user</td>
+                  <td>$0.04 / request</td>
+                </tr>
+                <tr>
+                  <td>🏛️ Copilot Enterprise</td>
+                  <td>$39 / seat / month</td>
+                  <td>1,000 / user</td>
+                  <td>$0.04 / request</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>Problems With This Model</h2>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-red h-100">
+                  <h4>🔀 No Size Distinction</h4>
+                  <p style="font-size:0.9rem">A quick "What is React?" question and a complex "Refactor my entire auth service across 20 files" agent session both consumed exactly 1 request each.</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-red h-100">
+                  <h4>🤔 Model-Blind</h4>
+                  <p style="font-size:0.9rem">Using GPT-5 mini (cheap) vs. Claude Opus 4.7 (expensive) cost you the same 1 request. There was no incentive to choose efficient models.</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-yellow h-100">
+                  <h4>🚫 Hard Cutoffs</h4>
+                  <p style="font-size:0.9rem">Hit your 300-request cap mid-task? Work stopped. You either paid $0.04 per extra request or waited for the next billing cycle.</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-yellow h-100">
+                  <h4>📊 Poor Org Visibility</h4>
+                  <p style="font-size:0.9rem">Organizations couldn't see <em>which</em> interactions consumed value. Every request looked the same in usage reports.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>Example: What 300 Requests Looked Like</h2>
+            <p>With 300 premium requests per month (Copilot Pro), here's how quickly you could exhaust them:</p>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Developer Activity</th>
+                  <th>Requests Used</th>
+                  <th>Days to Exhaust 300</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Casual chat (5 questions/day)</td>
+                  <td>150/month</td>
+                  <td>Never exhausted</td>
+                </tr>
+                <tr>
+                  <td>Regular developer (15 questions/day)</td>
+                  <td>450/month</td>
+                  <td>~20 days ⚠️</td>
+                </tr>
+                <tr>
+                  <td>Power user with agent mode (30/day)</td>
+                  <td>900/month</td>
+                  <td>~10 days ❌</td>
+                </tr>
+                <tr>
+                  <td>Agentic sessions (5 sessions of 20 steps each/day)</td>
+                  <td>3,000/month</td>
+                  <td>~3 days ❌❌</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 3: New Billing Model -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="new-model" role="article">
+            <h1>🟢 New Model: GitHub AI Credits (Tokens)</h1>
+            <span class="badge badge-success">effective June 1, 2026</span>
+            <span class="badge">token-based</span>
+
+            <p>Starting June 1, 2026, Copilot moves to <strong>GitHub AI Credits</strong>. You're now billed based on the actual tokens consumed by each interaction, converted to a credit amount where <code>1 AI Credit = $0.01 USD</code>.</p>
+
+            <h2>Understanding Tokens</h2>
+            <div class="callout callout-purple">
+              <strong>📐 What is a Token?</strong><br>
+              A token is roughly 4 characters of text (or ¾ of a word). "The quick brown fox" ≈ 4–5 tokens. Large language models process everything — your prompt, the codebase context, and the generated response — in tokens.
+            </div>
+
+            <h2>Three Types of Tokens</h2>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-blue text-center">
+                  <span class="token-chip chip-input" style="font-size:1rem;padding:0.4rem 1rem">INPUT</span>
+                  <h4 class="mt-2">Input Tokens</h4>
+                  <p style="font-size:0.85rem">What you send to the model: your message, code context, system instructions, file contents included in the prompt.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-green text-center">
+                  <span class="token-chip chip-output" style="font-size:1rem;padding:0.4rem 1rem">OUTPUT</span>
+                  <h4 class="mt-2">Output Tokens</h4>
+                  <p style="font-size:0.85rem">What the model generates: code suggestions, explanations, analysis. Output tokens are typically 3–8× more expensive than input tokens.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-yellow text-center">
+                  <span class="token-chip chip-cached" style="font-size:1rem;padding:0.4rem 1rem">CACHED</span>
+                  <h4 class="mt-2">Cached Tokens</h4>
+                  <p style="font-size:0.85rem">Context the model reuses from previous turns (conversation history). Significantly cheaper — typically 90% less than regular input tokens.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>How AI Credits Are Calculated</h2>
+            <div class="callout callout-success">
+              <strong>Formula:</strong><br>
+              <code>AI Credits = (Input Tokens × Input Rate + Output Tokens × Output Rate + Cached Tokens × Cache Rate) ÷ 1,000,000</code><br><br>
+              Where rates are per 1 million tokens, in USD. <strong>1 AI Credit = $0.01 USD.</strong><br>
+              So 100 AI credits = $1.00 USD.
+            </div>
+
+            <h2>What Is and Is NOT Billed</h2>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-red h-100">
+                  <h4>💳 Billed in AI Credits</h4>
+                  <ul>
+                    <li>✅ Copilot Chat (IDE, GitHub.com, Mobile)</li>
+                    <li>✅ Copilot CLI interactions</li>
+                    <li>✅ Copilot Cloud Agent sessions</li>
+                    <li>✅ Copilot Spaces</li>
+                    <li>✅ GitHub Spark</li>
+                    <li>✅ Third-party coding agents</li>
+                    <li>✅ Copilot Code Review (+ GitHub Actions minutes)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-green h-100">
+                  <h4>🎁 Remains Unlimited (NOT Billed)</h4>
+                  <ul>
+                    <li>🚀 Inline code completions</li>
+                    <li>🚀 Next Edit Suggestions</li>
+                    <li>🚀 Ghost-text autocomplete</li>
+                  </ul>
+                  <div class="callout callout-success" style="margin-top:0.75rem;padding:0.75rem">
+                    <strong>Key point:</strong> The bread-and-butter autocomplete that developers use all day remains completely free and unlimited for all paid plans.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h2>Monthly AI Credit Allowances (New)</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Price</th>
+                  <th>Base Credits</th>
+                  <th>Flex Credits</th>
+                  <th>Total / Month</th>
+                  <th>Overage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🆓 Copilot Free</td>
+                  <td>$0</td>
+                  <td>Included allowance</td>
+                  <td>—</td>
+                  <td>Limited</td>
+                  <td>Not available</td>
+                </tr>
+                <tr>
+                  <td>👤 Copilot Pro</td>
+                  <td>$10 / month</td>
+                  <td>1,000</td>
+                  <td>500</td>
+                  <td><strong>1,500</strong></td>
+                  <td>Pay as you go ($0.01/credit)</td>
+                </tr>
+                <tr>
+                  <td>⚡ Copilot Pro+</td>
+                  <td>$39 / month</td>
+                  <td>3,900</td>
+                  <td>3,100</td>
+                  <td><strong>7,000</strong></td>
+                  <td>Pay as you go ($0.01/credit)</td>
+                </tr>
+                <tr>
+                  <td>🌟 Copilot Max</td>
+                  <td>$100 / month</td>
+                  <td>10,000</td>
+                  <td>10,000</td>
+                  <td><strong>20,000</strong></td>
+                  <td>Pay as you go ($0.01/credit)</td>
+                </tr>
+                <tr>
+                  <td>🏢 Copilot Business</td>
+                  <td>$19 / seat</td>
+                  <td colspan="2">1,900 / seat (pooled)</td>
+                  <td><strong>1,900 × seats</strong></td>
+                  <td>Configurable policy</td>
+                </tr>
+                <tr>
+                  <td>🏛️ Copilot Enterprise</td>
+                  <td>$39 / seat</td>
+                  <td colspan="2">3,900 / seat (pooled)</td>
+                  <td><strong>3,900 × seats</strong></td>
+                  <td>Configurable policy</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="callout callout-success">
+              <strong>💡 Base vs. Flex Credits</strong><br>
+              <strong>Base credits</strong> are fixed and match your subscription price — they never change.<br>
+              <strong>Flex credits</strong> are an additional monthly bonus that adapts as AI economics evolve (model pricing drops, new models launch). Think of flex as GitHub's way of passing efficiency savings back to you.
+            </div>
+
+            <h2>Promotional Credits for Existing Customers</h2>
+            <p>To ease the transition, existing Business and Enterprise customers get higher credit amounts for the first 3 months (June 1 – September 1, 2026):</p>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-4 rounded bg-gradient-blue text-center">
+                  <h4>🏢 Copilot Business</h4>
+                  <div class="plan-price text-primary">3,000</div>
+                  <div class="plan-unit">AI Credits / seat / month (promo)</div>
+                  <p style="font-size:0.8rem;margin-top:0.5rem">vs. 1,900 standard (June–Sept 2026)</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-4 rounded bg-gradient-purple text-center">
+                  <h4>🏛️ Copilot Enterprise</h4>
+                  <div class="plan-price" style="color:#7c3aed">7,000</div>
+                  <div class="plan-unit">AI Credits / seat / month (promo)</div>
+                  <p style="font-size:0.8rem;margin-top:0.5rem">vs. 3,900 standard (June–Sept 2026)</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>Pooled Credits for Organizations</h2>
+            <div class="callout">
+              <strong>🏊 The Pool Model</strong><br>
+              For Business and Enterprise, credits are <em>pooled at the billing entity level</em>, not siloed per user.<br><br>
+              Example: An enterprise with <strong>100 Copilot Business seats</strong> gets a shared pool of <strong>190,000 AI Credits / month</strong>.<br>
+              Power users can draw more when they need it, while lighter users offset that consumption — no wasted credits sitting unused in individual buckets.
+            </div>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 4: Token Consumption Illustrated -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="token-illustrations" role="article">
+            <h1>🔬 Token Consumption Illustrated</h1>
+            <span class="badge">examples</span>
+            <span class="badge">illustrations</span>
+
+            <p>To understand the billing impact, let's walk through realistic Copilot interactions and see how token consumption translates to AI Credit cost.</p>
+
+            <div class="callout">
+              <strong>💰 Quick Reference:</strong> 1 AI Credit = $0.01 USD &nbsp;|&nbsp; Claude Sonnet 4.6 rates: $3.00 input / $15.00 output per 1M tokens &nbsp;|&nbsp; GPT-5 mini: $0.25 input / $2.00 output per 1M tokens
+            </div>
+
+            <h2>Example 1: Simple Question (Lightweight Model)</h2>
+            <div class="prompt-card">
+              <strong>What does the <code>Array.reduce()</code> method do in JavaScript?</strong>
+            </div>
+            <div class="response-card">
+              <strong><code>Array.reduce()</code></strong> executes a reducer function on each element of the array, resulting in a single output value.<br><br>
+              <code>const sum = [1, 2, 3, 4].reduce((acc, curr) => acc + curr, 0); // 10</code><br><br>
+              It takes two arguments: a callback function <code>(accumulator, currentValue)</code> and an optional initial value. The accumulator carries the result across iterations.
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (GPT-5 mini used)<br>
+              <span class="token-chip chip-input">Input: ~25 tokens</span>
+              <span class="token-chip chip-output">Output: ~85 tokens</span>
+              <span class="token-chip chip-cached">Cached: 0 tokens</span><br>
+              <strong>Cost:</strong> (25 × $0.25 + 85 × $2.00) / 1,000,000 = $0.000176 ≈ <span class="token-chip chip-cost">0.018 AI Credits</span><br>
+              <em>Compare old model: 1 Premium Request = $0.04 (228× more expensive)</em>
+            </div>
+
+            <h2>Example 2: Code Generation (Versatile Model)</h2>
+            <div class="prompt-card">
+              Write a TypeScript function that validates an email address using a regex and returns a typed result object with <code>isValid</code>, <code>domain</code>, and <code>localPart</code> fields. Include JSDoc comments.
+            </div>
+            <div class="response-card">
+              <pre style="font-size:0.8rem;margin:0">
+interface EmailValidationResult {
+  isValid: boolean;
+  localPart: string | null;
+  domain: string | null;
+}
+
+/**
+ * Validates an email address and extracts its components.
+ * @param email - The email address string to validate
+ * @returns An EmailValidationResult object
+ */
+function validateEmail(email: string): EmailValidationResult {
+  const emailRegex = /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
+  const match = emailRegex.exec(email.trim());
+  if (!match) {
+    return { isValid: false, localPart: null, domain: null };
+  }
+  return { isValid: true, localPart: match[1], domain: match[2] };
+}</pre>
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (Claude Sonnet 4.6 used)<br>
+              <span class="token-chip chip-input">Input: ~65 tokens</span>
+              <span class="token-chip chip-output">Output: ~220 tokens</span>
+              <span class="token-chip chip-cached">Cached: 0 tokens</span><br>
+              <strong>Cost:</strong> (65 × $3.00 + 220 × $15.00) / 1,000,000 = $0.000195 + $0.0033 = $0.003495 ≈ <span class="token-chip chip-cost">0.35 AI Credits</span><br>
+              <em>Compare old model: 1 Premium Request = $0.04 (11× more expensive)</em>
+            </div>
+
+            <h2>Example 3: Multi-turn Chat with Context (Versatile Model)</h2>
+            <div class="prompt-card">
+              <em>[Turn 4 of a conversation — prior 3 turns in context]</em><br>
+              Now add error handling to the function we created and make it handle edge cases like null inputs.
+            </div>
+            <div class="response-card">
+              <pre style="font-size:0.8rem;margin:0">
+function validateEmail(email: unknown): EmailValidationResult {
+  if (email === null || email === undefined) {
+    return { isValid: false, localPart: null, domain: null };
+  }
+  if (typeof email !== 'string') {
+    throw new TypeError(`Expected string, received ${typeof email}`);
+  }
+  const trimmed = email.trim();
+  if (trimmed.length === 0) {
+    return { isValid: false, localPart: null, domain: null };
+  }
+  // ... (rest of original logic)
+}</pre>
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (Claude Sonnet 4.6 used, conversation history cached)<br>
+              <span class="token-chip chip-input">Input: ~40 tokens</span>
+              <span class="token-chip chip-output">Output: ~180 tokens</span>
+              <span class="token-chip chip-cached">Cached: ~580 tokens (prior turns)</span><br>
+              <strong>Cost:</strong> (40 × $3.00 + 180 × $15.00 + 580 × $0.30) / 1,000,000 ≈ <span class="token-chip chip-cost">3.0 AI Credits</span><br>
+              <em>Compare old model: 1 Premium Request = $0.04 (saves ~$0.01)</em>
+            </div>
+
+            <h2>Example 4: Agentic Session (Frontier Model)</h2>
+            <div class="prompt-card">
+              <strong>Agent mode prompt:</strong> Review the entire <code>src/auth</code> directory, identify security vulnerabilities, and fix them. Update all tests accordingly. Create a summary report.
+            </div>
+            <div class="response-card">
+              <strong>Agent executes 14 tool calls:</strong><br>
+              📁 Read 8 files (~15,000 tokens) → 🔍 Analyze patterns → ✏️ Write fixes to 6 files (~3,200 tokens) → 🧪 Update 4 test files (~2,400 tokens) → 📝 Generate report (~800 tokens)
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (Claude Opus 4.7 used — full agentic session)<br>
+              <span class="token-chip chip-input">Input: ~42,000 tokens</span>
+              <span class="token-chip chip-output">Output: ~6,400 tokens</span>
+              <span class="token-chip chip-cached">Cached: ~28,000 tokens (file re-reads)</span><br>
+              <strong>Cost:</strong> (42,000 × $5.00 + 6,400 × $25.00 + 28,000 × $0.50) / 1,000,000 = $0.21 + $0.16 + $0.014 = $0.384 ≈ <span class="token-chip chip-cost">38.4 AI Credits</span><br>
+              <em>Old model: 14 agent steps × 1 request each = 14 Premium Requests = <strong>$0.56</strong> in overage</em>
+            </div>
+
+            <h2>Example 5: Code Completion (Always Free)</h2>
+            <div class="prompt-card">
+              <em>[Typing in VS Code]</em><br>
+              <code>function calculateTax(income: number, ra</code> [Copilot suggests the rest]
+            </div>
+            <div class="response-card">
+              <code>te: number): number {<br>&nbsp;&nbsp;return income * rate;<br>}</code>
+            </div>
+            <div class="token-breakdown" style="background: #d1fae5; border-color: #10b981">
+              <strong>Cost:</strong> <span class="token-chip chip-output" style="background:#10b981;color:white">🎁 FREE — $0.00 AI Credits</span><br>
+              Code completions and next-edit suggestions remain <strong>unlimited and free</strong> for all paid plans. This is the #1 daily-use feature and it is never metered.
+            </div>
+
+            <!-- ─── MCP SERVERS & TOOL CALLS ─── -->
+            <h2>🔌 Impact of MCP Servers &amp; Tool Calls on Token Usage</h2>
+
+            <div class="callout callout-warning">
+              <strong>⚠️ MCP Servers are a Token Multiplier</strong><br>
+              When Copilot calls a Model Context Protocol (MCP) server (GitHub, Azure, FileSystem, databases, etc.), the tool's <em>output is injected into the model's context window as additional input tokens</em>. A single user question can trigger a chain of tool calls, each adding hundreds or thousands of tokens to the running context — dramatically inflating your AI Credit consumption compared to a plain chat message.
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-blue text-center h-100">
+                  <div style="font-size:2rem">📡</div>
+                  <h4>How an MCP Tool Call Works</h4>
+                  <p style="font-size:0.85rem">User prompt → Model decides to call a tool → Tool runs → Result injected as input tokens → Model generates answer using that data.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-yellow text-center h-100">
+                  <div style="font-size:2rem">📈</div>
+                  <h4>What Gets Injected as Tokens</h4>
+                  <ul style="font-size:0.85rem;text-align:left">
+                    <li>The tool's JSON schema (every request)</li>
+                    <li>Tool call arguments</li>
+                    <li>Full tool response payload</li>
+                    <li>Prior tool calls in the same turn</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-red text-center h-100">
+                  <div style="font-size:2rem">🔗</div>
+                  <h4>Chained Calls Compound Cost</h4>
+                  <p style="font-size:0.85rem">Each tool call in a chain adds its output to the running context. By call #4, earlier results are still present as cached tokens, costing less — but the context window keeps growing.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>Example 6: Single MCP Tool Call — GitHub Issue Lookup</h2>
+            <div class="prompt-card">
+              <strong>@github</strong> What is the current status and linked PR for issue #1847?
+            </div>
+            <div style="background:#f8fafc;border:1px dashed #94a3b8;border-radius:0.5rem;padding:0.85rem 1rem;margin:0.5rem 0;font-size:0.85rem">
+              <strong>🔧 MCP Tool Call (GitHub MCP):</strong> <code>get_issue({ repo: "myorg/myapp", issue: 1847 })</code><br>
+              <strong>Tool Response (~420 tokens):</strong> Issue title, body, labels, assignees, milestone, timeline events, linked PR #2103 details
+            </div>
+            <div class="response-card">
+              Issue #1847 "Fix null-pointer in AuthService" is currently <strong>open</strong>, assigned to @alice. It is linked to PR #2103 (merged 2 days ago) but the issue was not auto-closed because the branch targeted <code>release/v2.1</code> instead of <code>main</code>. You can close it manually.
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (GPT-5 mini, 1 tool call)<br>
+              <span class="token-chip chip-input">User prompt: ~18 tokens</span>
+              <span class="token-chip chip-input">Tool schema: ~120 tokens</span>
+              <span class="token-chip chip-input">Tool response: ~420 tokens</span>
+              <span class="token-chip chip-output">Output: ~95 tokens</span><br>
+              <strong>Total input:</strong> ~558 tokens &nbsp;|&nbsp; <strong>Cost:</strong> (558 × $0.25 + 95 × $2.00) / 1,000,000 ≈ <span class="token-chip chip-cost">0.33 AIC</span><br>
+              <em>Without MCP (plain chat): ~0.05 AIC. <strong>MCP added 6.6× more tokens.</strong></em>
+            </div>
+
+            <h2>Example 7: MCP Tool Chain — GitHub + Azure + FileSystem</h2>
+            <div class="prompt-card">
+              <strong>Agent mode + 3 MCP servers:</strong> Pull the failing tests from the latest CI run on PR #2103, read the test file locally, check the Azure App Service logs for the same error, and suggest a fix.
+            </div>
+            <div style="background:#f8fafc;border:1px dashed #94a3b8;border-radius:0.5rem;padding:0.85rem 1rem;margin:0.5rem 0;font-size:0.85rem">
+              <strong>🔧 Tool Call 1 (GitHub MCP):</strong> <code>get_check_run_output</code> → CI failure details (~850 tokens)<br>
+              <strong>🔧 Tool Call 2 (FileSystem MCP):</strong> <code>read_file("src/auth/__tests__/AuthService.test.ts")</code> → full test file (~1,400 tokens)<br>
+              <strong>🔧 Tool Call 3 (Azure MCP):</strong> <code>get_app_logs({ app: "myapp-prod", filter: "ERROR", tail: 50 })</code> → log entries (~780 tokens)<br>
+              <em>All 3 tool schemas present in context for every call: ~360 tokens total</em>
+            </div>
+            <div class="response-card">
+              The test failure in <code>AuthService.test.ts:line 82</code> is caused by a race condition — <code>refreshToken()</code> resolves before the user session is saved. The Azure logs confirm the same pattern: 429 retry storms on <code>/token</code>. Fix: add <code>await</code> before <code>session.save()</code> and increase the retry backoff to 500 ms...
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (Claude Sonnet 4.6, 3 tool calls)<br>
+              <span class="token-chip chip-input">User prompt: ~55 tokens</span>
+              <span class="token-chip chip-input">Tool schemas: ~360 tokens</span>
+              <span class="token-chip chip-input">Tool responses: ~3,030 tokens</span>
+              <span class="token-chip chip-cached">Prior context (cached): ~1,200 tokens</span>
+              <span class="token-chip chip-output">Output: ~380 tokens</span><br>
+              <strong>Cost:</strong> (3,445 × $3.00 + 380 × $15.00 + 1,200 × $0.30) / 1,000,000 ≈ <span class="token-chip chip-cost">16.7 AIC</span><br>
+              <em>Old model: 3 agent steps = 3 PRU = $0.12. New model: <strong>$0.167 (39% more)</strong> — tool payloads make this expensive even with caching.</em>
+            </div>
+
+            <h2>Example 8: MCP Bulk File Read — Large Context Injection</h2>
+            <div class="prompt-card">
+              <strong>Agent + FileSystem MCP:</strong> Read all TypeScript files in <code>src/services/</code> and identify which ones have no error handling in their public methods.
+            </div>
+            <div style="background:#f8fafc;border:1px dashed #94a3b8;border-radius:0.5rem;padding:0.85rem 1rem;margin:0.5rem 0;font-size:0.85rem">
+              <strong>🔧 Tool Call 1:</strong> <code>list_directory("src/services/")</code> → 18 files listed (~90 tokens)<br>
+              <strong>🔧 Tool Calls 2–19 (18 read_file calls):</strong> Each file averages 350 tokens → <strong>~6,300 tokens total file content</strong><br>
+              <em>All file contents accumulate in context. By call #10, earlier files are cached; still costs cache read price per token.</em>
+            </div>
+            <div class="response-card">
+              9 of 18 service files have public methods with no try/catch or error propagation: <code>EmailService.ts</code>, <code>PaymentService.ts</code>, <code>NotificationService.ts</code>... [detailed report]
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (Claude Sonnet 4.6, 19 tool calls)<br>
+              <span class="token-chip chip-input">User prompt: ~40 tokens</span>
+              <span class="token-chip chip-input">Tool schemas: ~180 tokens</span>
+              <span class="token-chip chip-input">Tool responses (fresh): ~3,200 tokens</span>
+              <span class="token-chip chip-cached">Tool responses (cached re-reads): ~3,200 tokens</span>
+              <span class="token-chip chip-output">Output: ~650 tokens</span><br>
+              <strong>Cost:</strong> (3,420 × $3.00 + 650 × $15.00 + 3,200 × $0.30) / 1,000,000 ≈ <span class="token-chip chip-cost">21.7 AIC</span><br>
+              <em>⚠️ Reading 18 files via MCP inflated context 17× vs. a plain chat. Consider using <code>@workspace</code> indexing instead — it retrieves only <em>relevant</em> code snippets, not whole files.</em>
+            </div>
+
+            <h2>Example 9: RAG Retrieval via MCP (Azure AI Search / Vector DB)</h2>
+            <div class="prompt-card">
+              <strong>Copilot + Azure MCP + custom RAG tool:</strong> Based on our internal runbooks, what are the steps to roll back a failed Kubernetes deployment in the PROD cluster?
+            </div>
+            <div style="background:#f8fafc;border:1px dashed #94a3b8;border-radius:0.5rem;padding:0.85rem 1rem;margin:0.5rem 0;font-size:0.85rem">
+              <strong>🔧 Tool Call 1 (RAG / Azure AI Search MCP):</strong> <code>search_documents({ query: "kubernetes rollback production", top: 5 })</code><br>
+              <strong>Retrieved chunks (~3,800 tokens):</strong> 5 runbook sections, each ~760 tokens average, injected verbatim into context
+            </div>
+            <div class="response-card">
+              Based on your internal runbooks: <br>1. Run <code>kubectl rollout history deployment/myapp -n prod</code> to identify the last stable revision...<br>2. Execute <code>kubectl rollout undo deployment/myapp --to-revision=N -n prod</code>...<br>[continues for 5 detailed steps with commands]
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (GPT-5.2, 1 tool call + RAG injection)<br>
+              <span class="token-chip chip-input">User prompt: ~30 tokens</span>
+              <span class="token-chip chip-input">Tool schema: ~95 tokens</span>
+              <span class="token-chip chip-input">RAG-retrieved chunks: ~3,800 tokens</span>
+              <span class="token-chip chip-output">Output: ~420 tokens</span><br>
+              <strong>Cost:</strong> (3,925 × $1.75 + 420 × $14.00) / 1,000,000 ≈ <span class="token-chip chip-cost">12.8 AIC</span><br>
+              <em>💡 RAG chunk size matters. Retrieving top-5 at 760 tokens/chunk: 12.8 AIC. Retrieving top-3 at 400 tokens/chunk: ~6 AIC. <strong>Tune your retrieval strategy to reduce injected tokens.</strong></em>
+            </div>
+
+            <h2>Example 10: Copilot Code Review with MCP Context</h2>
+            <div class="prompt-card">
+              <strong>Copilot Code Review (PR #2103) + GitHub MCP + Azure DevOps MCP:</strong> Review this PR for correctness and security, including any context from related tickets.
+            </div>
+            <div style="background:#f8fafc;border:1px dashed #94a3b8;border-radius:0.5rem;padding:0.85rem 1rem;margin:0.5rem 0;font-size:0.85rem">
+              <strong>🔧 GitHub MCP:</strong> Fetch PR diff (~4,200 tokens), linked issues (#1847, #1901) body + comments (~1,100 tokens)<br>
+              <strong>🔧 Azure DevOps MCP:</strong> Related work items WI-5512, WI-5603 (~620 tokens)<br>
+              <strong>⚡ Also billed:</strong> GitHub Actions minutes for the agentic review runner (~0.5 min)
+            </div>
+            <div class="response-card">
+              Found 3 issues: (1) SQL injection risk in <code>UserRepository.findByEmail()</code> — input not sanitized before query construction; (2) Missing rate-limiting on <code>POST /api/token</code>; (3) The PKCE code_verifier is stored in localStorage — should use sessionStorage. See inline comments on lines 88, 134, 212.
+            </div>
+            <div class="token-breakdown">
+              <strong>Token Breakdown</strong> (auto-selected model, Code Review flow)<br>
+              <span class="token-chip chip-input">System instructions: ~800 tokens</span>
+              <span class="token-chip chip-input">PR diff: ~4,200 tokens</span>
+              <span class="token-chip chip-input">Linked issues + work items: ~1,720 tokens</span>
+              <span class="token-chip chip-output">Output (inline comments + summary): ~950 tokens</span><br>
+              <strong>AI Credits cost:</strong> ~60–80 AIC (model not disclosed by GitHub for Code Review)<br>
+              <strong>Also billed:</strong> ~0.5 GitHub Actions minute ≈ $0.004<br>
+              <em>⚠️ Code Review billing combines AI Credits + Actions minutes. Larger PRs with many linked issues will cost significantly more. Keep PRs focused to limit both costs.</em>
+            </div>
+
+            <!-- MCP Cost Summary Callout -->
+            <div class="callout callout-danger mt-3">
+              <strong>🔌 MCP Server Billing Rules of Thumb</strong>
+              <ul style="margin:0.5rem 0 0 0">
+                <li>Every MCP tool schema is injected as input tokens on <em>every request in that session</em> — even for tools you didn't call this turn</li>
+                <li>Tool response payload is fully injected as input tokens — large API responses = expensive</li>
+                <li>More MCP servers configured = more schema tokens overhead per request</li>
+                <li>Chained tool calls where results feed the next call accumulate rapidly</li>
+                <li>Prefer <strong>targeted MCP queries</strong> (specific filters, smaller payloads) over broad "get everything" tool calls</li>
+                <li>Use <code>@workspace</code> file indexing rather than FileSystem MCP bulk reads when possible</li>
+              </ul>
+            </div>
+
+            <h2>Side-by-Side Cost Summary</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Interaction Type</th>
+                  <th>Model</th>
+                  <th>Old Cost (PRU)</th>
+                  <th>New Cost (AIC)</th>
+                  <th>Δ Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Simple question</td>
+                  <td>GPT-5 mini</td>
+                  <td>1 PRU = $0.04</td>
+                  <td>0.018 AIC = $0.00018</td>
+                  <td class="text-success fw-bold">▼ 99.6% cheaper</td>
+                </tr>
+                <tr>
+                  <td>Code generation</td>
+                  <td>Claude Sonnet 4.6</td>
+                  <td>1 PRU = $0.04</td>
+                  <td>0.35 AIC = $0.0035</td>
+                  <td class="text-success fw-bold">▼ 91% cheaper</td>
+                </tr>
+                <tr>
+                  <td>Multi-turn chat</td>
+                  <td>Claude Sonnet 4.6</td>
+                  <td>1 PRU = $0.04</td>
+                  <td>3.0 AIC = $0.03</td>
+                  <td class="text-success fw-bold">▼ 25% cheaper</td>
+                </tr>
+                <tr>
+                  <td>Complex agentic task</td>
+                  <td>Claude Opus 4.7</td>
+                  <td>14 PRU = $0.56</td>
+                  <td>38.4 AIC = $0.384</td>
+                  <td class="text-success fw-bold">▼ 31% cheaper</td>
+                </tr>
+                <tr>
+                  <td>Very long agent session</td>
+                  <td>GPT-5.5</td>
+                  <td>50 PRU = $2.00</td>
+                  <td>~200 AIC = $2.00</td>
+                  <td class="text-warning fw-bold">≈ Similar</td>
+                </tr>
+                <tr>
+                  <td>Single MCP tool call</td>
+                  <td>GPT-5 mini</td>
+                  <td>1 PRU = $0.04</td>
+                  <td>0.33 AIC = $0.0033</td>
+                  <td class="text-success fw-bold">▼ 92% cheaper</td>
+                </tr>
+                <tr>
+                  <td>3-server MCP chain (agent)</td>
+                  <td>Claude Sonnet 4.6</td>
+                  <td>3 PRU = $0.12</td>
+                  <td>16.7 AIC = $0.167</td>
+                  <td class="text-danger fw-bold">▲ 39% more expensive</td>
+                </tr>
+                <tr>
+                  <td>Bulk file read via MCP (18 files)</td>
+                  <td>Claude Sonnet 4.6</td>
+                  <td>19 PRU = $0.76</td>
+                  <td>21.7 AIC = $0.217</td>
+                  <td class="text-success fw-bold">▼ 71% cheaper</td>
+                </tr>
+                <tr>
+                  <td>RAG retrieval via MCP (top-5 chunks)</td>
+                  <td>GPT-5.2</td>
+                  <td>1 PRU = $0.04</td>
+                  <td>12.8 AIC = $0.128</td>
+                  <td class="text-danger fw-bold">▲ 220% more expensive</td>
+                </tr>
+                <tr>
+                  <td>Code Review (PR + MCP context)</td>
+                  <td>Auto (not disclosed)</td>
+                  <td>1 PRU = $0.04</td>
+                  <td>~70 AIC = $0.70 + Actions</td>
+                  <td class="text-danger fw-bold">▲ Large PRs very costly</td>
+                </tr>
+                <tr>
+                  <td>Code completion</td>
+                  <td>Base model</td>
+                  <td>0 PRU (included)</td>
+                  <td>0 AIC (free)</td>
+                  <td class="text-muted">No change</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="callout callout-warning mt-2">
+              <strong>📌 Key Takeaway from the Table</strong><br>
+              Simple queries and agent tasks that stay within the model context are <em>much cheaper</em> under the new model. But MCP-driven interactions that inject large tool payloads — especially RAG retrieval, Code Review with linked issues, or bulk file reads — can be <em>more expensive per "request"</em> than the old flat $0.04 rate. <strong>Token discipline is the new cost discipline.</strong>
+            </div>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 5: Model Pricing Table -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="model-pricing" role="article">
+            <h1>📊 Model Pricing Reference</h1>
+            <span class="badge">pricing</span>
+            <span class="badge">models</span>
+
+            <p>All rates apply starting June 1, 2026. Prices are per <strong>1 million tokens</strong> and are expressed in USD. 1 AI Credit = $0.01 USD.</p>
+
+            <div class="callout callout-warning">
+              <strong>⚠️ When Does Pricing Matter?</strong><br>
+              Pricing only applies to usage that <em>exceeds</em> your included AI Credit allowance. Within your allowance, the specific per-token rates are absorbed — you just see credits drawn down on your usage dashboard.
+            </div>
+
+            <h2>OpenAI Models</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Tier</th>
+                  <th>Input ($/1M)</th>
+                  <th>Cached ($/1M)</th>
+                  <th>Output ($/1M)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-info">
+                  <td><strong>GPT-4.1</strong> ⭐</td>
+                  <td>Versatile</td>
+                  <td>$2.00</td>
+                  <td>$0.50</td>
+                  <td>$8.00</td>
+                  <td><span class="badge badge-success">Included model</span></td>
+                </tr>
+                <tr class="table-info">
+                  <td><strong>GPT-5 mini</strong> ⭐</td>
+                  <td>Lightweight</td>
+                  <td>$0.25</td>
+                  <td>$0.025</td>
+                  <td>$2.00</td>
+                  <td><span class="badge badge-success">Included model</span></td>
+                </tr>
+                <tr>
+                  <td>GPT-5.2</td>
+                  <td>Versatile</td>
+                  <td>$1.75</td>
+                  <td>$0.175</td>
+                  <td>$14.00</td>
+                  <td>GA</td>
+                </tr>
+                <tr>
+                  <td>GPT-5.2-Codex</td>
+                  <td>Powerful</td>
+                  <td>$1.75</td>
+                  <td>$0.175</td>
+                  <td>$14.00</td>
+                  <td>GA</td>
+                </tr>
+                <tr>
+                  <td>GPT-5.3-Codex</td>
+                  <td>Powerful</td>
+                  <td>$1.75</td>
+                  <td>$0.175</td>
+                  <td>$14.00</td>
+                  <td>GA</td>
+                </tr>
+                <tr>
+                  <td>GPT-5.4</td>
+                  <td>Versatile</td>
+                  <td>$2.50</td>
+                  <td>$0.25</td>
+                  <td>$15.00</td>
+                  <td>GA</td>
+                </tr>
+                <tr>
+                  <td>GPT-5.4 mini</td>
+                  <td>Lightweight</td>
+                  <td>$0.75</td>
+                  <td>$0.075</td>
+                  <td>$4.50</td>
+                  <td>GA</td>
+                </tr>
+                <tr>
+                  <td>GPT-5.4 nano</td>
+                  <td>Lightweight</td>
+                  <td>$0.20</td>
+                  <td>$0.02</td>
+                  <td>$1.25</td>
+                  <td>GA (Pro+ only)</td>
+                </tr>
+                <tr class="table-warning">
+                  <td><strong>GPT-5.5</strong></td>
+                  <td>Powerful</td>
+                  <td>$5.00</td>
+                  <td>$0.50</td>
+                  <td>$30.00</td>
+                  <td>GA</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>Anthropic Models</h2>
+            <p><em>Anthropic models include an additional <strong>cache write cost</strong> on top of cached input pricing.</em></p>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Tier</th>
+                  <th>Input ($/1M)</th>
+                  <th>Cache Write ($/1M)</th>
+                  <th>Cached ($/1M)</th>
+                  <th>Output ($/1M)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Claude Haiku 4.5</td>
+                  <td>Versatile</td>
+                  <td>$1.00</td>
+                  <td>$1.25</td>
+                  <td>$0.10</td>
+                  <td>$5.00</td>
+                </tr>
+                <tr>
+                  <td>Claude Sonnet 4</td>
+                  <td>Versatile</td>
+                  <td>$3.00</td>
+                  <td>$3.75</td>
+                  <td>$0.30</td>
+                  <td>$15.00</td>
+                </tr>
+                <tr>
+                  <td>Claude Sonnet 4.5</td>
+                  <td>Versatile</td>
+                  <td>$3.00</td>
+                  <td>$3.75</td>
+                  <td>$0.30</td>
+                  <td>$15.00</td>
+                </tr>
+                <tr>
+                  <td>Claude Sonnet 4.6</td>
+                  <td>Versatile</td>
+                  <td>$3.00</td>
+                  <td>$3.75</td>
+                  <td>$0.30</td>
+                  <td>$15.00</td>
+                </tr>
+                <tr class="table-warning">
+                  <td><strong>Claude Opus 4.5</strong></td>
+                  <td>Powerful</td>
+                  <td>$5.00</td>
+                  <td>$6.25</td>
+                  <td>$0.50</td>
+                  <td>$25.00</td>
+                </tr>
+                <tr class="table-warning">
+                  <td><strong>Claude Opus 4.6</strong></td>
+                  <td>Powerful</td>
+                  <td>$5.00</td>
+                  <td>$6.25</td>
+                  <td>$0.50</td>
+                  <td>$25.00</td>
+                </tr>
+                <tr class="table-warning">
+                  <td><strong>Claude Opus 4.7</strong></td>
+                  <td>Powerful</td>
+                  <td>$5.00</td>
+                  <td>$6.25</td>
+                  <td>$0.50</td>
+                  <td>$25.00</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>Google Models</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Tier</th>
+                  <th>Input ($/1M)</th>
+                  <th>Cached ($/1M)</th>
+                  <th>Output ($/1M)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Gemini 2.5 Pro</td>
+                  <td>Powerful</td>
+                  <td>$1.25</td>
+                  <td>$0.125</td>
+                  <td>$10.00</td>
+                  <td>GA</td>
+                </tr>
+                <tr>
+                  <td>Gemini 3 Flash</td>
+                  <td>Lightweight</td>
+                  <td>$0.50</td>
+                  <td>$0.05</td>
+                  <td>$3.00</td>
+                  <td>Public Preview</td>
+                </tr>
+                <tr>
+                  <td>Gemini 3.1 Pro</td>
+                  <td>Powerful</td>
+                  <td>$2.00</td>
+                  <td>$0.20</td>
+                  <td>$12.00</td>
+                  <td>Public Preview</td>
+                </tr>
+                <tr>
+                  <td>Gemini 3.5 Flash</td>
+                  <td>Lightweight</td>
+                  <td>$1.50</td>
+                  <td>$0.15</td>
+                  <td>$9.00</td>
+                  <td>GA</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>GitHub Fine-Tuned Models</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Tier</th>
+                  <th>Input ($/1M)</th>
+                  <th>Cached ($/1M)</th>
+                  <th>Output ($/1M)</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Raptor mini</td>
+                  <td>Versatile</td>
+                  <td>$0.25</td>
+                  <td>$0.025</td>
+                  <td>$2.00</td>
+                  <td>Uses GPT-5 mini pricing</td>
+                </tr>
+                <tr>
+                  <td>Goldeneye</td>
+                  <td>Powerful</td>
+                  <td>$1.25</td>
+                  <td>$0.125</td>
+                  <td>$10.00</td>
+                  <td>Uses GPT-5.1-Codex pricing</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>Cost Spectrum Visualization</h2>
+            <p>Relative cost per interaction for a typical 1,000-token prompt + 500-token response (no caching):</p>
+            <div class="p-3 bg-light rounded">
+              <div class="mb-2"><strong>GPT-5 mini</strong> <small class="text-muted">Cheapest</small></div>
+              <div class="credit-meter"><div class="credit-fill" style="width:4%;background:linear-gradient(90deg,#10b981,#059669)">0.13 AIC</div></div>
+              <div class="mb-2 mt-3"><strong>Gemini 3 Flash</strong></div>
+              <div class="credit-meter"><div class="credit-fill" style="width:8%;background:linear-gradient(90deg,#22c55e,#16a34a)">0.20 AIC</div></div>
+              <div class="mb-2 mt-3"><strong>Claude Haiku 4.5</strong></div>
+              <div class="credit-meter"><div class="credit-fill" style="width:14%;background:linear-gradient(90deg,#84cc16,#65a30d)">0.35 AIC</div></div>
+              <div class="mb-2 mt-3"><strong>GPT-5.2 / Claude Sonnet 4.6</strong></div>
+              <div class="credit-meter"><div class="credit-fill" style="width:35%;background:linear-gradient(90deg,#f59e0b,#d97706)">0.93 AIC</div></div>
+              <div class="mb-2 mt-3"><strong>Gemini 2.5 Pro</strong></div>
+              <div class="credit-meter"><div class="credit-fill" style="width:48%;background:linear-gradient(90deg,#f97316,#ea580c)">1.38 AIC</div></div>
+              <div class="mb-2 mt-3"><strong>Claude Opus 4.7</strong></div>
+              <div class="credit-meter"><div class="credit-fill" style="width:72%;background:linear-gradient(90deg,#ef4444,#dc2626)">2.00 AIC</div></div>
+              <div class="mb-2 mt-3"><strong>GPT-5.5</strong> <small class="text-muted">Most Expensive</small></div>
+              <div class="credit-meter"><div class="credit-fill" style="width:100%;background:linear-gradient(90deg,#9333ea,#7e22ce)">2.25 AIC</div></div>
+            </div>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 6: Billing Comparison (Old vs New) -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="billing-comparison" role="article">
+            <h1>⚖️ Billing Comparison: Old vs New</h1>
+            <span class="badge">comparison</span>
+            <span class="badge">impact</span>
+
+            <h2>Individual Plans</h2>
+
+            <div class="mermaid">
+graph LR
+    A["💰 Old: Copilot Pro\n$10/month\n300 Premium Requests"] -->|June 1, 2026| B["💰 New: Copilot Pro\n$10/month\n1,500 AI Credits\n(1,000 base + 500 flex)"]
+    C["💰 Old: Copilot Pro+\n$39/month\n1,500 Premium Requests"] -->|June 1, 2026| D["💰 New: Copilot Pro+\n$39/month\n7,000 AI Credits\n(3,900 base + 3,100 flex)"]
+    style A fill:#fee2e2,stroke:#dc2626
+    style B fill:#d1fae5,stroke:#059669
+    style C fill:#fee2e2,stroke:#dc2626
+    style D fill:#d1fae5,stroke:#059669
+            </div>
+
+            <h2>Overage Pricing</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Old Model (Premium Requests)</th>
+                  <th>New Model (AI Credits)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Unit</td>
+                  <td>1 request (flat)</td>
+                  <td>1 AI Credit = $0.01 USD</td>
+                </tr>
+                <tr>
+                  <td>Overage rate</td>
+                  <td>$0.04 / request (flat)</td>
+                  <td>Model-dependent per token rate</td>
+                </tr>
+                <tr>
+                  <td>Simple chat overage</td>
+                  <td>$0.04 per message</td>
+                  <td>~$0.0002–$0.003 per message</td>
+                </tr>
+                <tr>
+                  <td>Complex agent overage</td>
+                  <td>$0.04 per step (14 steps = $0.56)</td>
+                  <td>~$0.38 for full session</td>
+                </tr>
+                <tr>
+                  <td>Budget control</td>
+                  <td>None (bills automatically)</td>
+                  <td>Set hard caps at enterprise / org / user level</td>
+                </tr>
+                <tr>
+                  <td>Block on budget exhaustion</td>
+                  <td>No</td>
+                  <td>Yes — configurable policy</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>Business & Enterprise Plans</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Old: Monthly Allowance</th>
+                  <th>New: AI Credits / Month</th>
+                  <th>Pool Model</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Copilot Business ($19/seat)</td>
+                  <td>300 requests / user</td>
+                  <td>1,900 credits / seat (3,000 promo)</td>
+                  <td>✅ Org-wide pool</td>
+                </tr>
+                <tr>
+                  <td>Copilot Enterprise ($39/seat)</td>
+                  <td>1,000 requests / user</td>
+                  <td>3,900 credits / seat (7,000 promo)</td>
+                  <td>✅ Enterprise-wide pool</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>Key Impact Scenarios</h2>
+
+            <h3>🧑‍💻 Scenario A: Casual Developer</h3>
+            <div class="row g-2">
+              <div class="col-6">
+                <div class="cost-box bg-gradient-red">
+                  <div style="font-size:0.8rem;color:#7f1d1d">OLD (per month)</div>
+                  20 chat messages<br>
+                  <span style="font-size:1rem">20 PRU = $0.00 (within 300)</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="cost-box bg-gradient-green">
+                  <div style="font-size:0.8rem;color:#14532d">NEW (per month)</div>
+                  20 chat messages<br>
+                  <span style="font-size:1rem">~7 AIC = $0.07 (within 1,500)</span>
+                </div>
+              </div>
+            </div>
+            <p class="mt-2 text-muted" style="font-size:0.9rem">✅ No cost difference — both within included allowance. New model provides much more headroom.</p>
+
+            <h3>🔥 Scenario B: Power Developer Using Agent Mode Daily</h3>
+            <div class="row g-2">
+              <div class="col-6">
+                <div class="cost-box bg-gradient-red">
+                  <div style="font-size:0.8rem;color:#7f1d1d">OLD (per month, Pro)</div>
+                  5 agent sessions/day × 22 days<br>each session ~15 steps<br>
+                  <span style="font-size:1rem">1,650 PRU — 1,350 over limit</span><br>
+                  <strong>$54 overage!</strong>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="cost-box bg-gradient-green">
+                  <div style="font-size:0.8rem;color:#14532d">NEW (per month, Pro)</div>
+                  Same activity<br>avg 12 AIC per session<br>
+                  <span style="font-size:1rem">1,320 AIC total</span><br>
+                  <strong>Within 1,500 limit — $0 overage! 🎉</strong>
+                </div>
+              </div>
+            </div>
+            <p class="mt-2 text-muted" style="font-size:0.9rem">✅ Power users with efficient short agent sessions benefit most from the new model.</p>
+
+            <h3>⚠️ Scenario C: Extremely Heavy Frontier-Model User</h3>
+            <div class="row g-2">
+              <div class="col-6">
+                <div class="cost-box bg-gradient-yellow">
+                  <div style="font-size:0.8rem;color:#78350f">OLD (per month, Pro+)</div>
+                  Daily long GPT-5.5 sessions<br>100 agent steps/day<br>
+                  <span style="font-size:1rem">2,200 PRU — 700 over limit</span><br>
+                  <strong>$28 overage</strong>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="cost-box bg-gradient-yellow">
+                  <div style="font-size:0.8rem;color:#78350f">NEW (per month, Pro+)</div>
+                  Same activity<br>avg 45 AIC per GPT-5.5 session<br>
+                  <span style="font-size:1rem">~9,900 AIC total</span><br>
+                  <strong>2,900 over 7,000 limit → $29 overage</strong>
+                </div>
+              </div>
+            </div>
+            <p class="mt-2 text-muted" style="font-size:0.9rem">⚠️ Heavy frontier-model users will see similar or slightly higher costs. Switching to lighter models for routine tasks can help.</p>
+
+            <h2>Code Review Special Billing</h2>
+            <div class="callout callout-warning">
+              <strong>⚠️ Copilot Code Review is Billed Two Ways</strong><br>
+              Starting June 1, 2026, every Copilot Code Review run bills:<br>
+              <ol>
+                <li><strong>AI Credits</strong> — for token consumption (model is auto-selected, not disclosed)</li>
+                <li><strong>GitHub Actions minutes</strong> — for agentic infrastructure on GitHub-hosted runners</li>
+              </ol>
+              Self-hosted runners do NOT consume Actions minutes.
+            </div>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 7: Budget Controls -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="budget-controls" role="article">
+            <h1>🎛️ Budget Controls & Cost Management</h1>
+            <span class="badge">budgets</span>
+            <span class="badge">cost control</span>
+
+            <p>The new model introduces powerful, granular budget controls that were not available under Premium Requests. You can set spending limits at four levels.</p>
+
+            <h2>Budget Hierarchy</h2>
+            <div class="mermaid">
+graph TD
+    A["🏛️ Enterprise Budget\nTotal spend across all orgs, repos, cost centers"] --> B["🏢 Organization Budget\nAll repos in the organization"]
+    A --> C["💼 Cost Center Budget\nA single cost center"]
+    B --> D["👤 User Budget\n$0 = zero access"]
+    C --> D
+    style A fill:#dbeafe,stroke:#3b82f6
+    style B fill:#d1fae5,stroke:#10b981
+    style C fill:#fef3c7,stroke:#f59e0b
+    style D fill:#ede9fe,stroke:#8b5cf6
+            </div>
+
+            <h2>How Budgets Work</h2>
+            <ul>
+              <li><strong>Alert mode</strong> — Get notified when you approach a threshold</li>
+              <li><strong>Hard stop mode</strong> — Block access when a budget is exhausted</li>
+              <li><strong>Unit</strong> — Budgets are set in <strong>USD</strong>, displayed in AI Credits on dashboards</li>
+              <li><strong>Conversion</strong> — 1 AI Credit = $0.01 USD → a <strong>$10 budget</strong> covers <strong>1,000 AI Credits</strong></li>
+            </ul>
+
+            <h2>User-Level Budget Examples</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>User Budget Setting</th>
+                  <th>Effect</th>
+                  <th>When to Use</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$0</td>
+                  <td>Zero access to Copilot AI features</td>
+                  <td>Temporarily restrict a user</td>
+                </tr>
+                <tr>
+                  <td>$5 (500 AIC)</td>
+                  <td>Limited overage — enough for moderate extra use</td>
+                  <td>Interns, trial access</td>
+                </tr>
+                <tr>
+                  <td>$19 (1,900 AIC)</td>
+                  <td>Match the included credits for a Business seat</td>
+                  <td>Prevent any overage charges per user</td>
+                </tr>
+                <tr>
+                  <td>Unlimited</td>
+                  <td>No cap — bills on actual usage</td>
+                  <td>Senior engineers, power users</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="callout callout-danger">
+              <strong>⚠️ Critical Note on User Budgets</strong><br>
+              If you set a user-level budget and a user exhausts it, their Copilot access is <strong>immediately halted</strong> — regardless of whether the organization's pool still has capacity. There is <strong>no automatic fallback to a cheaper model</strong>. Plan budgets carefully for power users.
+            </div>
+
+            <h2>License Mid-Cycle Changes</h2>
+            <ul>
+              <li>➕ <strong>Adding licenses</strong> mid-cycle → pool increases <strong>immediately</strong></li>
+              <li>➖ <strong>Removing licenses</strong> mid-cycle → pool does NOT shrink until the <strong>next billing cycle</strong></li>
+            </ul>
+
+            <h2>Recommended Budget Strategy</h2>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-blue h-100">
+                  <h4>📊 Step 1: Observe</h4>
+                  <p style="font-size:0.85rem">First month: run without hard caps. Monitor the usage dashboard to understand your team's natural consumption patterns.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-green h-100">
+                  <h4>🎯 Step 2: Set Alerts</h4>
+                  <p style="font-size:0.85rem">Add alert-only budgets at 80% of expected spend. Get notified before you hit limits without blocking work.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-yellow h-100">
+                  <h4>🔒 Step 3: Enforce</h4>
+                  <p style="font-size:0.85rem">Once you understand usage, set appropriate hard stops for cost centers and per-user overages to prevent bill surprises.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 8: Transition Timeline -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="transition-timeline" role="article">
+            <h1>🗓️ Transition Timeline</h1>
+            <span class="badge">timeline</span>
+            <span class="badge">migration</span>
+
+            <h2>Key Dates</h2>
+            <div class="timeline">
+              <div class="timeline-item past-item">
+                <h4>April 20, 2026 — New Individual Sign-Ups Paused</h4>
+                <p style="font-size:0.9rem">New sign-ups for Copilot Pro, Copilot Pro+, and student plans temporarily paused ahead of the billing transition.</p>
+              </div>
+              <div class="timeline-item past-item">
+                <h4>April 22, 2026 — Self-Serve Business Sign-Ups Paused</h4>
+                <p style="font-size:0.9rem">New self-serve sign-ups for Copilot Business for organizations on GitHub Free and GitHub Team plans temporarily paused.</p>
+              </div>
+              <div class="timeline-item active-item">
+                <h4>June 1, 2026 — Usage-Based Billing Goes Live 🚀</h4>
+                <p style="font-size:0.9rem">All Copilot plans transition from Premium Requests to GitHub AI Credits (token-based) billing. Monthly plan subscribers automatically migrated. Annual subscribers move based on their renewal choices.</p>
+              </div>
+              <div class="timeline-item">
+                <h4>June 1 – September 1, 2026 — Promo Period</h4>
+                <p style="font-size:0.9rem">Existing Business and Enterprise customers receive elevated credit allowances: Business 3,000/seat (vs. standard 1,900) and Enterprise 7,000/seat (vs. standard 3,900).</p>
+              </div>
+              <div class="timeline-item">
+                <h4>September 1, 2026 — Standard Rates Resume</h4>
+                <p style="font-size:0.9rem">Promotional credits expire. Credits return to standard levels: Business 1,900/seat, Enterprise 3,900/seat.</p>
+              </div>
+            </div>
+
+            <h2>For Annual Plan Subscribers</h2>
+            <div class="callout callout-warning">
+              <strong>📋 Annual Plan Options (Before Your Renewal Date)</strong><br>
+              <ol>
+                <li><strong>Cancel</strong> — Receive a prorated refund for unused subscription months.</li>
+                <li><strong>Wait for downgrade</strong> — At renewal, plan automatically downgrades to Copilot Free.</li>
+                <li><strong>Note:</strong> Starting June 1, 2026, Copilot Pro and Pro+ annual subscribers who stay on request-based billing will see changes to model multipliers.</li>
+              </ol>
+            </div>
+
+            <h2>IDE & Extension Requirements</h2>
+            <p>Update your IDE and Copilot extensions to display accurate billing information and receive usage alerts:</p>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Tool</th>
+                  <th>Minimum Version</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>VS Code</td><td>1.120+</td></tr>
+                <tr><td>Visual Studio 2022 (17.x)</td><td>17.14.33+</td></tr>
+                <tr><td>Visual Studio 2025 (18.x)</td><td>18.6.0+</td></tr>
+                <tr><td>SQL Server Management Studio</td><td>22.6+</td></tr>
+                <tr><td>JetBrains IDEs (plugin)</td><td>1.9.1+</td></tr>
+                <tr><td>Eclipse (plugin)</td><td>0.18.0+</td></tr>
+                <tr><td>Xcode (extension)</td><td>0.50.0+</td></tr>
+                <tr><td>Copilot CLI</td><td>1.0.48+</td></tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              Older versions will continue to work but may display incorrect model pricing, inaccurate usage information, or outdated billing terminology.
+            </div>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 9: Tips for Cost Optimization -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="cost-optimization" role="article">
+            <h1>💡 Cost Optimization Tips</h1>
+            <span class="badge">tips</span>
+            <span class="badge">optimization</span>
+
+            <div class="callout callout-success">
+              <strong>🎯 Core Principle</strong><br>
+              In the new model, cost directly reflects how much work the AI does. The key to managing costs is matching the <em>right model</em> to the <em>right task</em> and writing <em>focused prompts</em>.
+            </div>
+
+            <h2>1. Choose the Right Model for the Task</h2>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-green h-100">
+                  <h4>✅ Use Lightweight Models For:</h4>
+                  <ul>
+                    <li>Simple questions and lookups</li>
+                    <li>Code completions and short fixes</li>
+                    <li>Generating boilerplate code</li>
+                    <li>Quick explanations of a function</li>
+                    <li>CLI command suggestions</li>
+                  </ul>
+                  <p style="font-size:0.8rem"><em>Recommended: GPT-5 mini, Gemini 3 Flash, Claude Haiku 4.5, Raptor mini</em></p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-yellow h-100">
+                  <h4>⚡ Use Frontier Models For:</h4>
+                  <ul>
+                    <li>Complex architectural decisions</li>
+                    <li>Multi-file refactoring tasks</li>
+                    <li>Security audit and review</li>
+                    <li>Debugging hard-to-reproduce issues</li>
+                    <li>Generating comprehensive test suites</li>
+                  </ul>
+                  <p style="font-size:0.8rem"><em>Recommended: Claude Opus 4.7, GPT-5.5, Gemini 3.1 Pro</em></p>
+                </div>
+              </div>
+            </div>
+
+            <h2>2. Write Focused Prompts</h2>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-red">
+                  <h4>❌ Costly Prompt Style</h4>
+                  <pre style="font-size:0.8rem">"Here is my entire codebase [paste 500 lines].
+Can you find any issues?"</pre>
+                  <p style="font-size:0.85rem"><strong>Problem:</strong> Sends thousands of unnecessary tokens as input. Vague question generates a verbose, expensive response.</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-green">
+                  <h4>✅ Efficient Prompt Style</h4>
+                  <pre style="font-size:0.8rem">"In the UserService.ts file, the login method
+on line 45 throws a null reference when the
+user is not found. How should I fix it?"</pre>
+                  <p style="font-size:0.85rem"><strong>Benefit:</strong> Precise context = fewer input tokens. Specific question = focused, shorter response.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>3. Use Context References, Not Pastes</h2>
+            <div class="callout">
+              In VS Code, use <code>#file:filename.ts</code>, <code>#selection</code>, or <code>@workspace</code> references rather than pasting entire file contents into chat. Copilot intelligently retrieves only relevant context, reducing input token cost.
+            </div>
+
+            <h2>4. Leverage Conversation History (Caching)</h2>
+            <ul>
+              <li>Continue in the same conversation thread rather than starting new chats — cached tokens from prior turns are significantly cheaper</li>
+              <li>Avoid clearing context unnecessarily in the middle of a task</li>
+              <li>For agentic tasks, let the agent complete the full task rather than restarting multiple times</li>
+            </ul>
+
+            <h2>5. Use Auto Model Selection</h2>
+            <div class="callout callout-success">
+              When you enable <strong>auto model selection</strong>, Copilot routes your prompt to the most cost-effective model capable of handling it well. This is often more economical than manually picking a frontier model for every interaction.
+            </div>
+
+            <h2>6. Monitor Your Usage Dashboard</h2>
+            <ul>
+              <li>Check the <strong>Premium Request Analytics</strong> page to see projected spend under the new model</li>
+              <li>Download the <strong>CSV usage report</strong> which includes <code>aic_quantity</code> and <code>aic_gross_amount</code> columns</li>
+              <li>Use GitHub's <a href="https://copilot-billing-preview.github.com/" target="_blank">billing preview tool</a> to upload your CSV and get a side-by-side comparison of old vs. new costs</li>
+            </ul>
+
+            <h2>7. Manage MCP Servers for Cost Efficiency</h2>
+            <div class="callout callout-warning">
+              <strong>🔌 MCP Servers are the biggest hidden cost driver</strong><br>
+              Each configured MCP server adds its tool schemas to <em>every</em> request context, and tool call responses inject large payloads as input tokens. Without discipline, an agent with 5 MCP servers configured can cost 10–20× more per request than plain chat.
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-red h-100">
+                  <h4>❌ Costly MCP Patterns</h4>
+                  <ul style="font-size:0.85rem">
+                    <li>Configuring every available MCP server globally (all schemas loaded every time)</li>
+                    <li>Using FileSystem MCP to read whole directories when you need 1 function</li>
+                    <li>RAG retrieval with large chunk sizes (top-5 × 800 tokens = 4,000 injected tokens)</li>
+                    <li>Fetching full API responses when only a few fields are needed</li>
+                    <li>Repeated MCP calls that re-fetch the same data (no response caching)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded bg-gradient-green h-100">
+                  <h4>✅ Efficient MCP Patterns</h4>
+                  <ul style="font-size:0.85rem">
+                    <li>Only enable MCP servers relevant to the current task</li>
+                    <li>Use specific file references (<code>#file:path.ts</code>) instead of directory reads</li>
+                    <li>Tune RAG to return top-3 chunks with smaller chunk sizes (400–500 tokens)</li>
+                    <li>Use MCP tools that support filtering: only request fields you need</li>
+                    <li>Prefer <code>@workspace</code> semantic search over FileSystem MCP bulk reads</li>
+                    <li>Combine related MCP queries into single tool calls where possible</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>MCP Scenario</th>
+                  <th>Avg Extra Tokens Added</th>
+                  <th>Cost Impact</th>
+                  <th>Optimization</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1 MCP server configured</td>
+                  <td>~120 tokens / request</td>
+                  <td>Low</td>
+                  <td>Only enable when needed</td>
+                </tr>
+                <tr>
+                  <td>5 MCP servers configured</td>
+                  <td>~600 tokens / request (schemas)</td>
+                  <td>Medium (baseline overhead)</td>
+                  <td>Remove unused MCP servers</td>
+                </tr>
+                <tr>
+                  <td>Single tool call (small response)</td>
+                  <td>+300–600 tokens</td>
+                  <td>Medium</td>
+                  <td>Filter API response fields</td>
+                </tr>
+                <tr>
+                  <td>Tool call with large payload (e.g. full PR diff)</td>
+                  <td>+3,000–8,000 tokens</td>
+                  <td>High</td>
+                  <td>Request summary/partial diff</td>
+                </tr>
+                <tr>
+                  <td>RAG top-5 large chunks</td>
+                  <td>+3,500–5,000 tokens</td>
+                  <td>High</td>
+                  <td>Reduce to top-3, shrink chunk size</td>
+                </tr>
+                <tr>
+                  <td>Bulk file read (10+ files)</td>
+                  <td>+5,000–15,000 tokens</td>
+                  <td>Very High</td>
+                  <td>Use @workspace instead</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>8. Org Admins: Pool Strategy</h2>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-blue text-center">
+                  <div style="font-size:2rem">🔍</div>
+                  <h4>Identify Outliers</h4>
+                  <p style="font-size:0.85rem">Use usage reports to find users consuming disproportionately high credits. Are they running heavy MCP sessions or using expensive frontier models for trivial tasks?</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-green text-center">
+                  <div style="font-size:2rem">🎓</div>
+                  <h4>Train Teams</h4>
+                  <p style="font-size:0.85rem">Educate developers on model selection and MCP token cost. Simple tasks → lightweight models. Focused prompts → fewer injected tokens.</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded bg-gradient-yellow text-center">
+                  <div style="font-size:2rem">⚖️</div>
+                  <h4>Right-Size Plans</h4>
+                  <p style="font-size:0.85rem">With pooled credits, review if your seat count still makes sense. A few heavy users drawing from a large pool may be more efficient.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- SECTION 10: FAQ -->
+          <!-- ═══════════════════════════════════════════════════════════ -->
+          <section id="faq" role="article">
+            <h1>❓ Frequently Asked Questions</h1>
+            <span class="badge">faq</span>
+
+            <h2>General</h2>
+
+            <h3>Q: Will code completions cost more?</h3>
+            <p>No. Inline code completions and next-edit suggestions remain <strong>completely free and unlimited</strong> for all paid plans. The billing change only affects AI-model-based features like Copilot Chat, agent mode, CLI, and cloud agent.</p>
+
+            <h3>Q: Do I need to do anything before June 1?</h3>
+            <p>If you're on a <strong>monthly plan</strong>, no action is required — you'll be automatically migrated. If you're on an <strong>annual plan</strong>, watch for GitHub's communications about your options before your renewal date.</p>
+
+            <h3>Q: Is my subscription price changing?</h3>
+            <p>No. The subscription price for all plans remains the same. Only the billing mechanism changes — from requests to credits.</p>
+
+            <h3>Q: What is a "Flex Allotment"?</h3>
+            <p>Flex credits are a variable additional monthly bonus on top of your base credits. They're designed to adapt as AI economics evolve — when model prices decrease or efficiency improves, GitHub can pass savings to you by adjusting the flex amount. Your base credits are always used first.</p>
+
+            <h3>Q: If I switch to a cheaper model, do I save credits?</h3>
+            <p>Absolutely. Within your included allowance, model choice affects how <em>many</em> credits you consume per interaction (and therefore how much headroom you have before hitting limits). When you exceed your allowance, cheaper models directly reduce overage charges.</p>
+
+            <h3>Q: Can I buy extra AI Credits?</h3>
+            <p>Yes. For paid plans, you can set a budget for additional usage and pay as you go at published per-credit rates. Note: this is not available if you subscribed via GitHub Mobile on iOS or Android.</p>
+
+            <h2>Business & Enterprise</h2>
+
+            <h3>Q: How does the pooled credit model benefit us?</h3>
+            <p>With pooling, power users can draw more credits when they need them, while lighter users offset that consumption. You're no longer wasting credits locked in individual buckets for users who don't use Copilot heavily. It's more equitable and efficient at scale.</p>
+
+            <h3>Q: What happens when our org pool is exhausted?</h3>
+            <p>It depends on your policy configuration:</p>
+            <ul>
+              <li><strong>Additional usage allowed</strong>: Usage continues at published per-credit rates, billed to your org/enterprise.</li>
+              <li><strong>Additional usage not allowed</strong>: Usage is blocked until the next billing cycle.</li>
+            </ul>
+
+            <h3>Q: Can I prevent specific users from causing overage?</h3>
+            <p>Yes. Set a user-level budget slightly above their included amount. If they exhaust it, their Copilot access is halted — the org pool's capacity doesn't matter. This lets you protect the overall budget while giving power users more rope.</p>
+
+            <h3>Q: When should we upgrade from Business to Enterprise?</h3>
+            <p>Enterprise ($39/seat) includes 3,900 AI Credits vs. Business's 1,900. If your team regularly exhausts Business credits and incurs significant overages, Enterprise may actually be more cost-effective, plus you get enhanced features (org custom instructions, content exclusion, audit logs, etc.).</p>
+
+            <h2>Technical</h2>
+
+            <h3>Q: Why is output priced higher than input?</h3>
+            <p>Generating tokens is computationally more expensive than reading them. The model has to run inference step-by-step for each output token (auto-regressive generation), while input tokens are processed in parallel. Output is typically 4–8× more expensive than input.</p>
+
+            <h3>Q: What is "cached" pricing and why does it matter?</h3>
+            <p>Cached tokens are parts of the context (like conversation history or large file contents) that the model has already processed in a prior turn and can reuse cheaply. Claude models charge a small fee to <em>write</em> something to cache, then a tiny fraction of the input rate to <em>read</em> from cache. For long agentic sessions, caching can reduce your bill by 70–90%.</p>
+
+            <h3>Q: How do I estimate my monthly spend before June 1?</h3>
+            <p>Use the <strong>billing preview tool</strong> at <a href="https://copilot-billing-preview.github.com/" target="_blank">copilot-billing-preview.github.com</a>. Download your usage CSV from the Premium Request Analytics page and upload it. The tool shows a side-by-side comparison of your current PRU spend and projected AIC spend.</p>
+
+            <h2>MCP Servers &amp; Tool Calls</h2>
+
+            <h3>Q: Why did my bill spike after I added MCP servers?</h3>
+            <p>Every MCP server you configure adds its tool schemas as input tokens on <em>every request in that session</em> — even for tools you didn't use in that particular turn. With 5 MCP servers configured, you might be paying for 500–700 extra input tokens per request purely as overhead. Additionally, when you <em>do</em> call an MCP tool, the full tool response payload is injected as input tokens. A single GitHub MCP call to fetch PR details can add 2,000–5,000 tokens.</p>
+
+            <h3>Q: Does Copilot bill for MCP tool calls separately from the chat message?</h3>
+            <p>No. Everything within a single agent turn — the user message, all tool schemas, all tool call arguments, all tool responses, and the final model output — is billed as a single combined token count. There is no separate per-tool-call charge. However, the total token consumption can be far higher than a simple chat, so the credit cost can be significantly higher.</p>
+
+            <h3>Q: My MCP server returns a large JSON payload. Can I reduce the cost?</h3>
+            <p>Yes. The best approaches are:</p>
+            <ul>
+              <li><strong>Filter on the server side</strong> — if your MCP tool supports query parameters, use them to return only the fields/records you need</li>
+              <li><strong>Summarize before injecting</strong> — pre-process large payloads to extract key fields before they are injected as context</li>
+              <li><strong>Reduce the retrieval scope</strong> — for RAG/vector search, lower the top-K parameter and reduce chunk size to inject fewer total tokens</li>
+              <li><strong>Only invoke MCP when necessary</strong> — use <code>@workspace</code> semantic search for code files rather than FileSystem MCP bulk reads</li>
+            </ul>
+
+            <h3>Q: Does using multiple MCP servers simultaneously multiply the cost?</h3>
+            <p>Yes, in two ways: (1) all configured MCP tool schemas are added as input tokens to every request, creating a baseline overhead proportional to the number and size of your MCP tool schemas; (2) if your agent calls multiple MCP tools in the same turn, all their responses accumulate in the context window. The token cost grows with each additional tool call. Limit configured MCP servers to those needed for the current task.</p>
+
+            <h3>Q: Are there MCP tool calls that are cheaper than others?</h3>
+            <p>Yes. MCP tools that return short, structured responses (e.g., a single boolean, a status code, a list of IDs) cost very little. Tools that return large bodies of text or code (e.g., full file contents, PR diffs, log tails, RAG document chunks) are the expensive ones. When building or selecting MCP tools, prefer APIs that return minimal, targeted payloads over broad "get everything" endpoints.</p>
+
+            <h3>Q: How does Copilot Code Review billing work with MCP context?</h3>
+            <p>Copilot Code Review is billed in two parts:</p>
+            <ol>
+              <li><strong>AI Credits</strong> — for all token consumption (PR diff + system prompt + any MCP-injected context like linked issues, work items, related code). The model used is selected automatically by GitHub and not disclosed.</li>
+              <li><strong>GitHub Actions minutes</strong> — for the infrastructure running the agentic review pipeline on GitHub-hosted runners (self-hosted runners are free).</li>
+            </ol>
+            <p>Large PRs with many linked issues that are fetched via MCP significantly increase the AI Credit cost. Keep PRs focused and limit the "include linked issue context" options if cost is a concern.</p>
+
+            <div class="document-footer">
+              <p><strong>GitHub Copilot Billing Changes — In a Nutshell</strong><br>
+              Effective June 1, 2026 | Based on official GitHub documentation<br>
+              <em>Curated by Murthy Vepa &nbsp;·&nbsp; Last updated May 2026</em></p>
+            </div>
+          </section>
+
+        </div><!-- /content -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Nav Controls -->
+  <div class="controls" aria-label="Navigation controls">
+    <div class="btn-group" role="group" aria-label="Page navigation">
+      <button class="btn btn-primary" id="prevBtn" aria-label="Previous section">&#8592;</button>
+      <span class="page-indicator px-2" id="pageIndicator">1 / 10</span>
+      <button class="btn btn-primary" id="nextBtn" aria-label="Next section">&#8594;</button>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ─── Navigation State ───────────────────────────────────────────────────
+    const sections = Array.from(document.querySelectorAll('section[role="article"]'));
+    let currentIndex = 0;
+
+    const tocData = [
+      { id: 'overview',           label: '📣 The Big Change',              badge: 'overview' },
+      { id: 'old-model',          label: '🔴 Old Model: Premium Requests', badge: 'deprecated' },
+      { id: 'new-model',          label: '🟢 New Model: AI Credits',        badge: 'new' },
+      { id: 'token-illustrations',label: '🔬 Token Consumption Illustrated',badge: 'examples' },
+      { id: 'model-pricing',      label: '📊 Model Pricing Reference',      badge: 'pricing' },
+      { id: 'billing-comparison', label: '⚖️ Billing Comparison',           badge: 'comparison' },
+      { id: 'budget-controls',    label: '🎛️ Budget Controls',             badge: 'controls' },
+      { id: 'transition-timeline',label: '🗓️ Transition Timeline',          badge: 'timeline' },
+      { id: 'cost-optimization',  label: '💡 Cost Optimization Tips',       badge: 'tips' },
+      { id: 'faq',                label: '❓ FAQ',                           badge: 'faq' },
+    ];
+
+    // ─── Build TOC ──────────────────────────────────────────────────────────
+    const toc = document.getElementById('toc');
+    tocData.forEach((item, idx) => {
+      const li = document.createElement('li');
+      li.className = 'list-group-item';
+      li.innerHTML = `<a href="#${item.id}" data-index="${idx}">
+        ${item.label}
+        <span class="badge">${item.badge}</span>
+      </a>`;
+      li.querySelector('a').addEventListener('click', (e) => {
+        e.preventDefault();
+        navigateTo(idx);
+      });
+      toc.appendChild(li);
+    });
+
+    // ─── Navigation Functions ────────────────────────────────────────────────
+    function navigateTo(index) {
+      if (index < 0 || index >= sections.length) return;
+
+      sections[currentIndex].classList.remove('active');
+      document.querySelectorAll('.list-group-item a').forEach(a => a.classList.remove('active'));
+
+      currentIndex = index;
+      sections[currentIndex].classList.add('active');
+      document.querySelectorAll('.list-group-item a')[currentIndex].classList.add('active');
+      document.getElementById('pageIndicator').textContent = `${currentIndex + 1} / ${sections.length}`;
+
+      document.querySelector('.content').scrollTop = 0;
+
+      // Render any mermaid diagrams in the newly visible section
+      const newDiagrams = sections[currentIndex].querySelectorAll('.mermaid:not([data-processed="true"])');
+      if (newDiagrams.length > 0) {
+        setTimeout(renderMermaidDiagrams, 100);
+      }
+    }
+
+    // Initialize
+    navigateTo(0);
+
+    document.getElementById('prevBtn').addEventListener('click', () => navigateTo(currentIndex - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => navigateTo(currentIndex + 1));
+
+    // Keyboard navigation
+    document.getElementById('main').addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); navigateTo(currentIndex + 1); }
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); navigateTo(currentIndex - 1); }
+    });
+
+    // Mobile sidebar toggle
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const sidebar   = document.getElementById('sidebar');
+    toggleBtn.addEventListener('click', () => {
+      sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
+    });
+  </script>
+</body>
+</html>

@@ -2717,6 +2717,178 @@ for partial_plan in llm.with_structured_output(TravelPlan).stream(
     print(partial_plan)  # TravelPlan builds field by field as tokens arrive</code></pre>
         </section>
 
+        <!-- ═══════════════════════════════════════ LANGCHAIN LANGSMITH ═══════════════════════════════════════ -->
+        <section id="langchain-langsmith" role="article">
+          <h1>🔍 LangSmith — Observability &amp; Evaluation</h1>
+          <span class="badge">langsmith</span> <span class="badge">tracing</span> <span class="badge">evaluation</span> <span class="badge">observability</span>
+
+          <div class="callout">
+            <strong>LangSmith</strong> is LangChain's observability and evaluation platform. It automatically traces every LLM call, tool invocation, and chain step — giving you full visibility into agent behavior in development and production. No code changes required — just set environment variables.
+          </div>
+
+          <h2>Setup</h2>
+          <pre><code>pip install langsmith
+
+import os
+
+# Enable tracing — all LangChain/LangGraph calls are automatically traced
+os.environ["LANGSMITH_TRACING"] = "true"
+os.environ["LANGSMITH_API_KEY"]  = "lsv2_pt_..."
+os.environ["LANGSMITH_PROJECT"]  = "my-project"  # Groups traces together</code></pre>
+
+          <h2>What LangSmith Automatically Captures</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Signal</th><th>Details Captured</th></tr></thead>
+            <tbody>
+              <tr><td><strong>LLM Calls</strong></td><td>Input messages, model name, temperature, token counts, cost, latency</td></tr>
+              <tr><td><strong>Tool Calls</strong></td><td>Tool name, input arguments, output, execution time</td></tr>
+              <tr><td><strong>LCEL Chain Steps</strong></td><td>Each Runnable's input/output, execution order</td></tr>
+              <tr><td><strong>LangGraph Nodes</strong></td><td>Node name, state before &amp; after, execution time per node</td></tr>
+              <tr><td><strong>Retrieval Steps</strong></td><td>Query, retrieved documents, scores (in RAG pipelines)</td></tr>
+              <tr><td><strong>Errors</strong></td><td>Exception type, stack trace, exact location in the graph/chain</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Manual Tracing with @traceable</h2>
+          <pre><code>from langsmith import traceable
+
+@traceable  # Wraps the function — shows as a span in LangSmith UI
+def my_pipeline(user_query: str) -> str:
+    retriever_results = retrieve_documents(user_query)
+    context = format_context(retriever_results)
+    return generate_answer(context, user_query)
+
+# Add run metadata for easier filtering / grouping in LangSmith
+result = my_pipeline(
+    "What is LangChain?",
+    langsmith_extra={
+        "run_name": "production-pipeline",
+        "tags": ["v2", "production"],
+        "metadata": {"user_id": "usr-42", "ab_test": "variant-b"},
+    },
+)</code></pre>
+
+          <h2>Creating Datasets</h2>
+          <pre><code>from langsmith import Client
+
+client = Client()
+
+# Create a named dataset (golden test set)
+dataset = client.create_dataset("RAG QA v1", description="Golden QA pairs for RAG eval")
+
+# Add question/answer examples
+client.create_examples(
+    inputs=[
+        {"question": "What is LangChain?"},
+        {"question": "What is RAG?"},
+        {"question": "How does LangGraph work?"},
+    ],
+    outputs=[
+        {"answer": "LangChain is an open-source Python framework for building LLM-powered agents."},
+        {"answer": "RAG grounds LLM responses with retrieved external data."},
+        {"answer": "LangGraph is a state machine runtime for building stateful agent workflows."},
+    ],
+    dataset_id=dataset.id,
+)
+
+# Curate from production traces — turn failures into test cases
+client.create_example_from_run(run_id="abc123", dataset_id=dataset.id)</code></pre>
+
+          <h2>Running Evaluations</h2>
+          <pre><code">from langsmith.evaluation import evaluate
+
+# 1. Define your LLM app as a simple function
+def my_app(inputs: dict) -> dict:
+    response = rag_chain.invoke({"question": inputs["question"]})
+    return {"answer": response}
+
+# 2. Custom evaluator — return a score dict
+def correctness(run, example) -> dict:
+    """LLM-as-judge: compare agent answer to ground truth."""
+    from langchain_openai import ChatOpenAI
+    llm = ChatOpenAI(model="gpt-4o-mini")
+    prompt = f"""Is this answer correct given the reference?
+Reference: {example.outputs["answer"]}
+Agent Answer: {run.outputs["answer"]}
+Respond with: correct or incorrect"""
+    verdict = llm.invoke(prompt).content.strip().lower()
+    return {"key": "correctness", "score": 1 if verdict == "correct" else 0}
+
+# 3. Run evaluation — results stored in LangSmith Experiments tab
+results = evaluate(
+    my_app,
+    data="RAG QA v1",           # Dataset name or ID
+    evaluators=[correctness],
+    experiment_prefix="rag-v1", # Visible in LangSmith UI
+    num_repetitions=1,          # Run each example N times
+)
+print(results.stats)  # → {"correctness": {"mean": 0.85, "std": 0.12}}</code></pre>
+
+          <h2>Built-in Evaluators</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Evaluator</th><th>What It Assesses</th></tr></thead>
+            <tbody>
+              <tr><td><code>LangChainStringEvaluator("qa")</code></td><td>Correctness vs. reference answer (QA grading)</td></tr>
+              <tr><td><code>LangChainStringEvaluator("cot_qa")</code></td><td>Chain-of-thought QA grading — provides reasoning before verdict</td></tr>
+              <tr><td><code>LangChainStringEvaluator("criteria")</code></td><td>Custom open-ended criteria (helpfulness, relevance, tone)</td></tr>
+              <tr><td><code>LangChainStringEvaluator("embedding_distance")</code></td><td>Semantic similarity to reference output (no LLM judge needed)</td></tr>
+              <tr><td><code>LangChainStringEvaluator("labeled_score_string")</code></td><td>Numeric score (1–10) quality assessment with reference</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Online Evaluation (Production Monitoring)</h2>
+          <pre><code"># Attach an auto-evaluator to a project — runs on a sample of live traces
+# Useful for continuously monitoring production quality without manual effort
+client.create_auto_evaluator(
+    project_name="my-production-agent",
+    evaluator_name="Helpfulness",
+    criteria="Is the response genuinely helpful and accurate for the user's request?",
+    sample_rate=0.10,  # Evaluate 10% of production traces
+)</code></pre>
+
+          <h2>LangSmith Key Features</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Traces</strong></td><td>Full execution tree — drill into every LLM call, tool, or node</td></tr>
+              <tr><td><strong>Projects</strong></td><td>Organize traces by app, version, or environment (dev/staging/prod)</td></tr>
+              <tr><td><strong>Datasets</strong></td><td>Curated golden test sets — create manually or from production traces</td></tr>
+              <tr><td><strong>Experiments</strong></td><td>Batch evaluation of your app against a dataset with tracked metrics</td></tr>
+              <tr><td><strong>Playground</strong></td><td>Open any traced run, edit the prompt/params, and re-run instantly</td></tr>
+              <tr><td><strong>Monitoring</strong></td><td>Real-time dashboards: latency, cost, error rate, token usage</td></tr>
+              <tr><td><strong>Hub</strong></td><td>Share and version prompts — pull them into code with <code>hub.pull()</code></td></tr>
+              <tr><td><strong>Annotation Queue</strong></td><td>Human-in-the-loop labeling workflow for building evaluation datasets</td></tr>
+              <tr><td><strong>Compare Experiments</strong></td><td>Side-by-side diff of two experiment runs to measure prompt improvements</td></tr>
+            </tbody>
+          </table>
+
+          <h2>LangSmith Tracing in LangGraph</h2>
+          <pre><code">from langgraph.graph import StateGraph, MessagesState, START, END
+import os
+
+os.environ["LANGSMITH_TRACING"] = "true"
+os.environ["LANGSMITH_PROJECT"] = "langgraph-agent"
+
+# No changes to LangGraph code needed — all nodes are traced automatically
+graph = StateGraph(MessagesState)
+graph.add_node("agent", call_model)
+graph.add_node("tools", tool_node)
+# ... build graph ...
+app = graph.compile(checkpointer=checkpointer)
+
+# Each graph invocation appears as a top-level trace in LangSmith
+# Each node is a child span — inspect state transitions visually
+result = app.invoke(
+    {"messages": [HumanMessage(content="What is the capital of France?")]},
+    config={
+        "configurable": {"thread_id": "demo"},
+        "run_name": "demo-run",          # Shows in LangSmith trace list
+        "tags": ["demo", "production"],
+        "metadata": {"user_id": "usr-99"},
+    },
+)</code></pre>
+        </section>
+
         <!-- ═══════════════════════════════════════ LANGGRAPH OVERVIEW ═══════════════════════════════════════ -->
         <section id="langgraph-overview" role="article">
           <h1>🕸️ LangGraph — Overview</h1>
@@ -3938,6 +4110,360 @@ for update in app.stream(
     print(f"[{graph_path}] {delta}")</code></pre>
         </section>
 
+        <!-- ═══════════════════════════════════════ LANGGRAPH SUBGRAPHS ═══════════════════════════════════════ -->
+        <section id="langgraph-subgraphs" role="article">
+          <h1>📦 LangGraph — Subgraphs</h1>
+          <span class="badge">langgraph</span> <span class="badge">subgraphs</span> <span class="badge">modular</span> <span class="badge">reusable</span>
+
+          <div class="callout">
+            <strong>Subgraphs</strong> allow hierarchical composition — a compiled graph can be used as a node inside a parent graph. This enables modular, independently testable agent components. Each subgraph can have its own state schema, checkpointer, and lifecycle.
+          </div>
+
+          <h2>Why Subgraphs?</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Benefit</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Modularity</strong></td><td>Build reusable specialist agents that plug into any parent graph</td></tr>
+              <tr><td><strong>Independent Testing</strong></td><td>Run and test each subgraph in isolation before composing</td></tr>
+              <tr><td><strong>State Isolation</strong></td><td>Subgraph state can differ from parent — transformation functions bridge them</td></tr>
+              <tr><td><strong>Team Ownership</strong></td><td>Different teams own different subgraphs with well-defined interfaces</td></tr>
+              <tr><td><strong>Nested Streaming</strong></td><td>Stream events from nested subgraphs with <code>subgraphs=True</code></td></tr>
+            </tbody>
+          </table>
+
+          <h2>Shared State Subgraph (Same Schema)</h2>
+          <pre><code">from langgraph.graph import StateGraph, MessagesState, START, END
+from langchain_openai import ChatOpenAI
+
+# ── Sub-graph: Researcher ──────────────────────────────────────────────────────
+def web_search(state: MessagesState) -> dict:
+    query = state["messages"][-1].content
+    results = f"[WebSearch] Results for: {query}"           # real impl: call a search API
+    return {"messages": [{"role": "tool", "content": results}]}
+
+def synthesize(state: MessagesState) -> dict:
+    llm = ChatOpenAI(model="gpt-4o-mini")
+    response = llm.invoke(state["messages"])
+    return {"messages": [response]}
+
+sub = StateGraph(MessagesState)
+sub.add_node("search",     web_search)
+sub.add_node("synthesize", synthesize)
+sub.add_edge(START, "search")
+sub.add_edge("search", "synthesize")
+sub.add_edge("synthesize", END)
+researcher = sub.compile()           # ← compiled sub-graph
+
+# ── Parent graph: uses researcher as a plain node ─────────────────────────────
+def planner(state: MessagesState) -> dict:
+    llm = ChatOpenAI(model="gpt-4o")
+    response = llm.invoke([
+        {"role": "system", "content": "Turn the user task into a focused research question."},
+        *state["messages"],
+    ])
+    return {"messages": [response]}
+
+def writer(state: MessagesState) -> dict:
+    llm = ChatOpenAI(model="gpt-4o")
+    response = llm.invoke([
+        {"role": "system", "content": "Write a clear, detailed answer using the research provided."},
+        *state["messages"],
+    ])
+    return {"messages": [response]}
+
+parent = StateGraph(MessagesState)
+parent.add_node("planner",    planner)
+parent.add_node("researcher", researcher)   # ← sub-graph dropped in as a node
+parent.add_node("writer",     writer)
+parent.add_edge(START, "planner")
+parent.add_edge("planner",    "researcher")
+parent.add_edge("researcher", "writer")
+parent.add_edge("writer",     END)
+app = parent.compile()
+
+result = app.invoke({"messages": [{"role": "user", "content": "Explain quantum entanglement"}]})
+print(result["messages"][-1].content)</code></pre>
+
+          <h2>Different State Subgraph (State Transformation)</h2>
+          <pre><code">from typing import TypedDict
+from langgraph.graph import StateGraph, START, END
+
+# ── Parent state schema ────────────────────────────────────────────────────────
+class ParentState(TypedDict):
+    task:           str
+    research_notes: str
+    final_report:   str
+
+# ── Subgraph state schema (different fields) ───────────────────────────────────
+class ResearchState(TypedDict):
+    query:   str
+    results: list[str]
+    summary: str
+
+def fetch(state: ResearchState) -> dict:
+    return {"results": [f"[DB] Result for: {state['query']}", "[Web] More context..."]}
+
+def summarize(state: ResearchState) -> dict:
+    return {"summary": " | ".join(state["results"])}
+
+sub = StateGraph(ResearchState)
+sub.add_node("fetch",     fetch)
+sub.add_node("summarize", summarize)
+sub.add_edge(START, "fetch")
+sub.add_edge("fetch", "summarize")
+sub.add_edge("summarize", END)
+researcher = sub.compile()
+
+# ── Bridge function: parent state → sub-graph → back to parent ─────────────────
+def research_bridge(parent_state: ParentState) -> dict:
+    """Extract what the sub-graph needs; write results back into parent fields."""
+    sub_result = researcher.invoke({
+        "query":   parent_state["task"],
+        "results": [],
+        "summary": "",
+    })
+    return {"research_notes": sub_result["summary"]}   # inject into parent state
+
+def write_report(state: ParentState) -> dict:
+    return {"final_report": f"Report on '{state['task']}':\n{state['research_notes']}"}
+
+parent = StateGraph(ParentState)
+parent.add_node("research", research_bridge)   # wrapper calls sub-graph internally
+parent.add_node("report",   write_report)
+parent.add_edge(START,      "research")
+parent.add_edge("research", "report")
+parent.add_edge("report",   END)
+app = parent.compile()
+
+result = app.invoke({"task": "LangGraph best practices", "research_notes": "", "final_report": ""})
+print(result["final_report"])</code></pre>
+
+          <h2>Streaming Through Subgraphs</h2>
+          <pre><code">config = {"configurable": {"thread_id": "sg-stream"}}
+
+# subgraphs=True → events include a namespace tuple identifying the originating graph
+for event in app.stream(
+    {"messages": [{"role": "user", "content": "Explain LangGraph"}]},
+    config,
+    stream_mode="updates",
+    subgraphs=True,            # ← include events from nested graphs
+):
+    namespace, delta = event if isinstance(event, tuple) else ((), event)
+    path = " > ".join(namespace) or "main"
+    print(f"[{path}] {list(delta.keys())}")
+# Sample output:
+# [main] ['planner']
+# [main > researcher] ['search']
+# [main > researcher] ['synthesize']
+# [main] ['writer']</code></pre>
+
+          <h2>Subgraph Architecture</h2>
+          <div class="mermaid">
+graph TD
+    subgraph Parent["Parent Graph"]
+        P1[Planner] --> SG
+        SG --> P2[Writer]
+    end
+    subgraph SG["Subgraph: Researcher"]
+        S1[Web Search] --> S2[DB Search] --> S3[Synthesize]
+    end
+    P2 --> PEND([END])
+    style SG fill:#dcfce7,stroke:#10b981
+    style Parent fill:#dbeafe,stroke:#3b82f6
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ LANGGRAPH DEPLOYMENT ═══════════════════════════════════════ -->
+        <section id="langgraph-deployment" role="article">
+          <h1>🚀 LangGraph — Deployment</h1>
+          <span class="badge">langgraph</span> <span class="badge">deployment</span> <span class="badge">server</span> <span class="badge">production</span>
+
+          <div class="callout">
+            LangGraph agents can be served via <strong>LangGraph Server</strong> — a built-in HTTP server that exposes any compiled graph as a standards-based REST API with persistence, streaming, thread management, and a visual Studio debugger.
+          </div>
+
+          <h2>Deployment Options</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Option</th><th>Description</th><th>Best For</th></tr></thead>
+            <tbody>
+              <tr><td><strong>FastAPI / Flask</strong></td><td>Embed the graph in your own web server</td><td>Custom APIs, existing infrastructure</td></tr>
+              <tr><td><strong>LangGraph Server (local)</strong></td><td><code>langgraph dev</code> — hot-reload dev server with in-memory store</td><td>Development, testing, demos</td></tr>
+              <tr><td><strong>Docker / Kubernetes</strong></td><td>Containerize LangGraph Server image with Postgres/Redis</td><td>Self-hosted, cloud-native production</td></tr>
+              <tr><td><strong>LangGraph Platform</strong></td><td>Fully managed hosted service from LangChain</td><td>No infra to maintain, enterprise scale</td></tr>
+            </tbody>
+          </table>
+
+          <h2>LangGraph Server — Local Dev</h2>
+          <pre><code">pip install "langgraph-cli[inmem]"
+
+# Your agent file must expose a compiled graph variable, e.g.:
+#   src/agent.py:
+#     from langgraph.graph import StateGraph, MessagesState, START, END
+#     graph = build_and_compile_my_agent()   # returns CompiledGraph
+
+# langgraph.json — project configuration (place at repo root)
+# {
+#   "dependencies": ["."],
+#   "graphs": {
+#     "my_agent": "./src/agent.py:graph"
+#   },
+#   "env": ".env"
+# }
+
+# Start dev server with hot-reload and built-in Studio UI
+langgraph dev
+
+# → API server:  http://localhost:2024
+# → Studio UI:   http://localhost:2024/studio
+# → LangSmith tracing auto-enabled when LANGSMITH_API_KEY is set</code></pre>
+
+          <h2>langgraph.json Reference</h2>
+          <pre><code">{
+  "dependencies": ["."],
+  "graphs": {
+    "my_agent":       "./src/agent.py:graph",
+    "research_agent": "./src/research.py:compiled_graph"
+  },
+  "env": ".env",
+  "store": {
+    "index": {
+      "embed": "openai:text-embedding-3-small",
+      "dims": 1536
+    }
+  },
+  "http": {
+    "cors": { "allowed_origins": ["https://myapp.example.com"] }
+  }
+}</code></pre>
+
+          <h2>LangGraph Server REST API</h2>
+          <table class="table table-striped">
+            <thead><tr><th>Endpoint</th><th>Method</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>/assistants</code></td><td>GET</td><td>List deployed graph configurations</td></tr>
+              <tr><td><code>/threads</code></td><td>POST</td><td>Create a new persistent thread (conversation)</td></tr>
+              <tr><td><code>/threads/{id}/state</code></td><td>GET / POST</td><td>Read or overwrite thread state</td></tr>
+              <tr><td><code>/threads/{id}/runs</code></td><td>POST</td><td>Run the agent synchronously on a thread</td></tr>
+              <tr><td><code>/threads/{id}/runs/stream</code></td><td>POST</td><td>Stream agent output via SSE</td></tr>
+              <tr><td><code>/threads/{id}/runs/{run_id}/cancel</code></td><td>POST</td><td>Cancel a running invocation</td></tr>
+              <tr><td><code>/crons</code></td><td>POST</td><td>Schedule recurring background runs</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Python SDK Client</h2>
+          <pre><code">pip install langgraph-sdk
+
+from langgraph_sdk import get_client
+import asyncio
+
+async def main():
+    # Connect to local or hosted LangGraph Server
+    client = get_client(url="http://localhost:2024")
+
+    # Create a persistent thread
+    thread = await client.threads.create()
+    print("Thread:", thread["thread_id"])
+
+    # Stream token-by-token responses
+    async for chunk in client.runs.stream(
+        thread["thread_id"],
+        assistant_id="my_agent",
+        input={"messages": [{"role": "user", "content": "What is LangGraph?"}]},
+        stream_mode="messages",
+    ):
+        if chunk.event == "messages/partial":
+            print(chunk.data[0].get("content", ""), end="", flush=True)
+
+    # Read final thread state
+    state = await client.threads.get_state(thread["thread_id"])
+    print("\nFinal:", state["values"]["messages"][-1]["content"])
+
+asyncio.run(main())</code></pre>
+
+          <h2>Embed in FastAPI</h2>
+          <pre><code">from fastapi import FastAPI
+from pydantic import BaseModel
+from langchain_core.messages import HumanMessage
+from langgraph.checkpoint.memory import MemorySaver
+from src.agent import graph  # your compiled LangGraph
+
+app  = FastAPI(title="LangGraph Agent API")
+agent = graph.with_config({"configurable": {}})  # attach checkpointer at build time
+
+class ChatRequest(BaseModel):
+    message:   str
+    thread_id: str = "default"
+
+class ChatResponse(BaseModel):
+    reply:     str
+    thread_id: str
+
+@app.post("/chat", response_model=ChatResponse)
+async def chat(req: ChatRequest):
+    config = {"configurable": {"thread_id": req.thread_id}}
+    result = agent.invoke(
+        {"messages": [HumanMessage(content=req.message)]},
+        config=config,
+    )
+    return ChatResponse(reply=result["messages"][-1].content, thread_id=req.thread_id)
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}</code></pre>
+
+          <h2>Docker Deployment</h2>
+          <pre><code"># Dockerfile — builds on the official LangGraph API image
+FROM langchain/langgraph-api:20240717
+
+COPY . /app
+WORKDIR /app
+RUN pip install -r requirements.txt
+
+# langgraph.json must be at /app/langgraph.json
+# Pass secrets via environment variables (never bake into the image)
+ENV LANGSMITH_TRACING="true"
+
+# LangGraph Server listens on port 8000
+EXPOSE 8000</code></pre>
+
+          <pre><code"># docker-compose.yml
+services:
+  langgraph:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LANGSMITH_API_KEY=${LANGSMITH_API_KEY}
+      - LANGSMITH_PROJECT=production
+      - LANGGRAPH_POSTGRES_URI=postgresql://user:pass@postgres:5432/langgraph
+    depends_on: [postgres]
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: langgraph
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+
+volumes:
+  pgdata:</code></pre>
+
+          <h2>LangGraph Studio</h2>
+          <p>LangGraph Studio is a visual debugger that runs inside <code>langgraph dev</code>:</p>
+          <table class="table table-striped">
+            <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Graph Visualization</strong></td><td>Live topology view — nodes, edges, conditional branches rendered as a diagram</td></tr>
+              <tr><td><strong>Step Debugger</strong></td><td>Run the agent step by step and inspect full state after every node</td></tr>
+              <tr><td><strong>Interrupt UI</strong></td><td>Trigger human-in-the-loop interrupts and respond interactively in the browser</td></tr>
+              <tr><td><strong>Time Travel</strong></td><td>Click any historical checkpoint to replay execution from that point</td></tr>
+              <tr><td><strong>State Editor</strong></td><td>Edit state values inline and resume the graph with modified state</td></tr>
+              <tr><td><strong>Thread History</strong></td><td>Browse all threads and their full message/state history</td></tr>
+            </tbody>
+          </table>
+        </section>
+
         <!-- ═══════════════════════════════════════ BEST PRACTICES ═══════════════════════════════════════ -->
         <section id="best-practices" role="article">
           <h1>⭐ Best Practices</h1>
@@ -4112,7 +4638,7 @@ flowchart TD
           <hr />
           <div class="document-footer">
             <p>
-              <strong>Last Updated:</strong> April 2026 |
+              <strong>Last Updated:</strong> May 2026 |
               <strong>Curated by:</strong> Murthy Vepa with ❤️ |
               <strong>Powered by:</strong> GitHub Copilot
             </p>
@@ -4166,6 +4692,7 @@ flowchart TD
       { id: "langchain-memory",         title: "🧠 Memory",               parent: "langchain", tags: ["langchain", "memory", "conversation"] },
       { id: "langchain-rag",            title: "📚 RAG",                  parent: "langchain", tags: ["langchain", "rag", "retrieval"] },
       { id: "langchain-output-parsers", title: "📤 Output Parsers",       parent: "langchain", tags: ["langchain", "output", "parsers"] },
+      { id: "langchain-langsmith",      title: "🔍 LangSmith",             parent: "langchain", tags: ["langsmith", "tracing", "evaluation", "observability"] },
 
       // LangGraph
       { id: "langgraph", title: "🕸️ LangGraph", tags: ["langgraph", "graph", "orchestration"] },
@@ -4178,6 +4705,8 @@ flowchart TD
       { id: "langgraph-memory",         title: "🧠 Memory & Persistence", parent: "langgraph", tags: ["langgraph", "memory", "persistence"] },
       { id: "langgraph-multi-agent",    title: "🤝 Multi-Agent Workflows",parent: "langgraph", tags: ["langgraph", "multi-agent", "supervisor"] },
       { id: "langgraph-streaming",      title: "📡 Streaming",            parent: "langgraph", tags: ["langgraph", "streaming", "ux"] },
+      { id: "langgraph-subgraphs",      title: "📦 Subgraphs",             parent: "langgraph", tags: ["langgraph", "subgraphs", "modular", "reusable"] },
+      { id: "langgraph-deployment",     title: "🚀 Deployment",            parent: "langgraph", tags: ["langgraph", "deployment", "server", "production", "docker"] },
 
       // Standalone
       { id: "best-practices", title: "⭐ Best Practices",          tags: ["best-practices", "tips", "guidelines"] },

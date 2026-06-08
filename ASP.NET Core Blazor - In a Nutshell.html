@@ -230,35 +230,6 @@
       box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
     
-    /* Collapsible parent items */
-    .list-group-item.has-children {
-      cursor: default;
-    }
-    .list-group-item.has-children > a {
-      cursor: pointer;
-      user-select: none;
-    }
-    .list-group-item.has-children > a::after {
-      content: '▼';
-      font-size: 0.65rem;
-      opacity: 0.6;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      transform: translateY(-50%) rotate(0deg);
-    }
-    .list-group-item.has-children.collapsed > a::after {
-      transform: translateY(-50%) rotate(-90deg);
-    }
-    .list-group-item.has-children > a:hover::after {
-      opacity: 1;
-    }
-    
-    /* Hide collapsed children */
-    .list-group-sub-item.collapsed {
-      display: none;
-      max-height: 0;
-      overflow: hidden;
-    }
-    
     /* Sub-items tree connectors */
     .list-group-sub-item a::before { 
       content: '├─';
@@ -828,50 +799,28 @@
     {
         list-style-type: none;
     }
-
-    /* Code Tabs Styling */
-    .code-tabs {
-      margin: 1.5rem 0;
-    }
-    .code-tabs .nav-tabs {
-      border-bottom: 2px solid var(--border);
-      margin-bottom: 0;
-    }
-    .code-tabs .nav-link {
-      color: var(--muted);
-      border: none;
-      border-bottom: 3px solid transparent;
-      padding: 0.75rem 1.5rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      background: transparent;
-    }
-    .code-tabs .nav-link:hover {
-      color: var(--accent);
-      background: var(--accent-light);
-      border-bottom-color: var(--accent);
-    }
-    .code-tabs .nav-link.active {
-      color: var(--accent);
-      background: var(--accent-light);
-      border-bottom-color: var(--accent);
-    }
-    .code-tabs .tab-content {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-top: none;
-      border-radius: 0 0 0.5rem 0.5rem;
-      padding: 0;
-    }
-    .code-tabs .tab-pane {
-      padding: 0;
-    }
-    .code-tabs pre {
-      margin: 0;
-      border: none;
-      border-radius: 0 0 0.5rem 0.5rem;
-    }
-
+  /* Gradient card heading colors - matching Agile Scrum reference style */
+    .bg-gradient-blue h3, .bg-gradient-blue h4 { color: #1e40af; margin-top: 0; }
+    .bg-gradient-green h3, .bg-gradient-green h4 { color: #047857; margin-top: 0; }
+    .bg-gradient-yellow h3, .bg-gradient-yellow h4 { color: #b45309; margin-top: 0; }
+    .bg-gradient-pink h3, .bg-gradient-pink h4 { color: #be185d; margin-top: 0; }
+    .bg-gradient-purple h3, .bg-gradient-purple h4 { color: #7c3aed; margin-top: 0; }
+    .bg-gradient-teal h3, .bg-gradient-teal h4 { color: #0f766e; margin-top: 0; }
+    .bg-gradient-orange h3, .bg-gradient-orange h4 { color: #c2410c; margin-top: 0; }
+    .bg-gradient-red h3, .bg-gradient-red h4 { color: #991b1b; margin-top: 0; }
+    .bg-gradient-blue-dark h3, .bg-gradient-blue-dark h4,
+    .bg-gradient-purple-dark h3, .bg-gradient-purple-dark h4,
+    .bg-gradient-teal-dark h3, .bg-gradient-teal-dark h4,
+    .bg-gradient-green-dark h3, .bg-gradient-green-dark h4,
+    .bg-gradient-red-dark h3, .bg-gradient-red-dark h4,
+    .bg-gradient-indigo h3, .bg-gradient-indigo h4 { color: white; margin-top: 0; }
+    /* Code tabs styling */
+    .code-tabs { margin: 1rem 0; }
+    .code-tabs .nav-tabs { border-bottom: 2px solid var(--border); margin-bottom: 0; background: #f8fafc; border-radius: 0.5rem 0.5rem 0 0; padding: 0.5rem 0.5rem 0; }
+    .code-tabs .nav-tabs .nav-link { color: var(--muted); border: 1px solid transparent; padding: 0.4rem 1rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem 0.375rem 0 0; }
+    .code-tabs .nav-tabs .nav-link.active { color: var(--accent); background: white; border-color: var(--border) var(--border) white; font-weight: 600; }
+    .code-tabs .tab-content { border: 1px solid var(--border); border-top: none; border-radius: 0 0 0.5rem 0.5rem; }
+    .code-tabs .tab-pane pre { margin: 0; border-radius: 0 0 0.5rem 0.5rem; border: none; }
   /* Document Footer */
     .document-footer {
       text-align: center;
@@ -1128,54 +1077,30 @@
           <h2>Why Choose Blazor?</h2>
           <p>Blazor offers several compelling advantages for web development:</p>
           
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h3>🎯 Single Language Stack</h3>
-                  <p class="mb-0">Write both client and server code in C#, eliminating context switching between languages. Share models, validation logic, and business rules across the entire application.</p>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h3>🎯 Single Language Stack</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Write both client and server code in C#, eliminating context switching between languages. Share models, validation logic, and business rules across the entire application.</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h3>🛡️ Type Safety</h3>
-                  <p class="mb-0">Leverage C#'s strong typing and compile-time checking to catch errors early. IntelliSense and refactoring tools work seamlessly across your entire codebase.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h3>🛡️ Type Safety</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Leverage C#'s strong typing and compile-time checking to catch errors early. IntelliSense and refactoring tools work seamlessly across your entire codebase.</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-yellow">
-                <div class="card-body">
-                  <h3>📚 .NET Ecosystem</h3>
-                  <p class="mb-0">Access thousands of existing .NET libraries and NuGet packages. Reuse existing .NET skills and code, reducing the learning curve.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-yellow p-4 rounded shadow-sm">
+              <h3>📚 .NET Ecosystem</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Access thousands of existing .NET libraries and NuGet packages. Reuse existing .NET skills and code, reducing the learning curve.</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-pink">
-                <div class="card-body">
-                  <h3>⚡ Performance</h3>
-                  <p class="mb-0">Benefit from .NET's performance optimizations, including JIT compilation, garbage collection, and efficient memory management.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-pink p-4 rounded shadow-sm">
+              <h3>⚡ Performance</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Benefit from .NET's performance optimizations, including JIT compilation, garbage collection, and efficient memory management.</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h3>🔄 Code Reusability</h3>
-                  <p class="mb-0">Share components, logic, and models between Blazor Server, WebAssembly, Hybrid, and even desktop applications built with .NET MAUI.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h3>🔄 Code Reusability</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Share components, logic, and models between Blazor Server, WebAssembly, Hybrid, and even desktop applications built with .NET MAUI.</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-teal">
-                <div class="card-body">
-                  <h3>🚀 Modern Development</h3>
-                  <p class="mb-0">Hot reload, Visual Studio integration, excellent debugging experience, and modern component-based architecture out of the box.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-teal p-4 rounded shadow-sm">
+              <h3>🚀 Modern Development</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Hot reload, Visual Studio integration, excellent debugging experience, and modern component-based architecture out of the box.</p>
             </div>
           </div>
 
@@ -1341,34 +1266,26 @@ dotnet run</code></pre>
             <li>Can be nested and composed with other components</li>
           </ul>
 
-          <div class="row g-3 mt-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h3>📄 Razor Components (.razor)</h3>
-                  <p class="mb-2">Most common component type:</p>
-                  <ul class="mb-0">
-                    <li>Defined in <code>.razor</code> files</li>
-                    <li>Mix HTML markup with C# code</li>
-                    <li>Use <code>@code</code> block for logic</li>
-                    <li>Compiled into .NET classes</li>
-                  </ul>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h3>📄 Razor Components (.razor)</h3>
+              <p style="color: #333; font-size: 0.9rem; margin-bottom: 0.5rem;">Most common component type:</p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Defined in <code>.razor</code> files</li>
+                <li>Mix HTML markup with C# code</li>
+                <li>Use <code>@code</code> block for logic</li>
+                <li>Compiled into .NET classes</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h3>🔧 Code-Behind Components</h3>
-                  <p class="mb-2">Separate markup from logic:</p>
-                  <ul class="mb-0">
-                    <li><code>MyComponent.razor</code> (markup)</li>
-                    <li><code>MyComponent.razor.cs</code> (logic)</li>
-                    <li>Better for complex components</li>
-                    <li>Easier to test and maintain</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h3>🔧 Code-Behind Components</h3>
+              <p style="color: #333; font-size: 0.9rem; margin-bottom: 0.5rem;">Separate markup from logic:</p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li><code>MyComponent.razor</code> (markup)</li>
+                <li><code>MyComponent.razor.cs</code> (logic)</li>
+                <li>Better for complex components</li>
+                <li>Easier to test and maintain</li>
+              </ul>
             </div>
           </div>
 
@@ -1622,36 +1539,28 @@ else
           </p>
 
           <h3>C# Features in Blazor</h3>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h4>Language Features</h4>
-                  <ul class="mb-0">
-                    <li>LINQ queries</li>
-                    <li>Async/await</li>
-                    <li>Pattern matching</li>
-                    <li>Records and tuples</li>
-                    <li>Nullable reference types</li>
-                    <li>Extension methods</li>
-                  </ul>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h4>Language Features</h4>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>LINQ queries</li>
+                <li>Async/await</li>
+                <li>Pattern matching</li>
+                <li>Records and tuples</li>
+                <li>Nullable reference types</li>
+                <li>Extension methods</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-teal">
-                <div class="card-body">
-                  <h4>.NET Libraries</h4>
-                  <ul class="mb-0">
-                    <li>System.Text.Json</li>
-                    <li>HttpClient</li>
-                    <li>Entity Framework</li>
-                    <li>FluentValidation</li>
-                    <li>AutoMapper</li>
-                    <li>Any NuGet package</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-teal p-4 rounded shadow-sm">
+              <h4>.NET Libraries</h4>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>System.Text.Json</li>
+                <li>HttpClient</li>
+                <li>Entity Framework</li>
+                <li>FluentValidation</li>
+                <li>AutoMapper</li>
+                <li>Any NuGet package</li>
+              </ul>
             </div>
           </div>
 
@@ -1832,66 +1741,50 @@ else
           </table>
 
           <h2>Choosing the Right Hosting Model</h2>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h3>Choose Blazor Server When:</h3>
-                  <ul class="mb-0">
-                    <li>You need fast initial load times</li>
-                    <li>Building line-of-business applications</li>
-                    <li>Users have reliable internet connections</li>
-                    <li>You want to keep code on the server</li>
-                    <li>Supporting older browsers</li>
-                    <li>Minimizing download size is critical</li>
-                  </ul>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h3>Choose Blazor Server When:</h3>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>You need fast initial load times</li>
+                <li>Building line-of-business applications</li>
+                <li>Users have reliable internet connections</li>
+                <li>You want to keep code on the server</li>
+                <li>Supporting older browsers</li>
+                <li>Minimizing download size is critical</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h3>Choose Blazor WebAssembly When:</h3>
-                  <ul class="mb-0">
-                    <li>You need offline support or PWA capabilities</li>
-                    <li>Building public-facing applications</li>
-                    <li>Want to reduce server load</li>
-                    <li>Need rich client-side interactivity</li>
-                    <li>Can accept larger initial download</li>
-                    <li>Deploying to static hosting (CDN)</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h3>Choose Blazor WebAssembly When:</h3>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>You need offline support or PWA capabilities</li>
+                <li>Building public-facing applications</li>
+                <li>Want to reduce server load</li>
+                <li>Need rich client-side interactivity</li>
+                <li>Can accept larger initial download</li>
+                <li>Deploying to static hosting (CDN)</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h3>Choose Blazor Web App When:</h3>
-                  <ul class="mb-0">
-                    <li>Building modern full-stack applications</li>
-                    <li>You want flexibility in rendering modes</li>
-                    <li>Need both SSR and client interactivity</li>
-                    <li>Want progressive enhancement</li>
-                    <li>Optimizing for both SEO and UX</li>
-                    <li>Starting new projects (recommended)</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h3>Choose Blazor Web App When:</h3>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Building modern full-stack applications</li>
+                <li>You want flexibility in rendering modes</li>
+                <li>Need both SSR and client interactivity</li>
+                <li>Want progressive enhancement</li>
+                <li>Optimizing for both SEO and UX</li>
+                <li>Starting new projects (recommended)</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-orange">
-                <div class="card-body">
-                  <h3>Choose Blazor Hybrid When:</h3>
-                  <ul class="mb-0">
-                    <li>Building desktop or mobile applications</li>
-                    <li>Need native device capabilities</li>
-                    <li>Want to reuse web components in apps</li>
-                    <li>Targeting Windows, macOS, iOS, Android</li>
-                    <li>Migrating WPF/WinForms apps</li>
-                    <li>Building cross-platform apps</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-orange p-4 rounded shadow-sm">
+              <h3>Choose Blazor Hybrid When:</h3>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Building desktop or mobile applications</li>
+                <li>Need native device capabilities</li>
+                <li>Want to reuse web components in apps</li>
+                <li>Targeting Windows, macOS, iOS, Android</li>
+                <li>Migrating WPF/WinForms apps</li>
+                <li>Building cross-platform apps</li>
+              </ul>
             </div>
           </div>
 
@@ -1988,37 +1881,29 @@ else
           </ol>
 
           <h2>Key Features</h2>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h3>✅ Advantages</h3>
-                  <ul class="mb-0">
-                    <li><strong>Fast Initial Load:</strong> Only ~250 KB download</li>
-                    <li><strong>Full .NET Runtime:</strong> Access to all .NET APIs</li>
-                    <li><strong>Code Security:</strong> App code never leaves server</li>
-                    <li><strong>Small Client Footprint:</strong> Works on older devices</li>
-                    <li><strong>Easy Debugging:</strong> Full .NET debugging support</li>
-                    <li><strong>Database Access:</strong> Direct database connections</li>
-                    <li><strong>Browser Support:</strong> Works on older browsers</li>
-                  </ul>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h3>✅ Advantages</h3>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li><strong>Fast Initial Load:</strong> Only ~250 KB download</li>
+                <li><strong>Full .NET Runtime:</strong> Access to all .NET APIs</li>
+                <li><strong>Code Security:</strong> App code never leaves server</li>
+                <li><strong>Small Client Footprint:</strong> Works on older devices</li>
+                <li><strong>Easy Debugging:</strong> Full .NET debugging support</li>
+                <li><strong>Database Access:</strong> Direct database connections</li>
+                <li><strong>Browser Support:</strong> Works on older browsers</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-red">
-                <div class="card-body">
-                  <h3>⚠️ Limitations</h3>
-                  <ul class="mb-0">
-                    <li><strong>Network Dependency:</strong> Requires constant connection</li>
-                    <li><strong>Latency:</strong> Every interaction has network round-trip</li>
-                    <li><strong>No Offline:</strong> Cannot work without server connection</li>
-                    <li><strong>Scalability:</strong> Server resources per user</li>
-                    <li><strong>Connection Issues:</strong> Reconnection logic needed</li>
-                    <li><strong>State Management:</strong> Server memory per connection</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-red p-4 rounded shadow-sm">
+              <h3>⚠️ Limitations</h3>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li><strong>Network Dependency:</strong> Requires constant connection</li>
+                <li><strong>Latency:</strong> Every interaction has network round-trip</li>
+                <li><strong>No Offline:</strong> Cannot work without server connection</li>
+                <li><strong>Scalability:</strong> Server resources per user</li>
+                <li><strong>Connection Issues:</strong> Reconnection logic needed</li>
+                <li><strong>State Management:</strong> Server memory per connection</li>
+              </ul>
             </div>
           </div>
 
@@ -2178,38 +2063,30 @@ window.Blazor = {
           </ol>
 
           <h2>Key Features</h2>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h3>✅ Advantages</h3>
-                  <ul class="mb-0">
-                    <li><strong>Offline Capable:</strong> Works without internet connection</li>
-                    <li><strong>No Server Required:</strong> After initial download</li>
-                    <li><strong>Fast UI Updates:</strong> No network latency</li>
-                    <li><strong>Scalable:</strong> Client resources, not server</li>
-                    <li><strong>Static Hosting:</strong> Deploy to CDN, Azure Storage</li>
-                    <li><strong>PWA Support:</strong> Installable progressive web apps</li>
-                    <li><strong>Local Processing:</strong> Heavy computation on client</li>
-                  </ul>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h3>✅ Advantages</h3>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li><strong>Offline Capable:</strong> Works without internet connection</li>
+                <li><strong>No Server Required:</strong> After initial download</li>
+                <li><strong>Fast UI Updates:</strong> No network latency</li>
+                <li><strong>Scalable:</strong> Client resources, not server</li>
+                <li><strong>Static Hosting:</strong> Deploy to CDN, Azure Storage</li>
+                <li><strong>PWA Support:</strong> Installable progressive web apps</li>
+                <li><strong>Local Processing:</strong> Heavy computation on client</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-red">
-                <div class="card-body">
-                  <h3>⚠️ Limitations</h3>
-                  <ul class="mb-0">
-                    <li><strong>Large Download:</strong> 2-5 MB initial payload</li>
-                    <li><strong>Slower Startup:</strong> Initial load takes longer</li>
-                    <li><strong>Limited APIs:</strong> Browser sandbox restrictions</li>
-                    <li><strong>Debugging:</strong> Browser dev tools only</li>
-                    <li><strong>Code Visibility:</strong> DLLs downloaded to client</li>
-                    <li><strong>Browser Support:</strong> Modern browsers only</li>
-                    <li><strong>SEO Challenges:</strong> Requires prerendering</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-red p-4 rounded shadow-sm">
+              <h3>⚠️ Limitations</h3>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li><strong>Large Download:</strong> 2-5 MB initial payload</li>
+                <li><strong>Slower Startup:</strong> Initial load takes longer</li>
+                <li><strong>Limited APIs:</strong> Browser sandbox restrictions</li>
+                <li><strong>Debugging:</strong> Browser dev tools only</li>
+                <li><strong>Code Visibility:</strong> DLLs downloaded to client</li>
+                <li><strong>Browser Support:</strong> Modern browsers only</li>
+                <li><strong>SEO Challenges:</strong> Requires prerendering</li>
+              </ul>
             </div>
           </div>
 
@@ -2348,30 +2225,18 @@ self.addEventListener('fetch', event => {
           </div>
 
           <h2>Key Features</h2>
-          <div class="row g-3">
-            <div class="col-md-4">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h3>🚀 Fast Initial Load</h3>
-                  <p class="mb-0">Static SSR delivers pre-rendered HTML instantly, with no JavaScript download required for static content.</p>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h3>🚀 Fast Initial Load</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Static SSR delivers pre-rendered HTML instantly, with no JavaScript download required for static content.</p>
             </div>
-            <div class="col-md-4">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h3>⚡ Progressive Enhancement</h3>
-                  <p class="mb-0">Start with static HTML, progressively enhance with interactivity only where needed.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h3>⚡ Progressive Enhancement</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Start with static HTML, progressively enhance with interactivity only where needed.</p>
             </div>
-            <div class="col-md-4">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h3>🔄 Flexible Rendering</h3>
-                  <p class="mb-0">Mix Static SSR, Server, WebAssembly, and Auto modes in the same application.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h3>🔄 Flexible Rendering</h3>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">Mix Static SSR, Server, WebAssembly, and Auto modes in the same application.</p>
             </div>
           </div>
 
@@ -2575,66 +2440,50 @@ else
           </div>
 
           <h2>Blazor Hybrid Platforms</h2>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h3>🎨 .NET MAUI</h3>
-                  <p><strong>Recommended for new apps</strong></p>
-                  <ul class="mb-0">
-                    <li>Cross-platform (Windows, macOS, iOS, Android)</li>
-                    <li>Modern UI framework</li>
-                    <li>Native controls + Blazor components</li>
-                    <li>Single codebase for all platforms</li>
-                    <li>Hot reload support</li>
-                  </ul>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h3>🎨 .NET MAUI</h3>
+              <p style="color: #333; font-size: 0.9rem;"><strong>Recommended for new apps</strong></p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Cross-platform (Windows, macOS, iOS, Android)</li>
+                <li>Modern UI framework</li>
+                <li>Native controls + Blazor components</li>
+                <li>Single codebase for all platforms</li>
+                <li>Hot reload support</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h3>🖼️ WPF (Windows Presentation Foundation)</h3>
-                  <p><strong>For existing WPF apps</strong></p>
-                  <ul class="mb-0">
-                    <li>Windows desktop only</li>
-                    <li>Modernize existing WPF apps</li>
-                    <li>Mix WPF controls with Blazor</li>
-                    <li>Leverage existing XAML skills</li>
-                    <li>Enterprise desktop applications</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h3>🖼️ WPF (Windows Presentation Foundation)</h3>
+              <p style="color: #333; font-size: 0.9rem;"><strong>For existing WPF apps</strong></p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Windows desktop only</li>
+                <li>Modernize existing WPF apps</li>
+                <li>Mix WPF controls with Blazor</li>
+                <li>Leverage existing XAML skills</li>
+                <li>Enterprise desktop applications</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h3>📋 Windows Forms</h3>
-                  <p><strong>For legacy WinForms apps</strong></p>
-                  <ul class="mb-0">
-                    <li>Windows desktop only</li>
-                    <li>Modernize legacy apps</li>
-                    <li>Gradual migration path</li>
-                    <li>Add Blazor to existing forms</li>
-                    <li>Simple integration</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h3>📋 Windows Forms</h3>
+              <p style="color: #333; font-size: 0.9rem;"><strong>For legacy WinForms apps</strong></p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Windows desktop only</li>
+                <li>Modernize legacy apps</li>
+                <li>Gradual migration path</li>
+                <li>Add Blazor to existing forms</li>
+                <li>Simple integration</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-teal">
-                <div class="card-body">
-                  <h3>🌐 Web View</h3>
-                  <p><strong>Custom integrations</strong></p>
-                  <ul class="mb-0">
-                    <li>Embed in any .NET app</li>
-                    <li>Custom WebView integration</li>
-                    <li>Maximum flexibility</li>
-                    <li>Advanced scenarios</li>
-                    <li>Direct WebView control</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-teal p-4 rounded shadow-sm">
+              <h3>🌐 Web View</h3>
+              <p style="color: #333; font-size: 0.9rem;"><strong>Custom integrations</strong></p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Embed in any .NET app</li>
+                <li>Custom WebView integration</li>
+                <li>Maximum flexibility</li>
+                <li>Advanced scenarios</li>
+                <li>Direct WebView control</li>
+              </ul>
             </div>
           </div>
 
@@ -2837,90 +2686,66 @@ public class GeolocationService : IGeolocationService
           </div>
 
           <h2>Core Concepts</h2>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h3>⚙️ Configuration</h3>
-                  <p>Manage app settings using <code>appsettings.json</code>, environment variables, and configuration providers.</p>
-                  <ul class="mb-0">
-                    <li>Environment-specific settings</li>
-                    <li>Strongly-typed options</li>
-                    <li>Configuration providers</li>
-                    <li>Secret management</li>
-                  </ul>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h3>⚙️ Configuration</h3>
+              <p style="color: #333; font-size: 0.9rem;">Manage app settings using <code>appsettings.json</code>, environment variables, and configuration providers.</p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Environment-specific settings</li>
+                <li>Strongly-typed options</li>
+                <li>Configuration providers</li>
+                <li>Secret management</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h3>🌍 Environments</h3>
-                  <p>Handle different environments (Development, Staging, Production) with appropriate configurations.</p>
-                  <ul class="mb-0">
-                    <li>ASPNETCORE_ENVIRONMENT variable</li>
-                    <li>Conditional middleware</li>
-                    <li>Environment-specific files</li>
-                    <li>Feature toggles</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h3>🌍 Environments</h3>
+              <p style="color: #333; font-size: 0.9rem;">Handle different environments (Development, Staging, Production) with appropriate configurations.</p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>ASPNETCORE_ENVIRONMENT variable</li>
+                <li>Conditional middleware</li>
+                <li>Environment-specific files</li>
+                <li>Feature toggles</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h3>📝 Logging</h3>
-                  <p>Implement comprehensive logging using <code>ILogger</code> for diagnostics and monitoring.</p>
-                  <ul class="mb-0">
-                    <li>Log levels and filtering</li>
-                    <li>Structured logging</li>
-                    <li>Log providers (Console, Debug, etc.)</li>
-                    <li>Application Insights integration</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h3>📝 Logging</h3>
+              <p style="color: #333; font-size: 0.9rem;">Implement comprehensive logging using <code>ILogger</code> for diagnostics and monitoring.</p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Log levels and filtering</li>
+                <li>Structured logging</li>
+                <li>Log providers (Console, Debug, etc.)</li>
+                <li>Application Insights integration</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-red">
-                <div class="card-body">
-                  <h3>🚨 Error Handling</h3>
-                  <p>Gracefully handle errors with error boundaries, global exception handlers, and custom error pages.</p>
-                  <ul class="mb-0">
-                    <li>ErrorBoundary component</li>
-                    <li>Global error handling</li>
-                    <li>Developer exception pages</li>
-                    <li>Custom error pages</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-red p-4 rounded shadow-sm">
+              <h3>🚨 Error Handling</h3>
+              <p style="color: #333; font-size: 0.9rem;">Gracefully handle errors with error boundaries, global exception handlers, and custom error pages.</p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>ErrorBoundary component</li>
+                <li>Global error handling</li>
+                <li>Developer exception pages</li>
+                <li>Custom error pages</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-teal">
-                <div class="card-body">
-                  <h3>📁 Static Files</h3>
-                  <p>Serve static assets (CSS, JavaScript, images) from the <code>wwwroot</code> folder.</p>
-                  <ul class="mb-0">
-                    <li>wwwroot folder structure</li>
-                    <li>Static file middleware</li>
-                    <li>CSS isolation</li>
-                    <li>Bundling and minification</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-teal p-4 rounded shadow-sm">
+              <h3>📁 Static Files</h3>
+              <p style="color: #333; font-size: 0.9rem;">Serve static assets (CSS, JavaScript, images) from the <code>wwwroot</code> folder.</p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>wwwroot folder structure</li>
+                <li>Static file middleware</li>
+                <li>CSS isolation</li>
+                <li>Bundling and minification</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-orange">
-                <div class="card-body">
-                  <h3>⚡ SignalR Integration</h3>
-                  <p>Enable real-time communication between server and client using SignalR hubs.</p>
-                  <ul class="mb-0">
-                    <li>Hub implementation</li>
-                    <li>Client-server communication</li>
-                    <li>Connection management</li>
-                    <li>Azure SignalR Service</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-orange p-4 rounded shadow-sm">
+              <h3>⚡ SignalR Integration</h3>
+              <p style="color: #333; font-size: 0.9rem;">Enable real-time communication between server and client using SignalR hubs.</p>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li>Hub implementation</li>
+                <li>Client-server communication</li>
+                <li>Connection management</li>
+                <li>Azure SignalR Service</li>
+              </ul>
             </div>
           </div>
 
@@ -3830,45 +3655,29 @@ Logger.LogInformation(
 }</code></pre>
 
           <h2>Logging Providers</h2>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h3>🖥️ Console Provider</h3>
-                  <p>Logs to console output (stdout/stderr)</p>
-                  <pre class="syntax-highlighted" data-language="C#"><code class="language-csharp">builder.Logging.AddConsole();</code></pre>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h3>🖥️ Console Provider</h3>
+              <p style="color: #333; font-size: 0.9rem;">Logs to console output (stdout/stderr)</p>
+              <pre class="syntax-highlighted" data-language="C#"><code class="language-csharp">builder.Logging.AddConsole();</code></pre>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h3>🐛 Debug Provider</h3>
-                  <p>Logs to debug output window</p>
-                  <pre class="syntax-highlighted" data-language="C#"><code class="language-csharp">builder.Logging.AddDebug();</code></pre>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h3>🐛 Debug Provider</h3>
+              <p style="color: #333; font-size: 0.9rem;">Logs to debug output window</p>
+              <pre class="syntax-highlighted" data-language="C#"><code class="language-csharp">builder.Logging.AddDebug();</code></pre>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h3>📊 Application Insights</h3>
-                  <p>Azure monitoring and analytics</p>
-                  <pre class="syntax-highlighted" data-language="C#"><code class="language-csharp">builder.Logging
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h3>📊 Application Insights</h3>
+              <p style="color: #333; font-size: 0.9rem;">Azure monitoring and analytics</p>
+              <pre class="syntax-highlighted" data-language="C#"><code class="language-csharp">builder.Logging
     .AddApplicationInsights();</code></pre>
-                </div>
-              </div>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-teal">
-                <div class="card-body">
-                  <h3>📁 File Provider (Serilog)</h3>
-                  <p>Log to files with Serilog</p>
-                  <pre class="syntax-highlighted" data-language="C#"><code class="language-csharp">builder.Host.UseSerilog(
+            <div class="bg-gradient-teal p-4 rounded shadow-sm">
+              <h3>📁 File Provider (Serilog)</h3>
+              <p style="color: #333; font-size: 0.9rem;">Log to files with Serilog</p>
+              <pre class="syntax-highlighted" data-language="C#"><code class="language-csharp">builder.Host.UseSerilog(
     (ctx, config) => config
         .ReadFrom.Configuration(ctx.Configuration));</code></pre>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -5503,53 +5312,34 @@ dotnet add reference ../MyComponentLibrary/MyComponentLibrary.csproj</code></pre
           </div>
 
           <h2>Lifecycle Methods</h2>
-          <div class="row mb-4">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h5 class="card-title">Initialization Phase</h5>
-                  <p class="card-text">
-                    <strong>SetParametersAsync</strong> → <strong>OnInitialized</strong> → <strong>OnInitializedAsync</strong>
-                  </p>
-                  <p class="card-text small">Runs once when component is first created.</p>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h4>Initialization Phase</h4>
+              <p style="color: #333; font-size: 0.9rem;">
+                <strong>SetParametersAsync</strong> → <strong>OnInitialized</strong> → <strong>OnInitializedAsync</strong>
+              </p>
+              <p style="color: #333; font-size: 0.85rem; margin: 0;">Runs once when component is first created.</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h5 class="card-title">Parameter Update Phase</h5>
-                  <p class="card-text">
-                    <strong>SetParametersAsync</strong> → <strong>OnParametersSet</strong> → <strong>OnParametersSetAsync</strong>
-                  </p>
-                  <p class="card-text small">Runs every time parameters change.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h4>Parameter Update Phase</h4>
+              <p style="color: #333; font-size: 0.9rem;">
+                <strong>SetParametersAsync</strong> → <strong>OnParametersSet</strong> → <strong>OnParametersSetAsync</strong>
+              </p>
+              <p style="color: #333; font-size: 0.85rem; margin: 0;">Runs every time parameters change.</p>
             </div>
-          </div>
-
-          <div class="row mb-4">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h5 class="card-title">Rendering Phase</h5>
-                  <p class="card-text">
-                    <strong>BuildRenderTree</strong> → <strong>OnAfterRender</strong> → <strong>OnAfterRenderAsync</strong>
-                  </p>
-                  <p class="card-text small">Runs after each render cycle.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h4>Rendering Phase</h4>
+              <p style="color: #333; font-size: 0.9rem;">
+                <strong>BuildRenderTree</strong> → <strong>OnAfterRender</strong> → <strong>OnAfterRenderAsync</strong>
+              </p>
+              <p style="color: #333; font-size: 0.85rem; margin: 0;">Runs after each render cycle.</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-red">
-                <div class="card-body">
-                  <h5 class="card-title">Disposal Phase</h5>
-                  <p class="card-text">
-                    <strong>Dispose</strong> or <strong>DisposeAsync</strong>
-                  </p>
-                  <p class="card-text small">Runs once when component is removed.</p>
-                </div>
-              </div>
+            <div class="bg-gradient-red p-4 rounded shadow-sm">
+              <h4>Disposal Phase</h4>
+              <p style="color: #333; font-size: 0.9rem;">
+                <strong>Dispose</strong> or <strong>DisposeAsync</strong>
+              </p>
+              <p style="color: #333; font-size: 0.85rem; margin: 0;">Runs once when component is removed.</p>
             </div>
           </div>
 
@@ -6942,26 +6732,18 @@ else
 }</code></pre>
 
           <h2>Performance Considerations</h2>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-orange">
-                <div class="card-body">
-                  <h5 class="card-title">Use @bind:event="oninput" Carefully</h5>
-                  <p class="card-text small">
-                    Updates on every keystroke can trigger frequent re-renders. Use for real-time feedback (character count, search), but prefer default "onchange" for most inputs.
-                  </p>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-orange p-4 rounded shadow-sm">
+              <h4>Use @bind:event="oninput" Carefully</h4>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">
+                Updates on every keystroke can trigger frequent re-renders. Use for real-time feedback (character count, search), but prefer default "onchange" for most inputs.
+              </p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-teal">
-                <div class="card-body">
-                  <h5 class="card-title">Avoid Binding Large Collections</h5>
-                  <p class="card-text small">
-                    Binding every item in a large collection individually can be expensive. Consider virtualization or pagination for large datasets.
-                  </p>
-                </div>
-              </div>
+            <div class="bg-gradient-teal p-4 rounded shadow-sm">
+              <h4>Avoid Binding Large Collections</h4>
+              <p style="color: #333; margin: 0; font-size: 0.9rem;">
+                Binding every item in a large collection individually can be expensive. Consider virtualization or pagination for large datasets.
+              </p>
             </div>
           </div>
 
@@ -7140,53 +6922,34 @@ else
           <h2>Input Components</h2>
           <p>Blazor provides specialized input components that integrate with EditForm and validation:</p>
 
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h5 class="card-title">Text Inputs</h5>
-                  <ul class="small mb-0">
-                    <li><code>InputText</code> - Single-line text</li>
-                    <li><code>InputTextArea</code> - Multi-line text</li>
-                    <li><code>InputNumber&lt;T&gt;</code> - Numeric values</li>
-                  </ul>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h4>Text Inputs</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                <li><code>InputText</code> - Single-line text</li>
+                <li><code>InputTextArea</code> - Multi-line text</li>
+                <li><code>InputNumber&lt;T&gt;</code> - Numeric values</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h5 class="card-title">Selection Inputs</h5>
-                  <ul class="small mb-0">
-                    <li><code>InputCheckbox</code> - Boolean checkbox</li>
-                    <li><code>InputSelect&lt;T&gt;</code> - Dropdown select</li>
-                    <li><code>InputRadioGroup&lt;T&gt;</code> - Radio buttons</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h4>Selection Inputs</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                <li><code>InputCheckbox</code> - Boolean checkbox</li>
+                <li><code>InputSelect&lt;T&gt;</code> - Dropdown select</li>
+                <li><code>InputRadioGroup&lt;T&gt;</code> - Radio buttons</li>
+              </ul>
             </div>
-          </div>
-
-          <div class="row mb-4">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h5 class="card-title">Date/Time Inputs</h5>
-                  <ul class="small mb-0">
-                    <li><code>InputDate&lt;T&gt;</code> - Date picker</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h4>Date/Time Inputs</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                <li><code>InputDate&lt;T&gt;</code> - Date picker</li>
+              </ul>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-orange">
-                <div class="card-body">
-                  <h5 class="card-title">File Input</h5>
-                  <ul class="small mb-0">
-                    <li><code>InputFile</code> - File upload</li>
-                  </ul>
-                </div>
-              </div>
+            <div class="bg-gradient-orange p-4 rounded shadow-sm">
+              <h4>File Input</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                <li><code>InputFile</code> - File upload</li>
+              </ul>
             </div>
           </div>
 
@@ -7710,39 +7473,27 @@ public class BookingModel : IValidatableObject
           <h2>Service Lifetimes</h2>
           <p>Blazor supports three service lifetimes:</p>
 
-          <div class="row mb-4">
-            <div class="col-md-4">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h5 class="card-title">Singleton</h5>
-                  <p class="card-text small">
-                    <strong>Created once</strong> and shared across the entire application lifetime. Same instance for all users and all requests.
-                  </p>
-                  <p class="card-text small"><strong>Use for:</strong> Stateless services, configuration, logging</p>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h4>Singleton</h4>
+              <p style="color: #333; font-size: 0.9rem;">
+                <strong>Created once</strong> and shared across the entire application lifetime. Same instance for all users and all requests.
+              </p>
+              <p style="color: #333; font-size: 0.85rem; margin: 0;"><strong>Use for:</strong> Stateless services, configuration, logging</p>
             </div>
-            <div class="col-md-4">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h5 class="card-title">Scoped</h5>
-                  <p class="card-text small">
-                    <strong>Created once per circuit</strong> (Blazor Server) or <strong>per user</strong> (Blazor WebAssembly). Shared within the same user session.
-                  </p>
-                  <p class="card-text small"><strong>Use for:</strong> Per-user state, authentication context</p>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h4>Scoped</h4>
+              <p style="color: #333; font-size: 0.9rem;">
+                <strong>Created once per circuit</strong> (Blazor Server) or <strong>per user</strong> (Blazor WebAssembly). Shared within the same user session.
+              </p>
+              <p style="color: #333; font-size: 0.85rem; margin: 0;"><strong>Use for:</strong> Per-user state, authentication context</p>
             </div>
-            <div class="col-md-4">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h5 class="card-title">Transient</h5>
-                  <p class="card-text small">
-                    <strong>Created every time</strong> the service is requested. New instance for each injection.
-                  </p>
-                  <p class="card-text small"><strong>Use for:</strong> Lightweight stateless services, operations</p>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h4>Transient</h4>
+              <p style="color: #333; font-size: 0.9rem;">
+                <strong>Created every time</strong> the service is requested. New instance for each injection.
+              </p>
+              <p style="color: #333; font-size: 0.85rem; margin: 0;"><strong>Use for:</strong> Lightweight stateless services, operations</p>
             </div>
           </div>
 
@@ -9005,61 +8756,42 @@ else
           </div>
 
           <h2>State Management Patterns</h2>
-          <div class="row mb-4">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-blue">
-                <div class="card-body">
-                  <h5 class="card-title">Component-Level State</h5>
-                  <ul class="small mb-0">
-                    <li>Component parameters</li>
-                    <li>Private fields and properties</li>
-                    <li>EventCallback communication</li>
-                  </ul>
-                  <p class="card-text small mt-2"><strong>Scope:</strong> Single component or parent-child</p>
-                </div>
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div class="bg-gradient-blue p-4 rounded shadow-sm">
+              <h4>Component-Level State</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                <li>Component parameters</li>
+                <li>Private fields and properties</li>
+                <li>EventCallback communication</li>
+              </ul>
+              <p style="color: #333; font-size: 0.85rem; margin-top: 0.5rem; margin-bottom: 0;"><strong>Scope:</strong> Single component or parent-child</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-green">
-                <div class="card-body">
-                  <h5 class="card-title">Application State</h5>
-                  <ul class="small mb-0">
-                    <li>Scoped services</li>
-                    <li>Singleton services</li>
-                    <li>State containers</li>
-                  </ul>
-                  <p class="card-text small mt-2"><strong>Scope:</strong> Application-wide or per-user</p>
-                </div>
-              </div>
+            <div class="bg-gradient-green p-4 rounded shadow-sm">
+              <h4>Application State</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                <li>Scoped services</li>
+                <li>Singleton services</li>
+                <li>State containers</li>
+              </ul>
+              <p style="color: #333; font-size: 0.85rem; margin-top: 0.5rem; margin-bottom: 0;"><strong>Scope:</strong> Application-wide or per-user</p>
             </div>
-          </div>
-
-          <div class="row mb-4">
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-purple">
-                <div class="card-body">
-                  <h5 class="card-title">Cascading State</h5>
-                  <ul class="small mb-0">
-                    <li>CascadingValue component</li>
-                    <li>CascadingParameter attribute</li>
-                    <li>Component hierarchy sharing</li>
-                  </ul>
-                  <p class="card-text small mt-2"><strong>Scope:</strong> Component tree</p>
-                </div>
-              </div>
+            <div class="bg-gradient-purple p-4 rounded shadow-sm">
+              <h4>Cascading State</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                <li>CascadingValue component</li>
+                <li>CascadingParameter attribute</li>
+                <li>Component hierarchy sharing</li>
+              </ul>
+              <p style="color: #333; font-size: 0.85rem; margin-top: 0.5rem; margin-bottom: 0;"><strong>Scope:</strong> Component tree</p>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100 bg-gradient-orange">
-                <div class="card-body">
-                  <h5 class="card-title">Persistent State</h5>
-                  <ul class="small mb-0">
-                    <li>Local storage</li>
-                    <li>Session storage</li>
-                    <li>Cookies</li>
-                  </ul>
-                  <p class="card-text small mt-2"><strong>Scope:</strong> Browser-persisted</p>
-                </div>
-              </div>
+            <div class="bg-gradient-orange p-4 rounded shadow-sm">
+              <h4>Persistent State</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                <li>Local storage</li>
+                <li>Session storage</li>
+                <li>Cookies</li>
+              </ul>
+              <p style="color: #333; font-size: 0.85rem; margin-top: 0.5rem; margin-bottom: 0;"><strong>Scope:</strong> Browser-persisted</p>
             </div>
           </div>
 
@@ -11055,7 +10787,8 @@ dotnet new razorclasslib -n MyApp.Components</code></pre>
         <button class="btn btn-outline-info btn-sm" id="nextBtn" title="Next" aria-label="Next concept">&nbsp;&gt;&nbsp;</button>
       </div>
     </nav>
-  </div>  <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarLabel">
+  </div>  
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="sidebarLabel">Contents</h5>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>

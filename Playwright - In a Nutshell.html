@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Playwright - In a Nutshell</title>
   <meta name="description" content="A comprehensive guide to Playwright." />
+   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🎭</text></svg>" />
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
- 
   <style>
     :root{
       --bg: #ffffff;
@@ -26,8 +26,31 @@
       --gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     }
     
+    /* Bootstrap Gradient Utility Classes */
+    .bg-gradient-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important; }
+    .bg-gradient-green { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important; }
+    .bg-gradient-yellow { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important; }
+    .bg-gradient-pink { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%) !important; }
+    .bg-gradient-purple { background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%) !important; }
+    .bg-gradient-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%) !important; }
+    .bg-gradient-blue-dark { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; }
+    .bg-gradient-gray { background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important; }
+    .bg-gradient-purple-dark { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important; }
+    .bg-gradient-teal-dark { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%) !important; }
+    .bg-gradient-green-dark { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+    .bg-gradient-red { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important; }
+    .bg-gradient-green-light { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important; }
+    .bg-gradient-blue-sky { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important; }
+    .bg-gradient-red-dark { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important; }
+    .bg-gradient-indigo { background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important; }
+    .bg-gradient-green-medium { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+    .bg-gradient-orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important; }
+    .bg-gradient-violet { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; }
+    .bg-gradient-lime { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%) !important; }
+    .bg-gradient-sky { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important; }
+    
     /* Apply theme colors to Bootstrap elements */
-    body { background-color: var(--bg); color: var(--fg); }
+    body { background-color: var(--bg); color: var(--fg); overflow: hidden; }
     .navbar { background-color: var(--fg) !important; border-bottom: none !important; box-shadow: var(--shadow-md) !important; }
     .navbar-brand { cursor: pointer; color: var(--bg) !important; font-weight: 600; letter-spacing: 0px; }
     .navbar-toggler-icon { 
@@ -38,20 +61,30 @@
     .btn-outline-secondary { border-color: var(--border) !important; color: var(--fg) !important; }
     .btn-outline-secondary:hover { background-color: var(--accent-light) !important; border-color: var(--accent) !important; color: var(--accent) !important; }
     
-    /* Sidebar */
-    nav.sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border) !important; overflow-y: auto; box-shadow: 2px 0 8px rgba(0,0,0,0.04); }
+    /* Sidebar - Modern Design */
+    nav.sidebar { 
+      background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%); 
+      border-right: 1px solid rgba(0, 0, 0, 0.05) !important;  
+      overflow-y: auto; 
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.06);
+      padding-top: 0;
+    }
     
     .menu-header {  
-      background: var(--sidebar-bg);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.1) 100%);
       font-weight: bold; 
       padding: 1.25rem 1.25rem; 
       letter-spacing: 0px; 
-      font-size: 1rem;
+      font-size: 1.1rem;
       position: relative;
       overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: var(--accent) 0 0px 8px;
-      color: var(--focus);
+      border: none;
+      border-bottom: 2px solid #a5aab3;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      color: #0c346c;
+      text-shadow: none;
+      margin: 0;
+      text-transform: none;
     }
     .menu-header::before {
       content: '';
@@ -60,29 +93,310 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s ease;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: left 0.6s ease;
     }
     .menu-header:hover::before {
       left: 100%;
     }
     .menu-header::after {
-      content: '📑';
+      content: '🏗️';
       position: absolute;
       right: 1.5rem;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 1.2rem;
-      opacity: 0.7;
+      font-size: 1.3rem;
+      opacity: 0.9;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
     }
     
-    .toc { list-style: none; padding: 0; margin: 0; }
-    .toc li { margin: 0; }
-    .list-group-item { background: transparent; border-color: transparent; padding: 0; margin: 0.35rem 0.5rem; border-radius: 0.5rem; }
-    .list-group-item a { color: var(--fg); text-decoration: none; display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; border-left: 4px solid transparent; padding: 0.6rem 1rem; transition: all 0.2s ease; font-weight: 500; border-radius: 0; }
-    .list-group-item a:hover { background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%); border-left-color: var(--accent); color: var(--accent); }
-    .list-group-item a.active { background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%); color: var(--accent); font-weight: 600; border-left-color: var(--accent); box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2); }
-    .list-group-item a.active:hover { background: linear-gradient(90deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.16) 100%); box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3); }
+    .toc { 
+      list-style: none; 
+      padding: 0rem 0; 
+      margin: 0; 
+      background: transparent;
+    }
+    .toc li { 
+      margin: 0; 
+    }
+    
+    /* Section grouping */
+    .toc li[data-group="overview"] { margin-bottom: 0.75rem; }
+    .toc li[data-group="solid"]:first-of-type { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(59, 130, 246, 0.15);
+      padding-top: 1rem;
+    }
+    .toc li[data-group="other-principles"]:first-of-type { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(16, 185, 129, 0.15);
+      padding-top: 1rem;
+    }
+    .toc li[data-group="resources"] { 
+      margin-top: 1rem; 
+      border-top: 2px solid rgba(100, 116, 139, 0.15);
+      padding-top: 1rem;
+    }
+    
+    .list-group-item { 
+      background: transparent; 
+      border-color: transparent; 
+      padding: 0; 
+      margin: 0.25rem 0.75rem; 
+      border-radius: 0rem;
+      transition: all 0.2s ease;
+    }
+    .list-group-item a { 
+      color: #1f2937; 
+      text-decoration: none; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-start; 
+      gap: 0.4rem; 
+      border-left: 3px solid transparent; 
+      padding: 0.85rem 1.25rem; 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      font-weight: 500; 
+      border-radius: 0rem;
+      font-size: 0.95rem;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    .list-group-item a::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+      border-radius: 0 0px 0px 0;
+    }
+    .list-group-item a::after {
+      content: '▶';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .list-group-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-item a:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    .list-group-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-item a.active::before {
+      transform: scaleY(1);
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      width: 5px;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+    .list-group-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Collapsible parent items */
+    .list-group-item.has-children {
+      cursor: default;
+    }
+    .list-group-item.has-children > a {
+      cursor: pointer;
+      user-select: none;
+    }
+    .list-group-item.has-children > a::after {
+      content: '▼';
+      font-size: 0.65rem;
+      opacity: 0.6;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    .list-group-item.has-children.collapsed > a::after {
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    .list-group-item.has-children > a:hover::after {
+      opacity: 1;
+    }
+    
+    /* Hide collapsed children */
+    .list-group-sub-item.collapsed {
+      display: none;
+      max-height: 0;
+      overflow: hidden;
+    }
+    
+    /* Sub-items tree connectors */
+    .list-group-sub-item a::before { 
+      content: '├─';
+      font-size: 0.85rem;
+      margin-right: 0.5rem;
+      color: #6b7280;
+      z-index: 1;
+      position: relative;
+    }
+    
+    /* Sub-items styling - similar to main items but smaller and indented */
+    .list-group-sub-item {
+      background: transparent; 
+      border-color: transparent; 
+      padding: 0px; 
+      margin: 0.2rem 0.75rem 0.2rem 1.5rem;
+      border-radius: 0rem;
+      transition: all 0.2s ease;
+      position: relative;
+      list-style-type: none;
+    }
+    .list-group-sub-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+      border-radius: 0 0px 0px 0;
+      z-index: 1;
+    }
+    .list-group-sub-item a {
+      color: #1f2937; 
+      text-decoration: none; 
+      display: block;
+      border-left: 3px solid transparent; 
+      padding: 0.65rem 1rem 0.65rem 2.00rem;
+      transition: all 0.2s ease; 
+      font-weight: 500; 
+      border-radius: 0rem;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Sub-items hover and active states - same as main items */
+    .list-group-sub-item a::after {
+      content: '▶';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      font-size: 0.7rem;
+      color: #9ca3af;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .list-group-sub-item:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-sub-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-sub-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    
+    .list-group-sub-item.active::before {
+      transform: scaleY(1);
+      width: 5px;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+    .list-group-sub-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-sub-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-sub-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    .list-group-item a:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%); 
+      border-left-color: transparent;
+      color: #1e40af;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      text-decoration: none;
+    }
+    .list-group-item a:hover::before {
+      transform: scaleY(1);
+    }
+    .list-group-item a:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      color: #3b82f6;
+    }
+    .list-group-item a.active { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%); 
+      color: #1e40af; 
+      font-weight: 600; 
+      border-left-color: transparent;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .list-group-item a.active::after {
+      opacity: 1;
+      color: #2563eb;
+      transform: translateY(-50%) scale(1);
+    }
+    .list-group-item a.active:hover { 
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.16) 100%); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
     
     /* Badge styling */
     .badge { font-size: 0.8rem; padding: 0.15rem 0.4rem; background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent); font-weight: 600; border-radius: 0.25rem; font-style: normal; line-height: 1.2; opacity: 0.9; }
@@ -91,7 +405,7 @@
     .list-group-item a.active .badge { background: rgba(255, 255, 255, 0.3); color: white; border-color: rgba(255, 255, 255, 0.6); font-weight: 600; opacity: 1; }
         
     /* Content */
-    .content { width: 100%; max-width: 1000px; margin: 0 auto; }
+    .content { width: 100%; max-width: 100%; margin: 0 auto; background: #ffffff; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
     section { display: none !important; margin-bottom: 2rem; }
     section.active { display: block !important; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -118,9 +432,9 @@
     .table-striped tbody tr:hover { background-color: var(--accent-light); }
     
     /* Controls/Pagination */
-    .controls { opacity: 0.4; position: fixed; bottom: 5px; right: 30px; width: auto; z-index: 1000; background: transparent; display: flex; align-items: center; justify-content: center; gap: 0rem; padding: 0; min-height: 40px; }
+    .controls { opacity: 0.5; position: fixed; bottom: 0.25rem; right: 1rem; width: auto; z-index: 1000; background: transparent; display: flex; align-items: center; justify-content: center; gap: 0rem; padding: 0; min-height: 40px; }
     @media (max-width: 991px) {
-      .controls { bottom: 5px; right: 30px; }
+      .controls { bottom: 0.25rem; right: 1rem; }
       .menu-header { color: var(--focus); }
     }
     .controls:hover { opacity: 1; }
@@ -138,8 +452,8 @@
     
     /* Scrollbar */
     nav.sidebar::-webkit-scrollbar { width: 6px; }
-    nav.sidebar::-webkit-scrollbar-track { background: transparent; }
-    nav.sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 3px; }
+    nav.sidebar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+    nav.sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 0px; }
     nav.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
     
     /* Mermaid Diagrams */
@@ -157,7 +471,7 @@
       position: relative;
     }
     .mermaid.rendered {
-      min-height: auto;
+      min-height: 0;
     }
     .mermaid svg {
       max-width: 100%;
@@ -192,7 +506,7 @@
     }
 
     .mermaid[data-processed="true"] {
-      min-height: auto;
+      min-height: 0;
     }
     
     .mermaid svg {
@@ -342,12 +656,12 @@
     
     /* Layout - prevent unnecessary scrolling */
     html, body { height: 100%; margin: 0; }
-    #appContainer { display: flex; flex-direction: column; height: calc(100vh - 60px); }
+    #appContainer { display: flex; flex-direction: column; height: calc(100vh - 50px); }
     #mainRow { flex: 1; overflow: hidden; display: flex; }
     nav.sidebar { overflow-y: auto; max-height: 100%; position: relative; padding-bottom: 0px; }
     #main { overflow: hidden; display: flex; flex-direction: column; height: 100%; -webkit-tap-highlight-color: transparent; outline: none; border: none; }
     #main:focus { outline: none; }
-    .content { overflow-y: auto; flex: 1; width: 100%; min-height: 0; padding: 0rem 1rem 0rem 1.5rem; }
+    .content { overflow-y: auto; flex: 1; width: 100%; min-height: 0; padding: 0rem 1.5rem 0rem 1.5rem; }
     
     /* Contact Info */
     .contact-info {
@@ -497,7 +811,12 @@
       font-size: 0.875rem;
       line-height: 1.6;
     }
-    /* Document Footer */
+
+    ul
+    {
+        list-style-type: none;
+    }
+  /* Document Footer */
     .document-footer {
       text-align: center;
       padding: 20px;
@@ -513,7 +832,7 @@
     }
     .document-footer strong {
       color: #495057;
-    } 
+    }  
   </style>
   <!-- Mermaid.js for diagrams -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
@@ -729,1404 +1048,1255 @@
 
       <main id="main" class="col-lg-9 d-flex flex-column" tabindex="-1">
         <div class="content" id="content">
+
         <section id="introduction" role="article">
-          <h1>Introduction to Playwright</h1>
-          <span class="badge">overview, intro, what-is</span>
-          <p>Playwright is a <strong>powerful end-to-end testing framework</strong> for modern web applications developed by Microsoft. It enables reliable testing across all major browsers with a single API.</p>
-          
-          <h3>Key Features</h3>
-          <ul>
-            <li>Leverages advanced AI coding assistants to interpret specifications</li>
-            <li>Clarifies ambiguities through structured Q&A</li>
-            <li>Plans implementations and generates code automatically</li>
-            <li>Maintains traceability and version control throughout</li>
-          </ul>
+          <h1>📖 Introduction to Playwright</h1>
+          <span class="badge">overview</span>
+          <span class="badge">introduction</span>
+          <span class="badge">what-is</span>
+          <p>Playwright is an <strong>open-source end-to-end testing framework</strong> for modern web applications, developed and maintained by Microsoft. It enables reliable, cross-browser automation with a single, unified API that works across Chromium, Firefox, and WebKit.</p>
 
-          <div class="callout">
-            <strong>Core Principle</strong><br />
-            Specifications become <strong>first-class citizens</strong> in development, not just documentation that gets discarded after coding begins.
-          </div>
+          <h2>What Makes Playwright Special</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Feature</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Cross-Browser</strong></td><td>Chromium (Chrome/Edge), Firefox, and WebKit (Safari) — all from one API</td></tr>
+              <tr><td><strong>Auto-Waiting</strong></td><td>Automatically waits for elements to be actionable before interacting — eliminates flaky <code>sleep()</code> calls</td></tr>
+              <tr><td><strong>Network Interception</strong></td><td>Intercept, mock, and modify network requests and responses programmatically</td></tr>
+              <tr><td><strong>Multi-Language</strong></td><td>TypeScript, JavaScript, Python, .NET (C#), Java</td></tr>
+              <tr><td><strong>Parallel Execution</strong></td><td>Run tests in parallel across workers and browsers simultaneously with sharding</td></tr>
+              <tr><td><strong>Trace Viewer</strong></td><td>Rich visual debugger with DOM snapshots, network logs, and action timeline</td></tr>
+              <tr><td><strong>Codegen</strong></td><td>Record browser interactions and auto-generate test code instantly</td></tr>
+              <tr><td><strong>Mobile Emulation</strong></td><td>Emulate devices, geolocation, permissions, and viewport sizes</td></tr>
+            </tbody>
+          </table>
 
-          <h2>Problems Solved</h2>
-          <span class="badge">challenges, benefits</span>
-          
-          <h3>Traditional Development Challenges</h3>
-          <ul>
-            <li>📝 Specifications often become <strong>outdated</strong> after coding begins</li>
-            <li>🎯 Gap between "what we want" and "what we build"</li>
-            <li>🎲 <strong>Vibe-coding:</strong> jumping directly to implementation without clear structure</li>
-            <li>💸 Technical debt from unclear requirements</li>
-            <li>🗣️ Miscommunication between stakeholders and developers</li>
-            <li>📊 Inconsistent quality and completeness of requirements</li>
-          </ul>
-
-          <h3>AI Development Challenges</h3>
-          <ul>
-            <li>⚡ Inefficient use of AI coding assistants without structured guidance</li>
-            <li>🤝 Limited collaboration between humans and AI in development</li>
-          </ul>
-
-          <h2>The Paradigm Shift</h2>
-            
-          <div class="callout">
-            <p style="color: #dc2626; font-weight: bold; margin: 0;">❌ Old Way: Specifications → Discard → Code → Ship</p>
-            <p style="color: #16a34a; font-weight: bold; margin: 0;">✅ New Way: Specifications → Executable → Implementation → Ship</p>
-          </div>
-        </section>
-
-        <section id="spec-driven-dev" role="article">
-          <h1>Spec-Driven Development</h1>
-          <span class="badge">philosophy, methodology</span>
-          <p>Spec-Driven Development is a <strong>structured process</strong> that emphasizes three core principles:</p>
-
-          <h2>1. Intent-Driven Development</h2>
-          <ul>
-            <li>Define the <strong>"what"</strong> and <strong>"why"</strong> before the "how"</li>
-            <li>Focus on product scenarios, not technical implementation</li>
-            <li>Let AI interpret specifications and generate code</li>
-          </ul>
-
-          <h2>2. Rich Specification Creation</h2>
-          <ul>
-            <li>Use guardrails and organizational principles</li>
-            <li>Multi-step refinement process</li>
-            <li>Not one-shot prompt engineering</li>
-          </ul>
-
-          <h2>3. AI-Powered Execution</h2>
-          <ul>
-            <li>Heavy reliance on advanced AI model capabilities</li>
-            <li>Specifications become executable through AI agents</li>
-            <li>Technology-independent approach</li>
-          </ul>
-
-          <h2>Key Benefits</h2>
-          <ul>
-            <li>⚡ <strong>Faster Development:</strong> Reduce time from idea to implementation</li>
-            <li>✅ <strong>Higher Quality:</strong> Structured approach ensures completeness</li>
-            <li>💬 <strong>Better Communication:</strong> Clear specifications for all stakeholders</li>
-            <li>🔧 <strong>Technology Independence:</strong> Not tied to specific frameworks or languages</li>
-            <li>📚 <strong>Maintainability:</strong> Living documentation that stays current</li>
-          </ul>
-
-          <h2>Development Phases</h2>
-          <span class="badge">greenfield, brownfield</span>
-          <p>SpecKit supports three distinct development scenarios:</p>
-
-          <h3>1. 0-to-1 Development (Greenfield)</h3>
-          <div class="callout">
-            Generate applications from scratch with high-level requirements
-          </div>
-          <ul>
-            <li>Start with high-level requirements</li>
-            <li>Build production-ready applications</li>
-            <li><strong>Example:</strong> Building a new task management system</li>
-          </ul>
-
-          <h3>2. Iterative Enhancement (Brownfield)</h3>
-          <div class="callout">
-            Add features to existing applications and modernize legacy systems
-          </div>
-          <ul>
-            <li>Add features to existing applications</li>
-            <li>Modernize legacy systems</li>
-            <li>Adapt and evolve processes</li>
-            <li><strong>Example:</strong> Adding real-time collaboration to existing app</li>
-          </ul>
-
-          <h3>3. Creative Exploration</h3>
-          <div class="callout">
-            Explore diverse solutions in parallel with different technology stacks
-          </div>
-          <ul>
-            <li>Explore diverse solutions in parallel</li>
-            <li>Support multiple technology stacks</li>
-            <li>Experiment with different UX patterns</li>
-            <li><strong>Example:</strong> Testing React vs Vue vs Vanilla JS implementations</li>
-          </ul>
-        </section>
-
-        <section id="architecture" role="article">
-          <h1>Architecture & Components</h1>
-          <span class="badge">cli, agents, workflow</span>
-          <p>SpecKit operationalizes Spec-Driven Development by turning rich specifications into executable workflows.</p>
-
-          <h2>Architecture Overview</h2>
+          <h2>Playwright Architecture</h2>
           <div class="mermaid">
----
-title: SpecKit Architecture
----
 flowchart LR
-%%{init: {'themeVariables': { 'fontFamily': 'Segoe UI'}}}%%
-    USER[**Developer/Product Owner**]
-    CLI[**Specify CLI**]
-    
-    subgraph Repo[**Project Repo**]
-        CONFIG[**.github/ & .specify/
-        Agents, Prompts, Templates**]
-        CONST[**constitution/**]
-        SPEC[**specs/**]
-        ARTIFACTS[**clarifications/ 
-        plan/
-        tasks/**]
-        CODE[**src/**]
+    subgraph TC["Test Code (TypeScript / JS)"]
+      T1["test(async ({ page }) => { ... })"]
     end
+    subgraph PW["Playwright Library"]
+      direction TB
+      API["High-Level API\n(Browser, Page, Locator, Expect)"]
+      PROTO["Browser Protocol\n(CDP / WebSocket)"]
+    end
+    subgraph BR["Browser Engines"]
+      CR["Chromium\n(Chrome / Edge)"]
+      FF["Firefox"]
+      WK["WebKit\n(Safari)"]
+    end
+    TC --> API
+    API --> PROTO
+    PROTO --> CR & FF & WK
 
-    USER -->|Slash commands| CLI
-    CLI -->|Initialize| CONFIG
-    CLI -->|Execute agents| CONFIG
-    CONST & SPEC -->|Input| CONFIG
-    CONFIG -->|Generate| ARTIFACTS
-    CONFIG -->|Implement| CODE
-    Repo -->|Results| USER
-
-    classDef userStyle fill:#e1f5ff,stroke:#0078d4,stroke-width:2px;
-    classDef configStyle fill:#fff4e1,stroke:#d4a800,stroke-width:2px;
-    classDef artifactStyle fill:#e8f5e9,stroke:#4caf50,stroke-width:2px;
-    
-    class USER,CLI userStyle;
-    class CONFIG configStyle;
-    class CONST,SPEC,ARTIFACTS,CODE artifactStyle;
+    classDef box fill:#dbeafe,stroke:#3b82f6,stroke-width:2px;
+    classDef browser fill:#dcfce7,stroke:#16a34a,stroke-width:2px;
+    class TC,PW box;
+    class BR,CR,FF,WK browser;
           </div>
 
-          <h2>Core Components</h2>
-          
-          <h3>1. Specify CLI</h3>
+          <h2>Core Concepts</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Concept</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Browser</strong></td><td>A browser instance (Chromium, Firefox, or WebKit)</td></tr>
+              <tr><td><strong>BrowserContext</strong></td><td>An isolated browser session (like an incognito profile). Each test gets its own context</td></tr>
+              <tr><td><strong>Page</strong></td><td>A single browser tab or window within a context</td></tr>
+              <tr><td><strong>Locator</strong></td><td>A lazy reference to an element — auto-retries on interaction</td></tr>
+              <tr><td><strong>Expect</strong></td><td>Assertion library with built-in retry and web-first assertions</td></tr>
+              <tr><td><strong>Fixture</strong></td><td>Reusable setup/teardown pieces injected into tests (page, context, browser)</td></tr>
+            </tbody>
+          </table>
+
+          <h2>When to Use Playwright</h2>
           <ul>
-            <li>Command-line tool that orchestrates the SDD flow end-to-end</li>
-            <li>System requirements checker for agent compatibility</li>
-            <li>Project scaffolding: initializes repo structure</li>
-            <li>Runs consistency and completeness validations</li>
-            <li>Provides safe handoff to selected AI agents</li>
+            <li>✅ End-to-end (E2E) tests simulating real user journeys</li>
+            <li>✅ Cross-browser regression testing</li>
+            <li>✅ Visual regression and screenshot comparison</li>
+            <li>✅ API testing combined with UI workflows</li>
+            <li>✅ Testing Single-Page Applications (React, Angular, Vue, Next.js)</li>
+            <li>✅ Accessibility testing with ARIA-based locators</li>
           </ul>
 
-          <h3>2. AI Agent Integration</h3>
-          <ul>
-            <li>Supports 18+ AI coding assistants</li>
-            <li>Works with: GitHub Copilot, Claude Code, Cursor, Windsurf, Gemini CLI, Qoder CLI, IBM Bob, Jules, and more</li>
-            <li>The CLI passes structured context to agents</li>
-            <li>Agents return proposed changes for review</li>
-          </ul>
+          <div class="callout">
+            <strong>Key Design Principle:</strong> Playwright's auto-wait mechanism eliminates the #1 cause of flaky tests — timing issues. Every action automatically waits for the element to be visible, enabled, stable, and not obscured before interacting.
+          </div>
+
+          <h2>Playwright vs. Other Frameworks</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Feature</th><th>Playwright</th><th>Cypress</th><th>Selenium</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Multi-browser</td><td>✅ Chromium, Firefox, WebKit</td><td>⚠️ Chrome, Firefox, Edge</td><td>✅ All major browsers</td></tr>
+              <tr><td>Auto-waiting</td><td>✅ Built-in on all actions</td><td>✅ Built-in</td><td>❌ Manual waits needed</td></tr>
+              <tr><td>Network mocking</td><td>✅ Full request intercept</td><td>✅ Full intercept</td><td>⚠️ BrowserMob required</td></tr>
+              <tr><td>Cross-origin iframes</td><td>✅ First-class support</td><td>⚠️ Limited</td><td>✅ Supported</td></tr>
+              <tr><td>Parallel tests</td><td>✅ Workers + sharding</td><td>⚠️ Paid cloud only (free: serial)</td><td>⚠️ Selenium Grid</td></tr>
+              <tr><td>Language support</td><td>✅ JS/TS, Python, Java, .NET</td><td>JS/TS only</td><td>✅ Many languages</td></tr>
+              <tr><td>Trace / Debug UI</td><td>✅ Built-in Trace Viewer</td><td>⚠️ Cypress Cloud (paid)</td><td>❌ Third-party only</td></tr>
+              <tr><td>Mobile emulation</td><td>✅ Built-in device profiles</td><td>⚠️ Viewport only</td><td>⚠️ Appium required</td></tr>
+            </tbody>
+          </table>
         </section>
 
         <section id="installation" role="article">
-          <h1>Installation</h1>
-          <span class="badge">setup, prerequisites</span>          
+          <h1>💾 Installation & Setup</h1>
+          <span class="badge">setup</span> <span class="badge">getting-started</span>
+
           <h2>Prerequisites</h2>
           <ul>
-            <li>Python 3.11+ (Python 3.8+ minimum)</li>
-            <li>Git 2.20+</li>
-            <li>uv package manager (extremely fast Python package manager)</li>
-            <li>Supported AI coding agent</li>
-            <li>VS Code or Cursor (recommended)</li>
+            <li><strong>Node.js</strong> 18+ (LTS recommended) — <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a></li>
+            <li>A package manager: <code>npm</code>, <code>yarn</code>, or <code>pnpm</code></li>
+            <li>VS Code with the <strong>Playwright Test for VS Code</strong> extension (optional but recommended)</li>
           </ul>
 
+          <h2>Quick Start — New Project</h2>
+          <pre><code># Create and scaffold a new Playwright project
+npm init playwright@latest
+
+# Answer the prompts:
+#   Where to put your tests?  → tests/
+#   Add a GitHub Actions CI?  → Y
+#   Install Playwright browsers? → Y</code></pre>
+
+          <p>This generates the following project structure:</p>
+          <pre><code>my-project/
+├── tests/
+│   └── example.spec.ts        # Sample test
+├── tests-examples/
+│   └── demo-todo-app.spec.ts  # Demo test suite
+├── playwright.config.ts        # Configuration file
+├── package.json
+└── .github/
+    └── workflows/
+        └── playwright.yml      # GitHub Actions CI</code></pre>
+
+          <h2>Add to Existing Project</h2>
+          <pre><code># npm
+npm install -D @playwright/test
+
+# yarn
+yarn add -D @playwright/test
+
+# pnpm
+pnpm add -D @playwright/test
+
+# Install browser binaries
+npx playwright install
+
+# Install only specific browsers
+npx playwright install chromium firefox</code></pre>
+
+          <h2>VS Code Extension</h2>
           <div class="callout">
-            <strong>Version Compatibility:</strong>
-            <ul>
-              <li>CLI Version 0.0.22 is compatible with Template Version 0.0.90</li>
-              <li>Always keep CLI and project templates in sync</li>
-              <li>Check <code>specify check</code> to verify compatibility</li>
-            </ul>
+            Install the <strong>Playwright Test for VS Code</strong> extension (by Microsoft) for a first-class developer experience: run tests from the gutter, pick locators interactively, record new tests with codegen, and open the Trace Viewer — all without leaving VS Code.
           </div>
+          <pre><code># Install via CLI
+code --install-extension ms-playwright.playwright</code></pre>
 
-          <h3>Install uv (Windows PowerShell)</h3>
-          <pre><code><b>powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</b></code></pre>
+          <h2>Generate Tests with Codegen</h2>
+          <pre><code># Launch codegen — interact with the browser, get test code
+npx playwright codegen https://example.com
 
-          <h2>Option 1: Persistent Installation (Recommended)</h2>
-          <pre><code># Install globally with uv
-<b>uv tool install specify-cli --from git+https://github.com/github/spec-kit.git --native-tls</b>
+# Codegen targeting a specific browser
+npx playwright codegen --browser firefox https://example.com
 
-# Verify installation
-<b>specify version</b>
+# Codegen with mobile device emulation
+npx playwright codegen --device "iPhone 13" https://example.com</code></pre>
 
-GitHub Spec Kit - Spec-Driven Development Toolkit
+          <h2>Verify Installation</h2>
+          <pre><code># Run the sample test
+npx playwright test
 
-│         CLI Version    0.0.22
-│    Template Version    0.0.90
-│            Released    2025-12-04
-│
-│              Python    3.13.4
-│            Platform    Windows
-│        Architecture    AMD64
-│          OS Version    10.0.22631
-
-# Check system requirements
-<b>specify check</b>
-
-GitHub Spec Kit - Spec-Driven Development Toolkit
-
-│         CLI Version    0.0.22
-│    Template Version    0.0.90
-│            Released    2025-12-04
-│
-│              Python    3.13.4
-│            Platform    Windows
-│        Architecture    AMD64
-│          OS Version    10.0.22631
-
-          </code></pre>
-
-          <h2>Option 2: One-Time Usage</h2>
-          <pre><code># Run without installing
-<b>uvx --from git+https://github.com/github/spec-kit.git specify init my-project</b></code></pre>
-
-          <h2>Initialize a Project</h2>
-          <pre><code># Initialize with GitHub Copilot / Claude / Gemini
-<b>specify init demo-project --ai copilot | claude | gemini</b>
-
-# Initialize in current directory
-<b>specify init . --ai copilot | claude | gemini</b>
-
-# Skip git initialization
-<b>specify init demo-project --ai copilot --no-git</b>
-
-# Enable debug output
-<b>specify init demo-project --ai copilot --debug</b>
-
-# Force merge into current (non-empty) directory without confirmation
-<b>specify init . --force --ai copilot</b></code></pre>
-
-<h2>Configuration</h2>
-          <p>Specify your preferred AI agent during initialization:</p>
-          <pre><code># GitHub Copilot
-specify init my-project --ai copilot
-
-# Claude
-specify init my-project --ai claude
-
-# Cursor
-specify init my-project --ai cursor</code></pre>
-
-          <h2>Agent-Specific Features</h2>
-          <ul>
-            <li>🎯 <strong>Context Awareness</strong>: All agents receive project structure and artifact state</li>
-            <li>🔄 <strong>Workflow Continuity</strong>: Agents maintain conversation history across sessions</li>
-            <li>📝 <strong>Spec Interpretation</strong>: Natural language specs translated into actionable tasks</li>
-            <li>✅ <strong>Validation Support</strong>: Automated testing and verification workflows</li>
-          </ul>
+# View HTML report in browser
+npx playwright show-report</code></pre>
 
           <div class="callout">
-            <strong>💡 Tip:</strong> You can switch agents mid-project by updating your configuration. All artifacts remain compatible across agents.
+            <strong>Tip:</strong> Run <code>npx playwright install --with-deps</code> on Linux CI environments to also install required system OS dependencies for the browsers.
           </div>
         </section>
 
-        <section id="workflow" role="article">
-          <h1>Development Workflow</h1>
-          <span class="badge">process, steps</span>
-          <p>The Spec-Driven Development workflow consists of seven structured steps that transform high-level specifications into executable code.</p>          
-            <table class="table table-striped">
-            <thead>
-              <tr>
-              <th>Step</th>
-              <th>Phase</th>
-              <th>Description</th>
-              <th>Key Activities</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-              <td><strong>1</strong></td>
-              <td><strong>CONSTITUTE</strong></td>
-              <td>Define Project Vision</td>
-              <td>
-                <ul>
-                  <li>Vision Statement</li>
-                  <li>Core Objectives</li>
-                  <li>Target Audience</li>
-                </ul>
-              </td>
-              </tr>
-              <tr>
-              <td><strong>2</strong></td>
-              <td><strong>SPECIFY</strong></td>
-              <td>Detailed Requirements</td>
-              <td>
-                <ul>
-                <li>Functional Requirements</li>
-                <li>User Stories & Scenarios</li>
-                <li>Data Models</li>
-                <li>API Contracts</li>
-                <li>Generate Checklist (optional)</li>
-                </ul>
-              </td>
-              </tr>
-              <tr>
-              <td><strong>3</strong></td>
-              <td><strong>CLARIFY</strong></td>
-              <td>Resolve Ambiguities</td>
-              <td>
-                <ul>
-                <li>Ask Questions</li>
-                <li>Make Decisions</li>
-                <li>Document Tradeoffs</li>
-                </ul>                  
-              </td>
-              </tr>
-              <tr>
-              <td><strong>4</strong></td>
-              <td><strong>PLAN</strong></td>
-              <td>Create Implementation Plan</td>
-              <td>
-                <ul>
-                  <li>Technical Architecture</li>
-                  <li>Development Phases</li>
-                  <li>Tech Stack Selection</li>
-                  <li>Testing Strategy</li>
-                  <li>Risk Assessment</li>
-                </ul>
-              </td>
-              </tr>
-              <tr>
-              <td><strong>5</strong></td>
-              <td><strong>TASKS</strong></td>
-              <td>Break Down Work</td>
-              <td>
-                <ul>
-                <li>Actionable Tasks</li>
-                <li>Acceptance Criteria</li>
-                <li>Time Estimates</li>
-                </ul>
-              </td>
-              </tr>
-              <tr>
-              <td><strong>6</strong></td>
-              <td><strong>ANALYZE</strong></td>
-              <td>Evaluate & Validate</td>
-              <td>
-                <ul>
-                <li>Feasibility Check</li>
-                <li>Risk Assessment</li>
-                <li>Gap Analysis</li>
-                <li>Validate Against Checklist
-                  <em>→ If not approved, refine and return to PLAN</em></li>
-                </ul>
-              </td>
-              </tr>
-              <tr>
-              <td><strong>7</strong></td>
-              <td><strong>IMPLEMENT</strong></td>
-              <td>Build the Solution</td>
-              <td>
-                <ul>
-                  <li>Execute Tasks</li>
-                  <li>Write Code</li>
-                  <li>Test & Deploy</li>
-                  <li>Verify Checklist Completion</li>
-                </ul>
-              </td>
-              </tr>
-            </tbody>
-            </table>
+        <section id="writing-tests" role="article">
+          <h1>✍️ Writing Tests</h1>
+          <span class="badge">basics</span> <span class="badge">first-test</span> <span class="badge">actions</span>
 
-          <h2>Slash Commands</h2>
-          <span class="badge">commands, usage</span>
-          <p>After running <code>specify init</code>, your AI coding agent will have access to <strong>8 slash commands</strong>:</p>
+          <h2>Anatomy of a Playwright Test</h2>
+          <pre><code>import { test, expect } from '@playwright/test';
 
-          <h3>Core Commands</h3>
+test('user can log in', async ({ page }) => {
+  // 1. Navigate
+  await page.goto('https://myapp.com/login');
+
+  // 2. Interact
+  await page.getByLabel('Email').fill('user@example.com');
+  await page.getByLabel('Password').fill('secret');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+
+  // 3. Assert
+  await expect(page).toHaveURL('/dashboard');
+  await expect(page.getByRole('heading')).toContainText('Welcome');
+});</code></pre>
+
+          <h2>Test Fixtures</h2>
+          <p>Playwright injects built-in fixtures into every test via destructuring:</p>
           <table class="table table-striped">
             <thead>
-              <tr>
-                <th>Command</th>
-                <th>Description</th>
-              </tr>
+              <tr><th>Fixture</th><th>Scope</th><th>Description</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td><code>/speckit.constitution</code></td>
-                <td>Create or update project governing principles and development guidelines</td>
-              </tr>
-              <tr>
-                <td><code>/speckit.specify</code></td>
-                <td>Define what you want to build (requirements and user stories)</td>
-              </tr>
-              <tr>
-                <td><code>/speckit.plan</code></td>
-                <td>Create technical implementation plans with your chosen tech stack</td>
-              </tr>
-              <tr>
-                <td><code>/speckit.tasks</code></td>
-                <td>Generate actionable task lists for implementation</td>
-              </tr>
-              <tr>
-                <td><code>/speckit.implement</code></td>
-                <td>Execute all tasks to build the feature according to the plan</td>
-              </tr>
+              <tr><td><code>page</code></td><td>Test</td><td>A fresh Page in an isolated BrowserContext</td></tr>
+              <tr><td><code>context</code></td><td>Test</td><td>The BrowserContext for the current test</td></tr>
+              <tr><td><code>browser</code></td><td>Worker</td><td>A shared Browser instance (expensive to create)</td></tr>
+              <tr><td><code>browserName</code></td><td>Worker</td><td>Name of the current browser (e.g., <code>'chromium'</code>)</td></tr>
+              <tr><td><code>request</code></td><td>Test</td><td>API request context for making HTTP requests</td></tr>
             </tbody>
           </table>
 
-          <h3>Optional Commands</h3>
+          <h2>Grouping Tests with <code>describe</code></h2>
+          <pre><code>import { test, expect } from '@playwright/test';
+
+test.describe('Shopping Cart', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/shop');
+  });
+
+  test('can add item to cart', async ({ page }) => {
+    await page.getByText('Add to Cart').first().click();
+    await expect(page.getByRole('status')).toContainText('1 item');
+  });
+
+  test('can remove item from cart', async ({ page }) => {
+    await page.getByText('Add to Cart').first().click();
+    await page.getByRole('button', { name: 'Remove' }).click();
+    await expect(page.getByRole('status')).toContainText('0 items');
+  });
+});</code></pre>
+
+          <h2>Test Hooks</h2>
+          <pre><code>test.beforeAll(async ({ browser }) => {
+  // Runs once before all tests in this file (worker scope)
+});
+
+test.afterAll(async () => {
+  // Runs once after all tests in this file
+});
+
+test.beforeEach(async ({ page }) => {
+  // Runs before each test — ideal for navigation/login
+  await page.goto('/');
+});
+
+test.afterEach(async ({ page }, testInfo) => {
+  // Runs after each test — ideal for cleanup
+  if (testInfo.status !== testInfo.expectedStatus) {
+    await page.screenshot({ path: `failure-${testInfo.title}.png` });
+  }
+});</code></pre>
+
+          <h2>Common Page Actions</h2>
           <table class="table table-striped">
             <thead>
-              <tr>
-                <th>Command</th>
-                <th>Description</th>
-              </tr>
+              <tr><th>Action</th><th>Code</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td><code>/speckit.clarify</code></td>
-                <td>Clarify underspecified areas (recommended before /speckit.plan)</td>
-              </tr>
-              <tr>
-                <td><code>/speckit.analyze</code></td>
-                <td>Cross-artifact consistency & coverage analysis</td>
-              </tr>
-              <tr>
-                <td><code>/speckit.checklist</code></td>
-                <td>Generate custom quality checklists that validate requirements</td>
-              </tr>
+              <tr><td>Navigate to URL</td><td><code>await page.goto('https://example.com')</code></td></tr>
+              <tr><td>Click element</td><td><code>await page.getByRole('button', { name: 'Submit' }).click()</code></td></tr>
+              <tr><td>Type into input</td><td><code>await page.getByLabel('Username').fill('alice')</code></td></tr>
+              <tr><td>Press keyboard key</td><td><code>await page.keyboard.press('Enter')</code></td></tr>
+              <tr><td>Select from dropdown</td><td><code>await page.getByLabel('Country').selectOption('Canada')</code></td></tr>
+              <tr><td>Check a checkbox</td><td><code>await page.getByRole('checkbox').check()</code></td></tr>
+              <tr><td>Upload a file</td><td><code>await page.getByLabel('Upload').setInputFiles('file.pdf')</code></td></tr>
+              <tr><td>Hover over element</td><td><code>await page.getByText('Menu').hover()</code></td></tr>
+              <tr><td>Drag and drop</td><td><code>await page.getByText('Item').dragTo(page.getByText('Target'))</code></td></tr>
+              <tr><td>Take screenshot</td><td><code>await page.screenshot({ path: 'screenshot.png' })</code></td></tr>
+              <tr><td>Wait for navigation</td><td><code>await page.waitForURL('**/dashboard')</code></td></tr>
+              <tr><td>Evaluate JavaScript</td><td><code>const title = await page.evaluate(() =&gt; document.title)</code></td></tr>
             </tbody>
           </table>
 
-          <h2>Workflow Sequence</h2>
-          <div class="mermaid">
-sequenceDiagram
-  title Developer Workflow
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '14', 'fontFamily': 'Segoe UI'}, 'sequence':{ 'actorMargin': 50, 'boxMargin': 10, 'boxTextMargin': 10}}}%%
-  participant U as User
-  participant C as Specify CLI
-  participant A as AI Agent
-  participant R as Repo
+          <h2>Custom Fixtures</h2>
+          <pre><code">// fixtures.ts — extend base test with custom fixtures
+import { test as base, expect } from '@playwright/test';
 
-  U->>C: initialize + check environment
-  C->>R: scaffold constitution/spec templates
-  U->>C: /speckit.specify (requirements)
-  C->>A: provide spec + constraints
-  A-->>C: ask clarifications
-  C-->>U: surface questions
-  U->>C: answers via /speckit.clarify
-  C->>A: updated context (spec+clarifications)
-  A-->>C: technical plan + tasks
-  C->>R: write Plan.md + Tasks.md
-  U->>C: /speckit.implement
-  C->>A: execute guarded code generation
-  A-->>C: proposed diffs
-  C->>R: apply changes to src/**
-  R-->>U: updated artifacts + code
-          </div>
+type MyFixtures = {
+  loggedInPage: Page;
+};
+
+export const test = base.extend&lt;MyFixtures&gt;({
+  loggedInPage: async ({ page }, use) => {
+    await page.goto('/login');
+    await page.getByLabel('Email').fill('admin@test.com');
+    await page.getByLabel('Password').fill('password');
+    await page.getByRole('button', { name: 'Login' }).click();
+    await page.waitForURL('/dashboard');
+    await use(page); // provide the fixture value to the test
+    // teardown: nothing needed, context is isolated
+  },
+});
+
+export { expect };
+
+// my.spec.ts
+import { test, expect } from './fixtures';
+
+test('admin can view reports', async ({ loggedInPage }) => {
+  await loggedInPage.getByRole('link', { name: 'Reports' }).click();
+  await expect(loggedInPage).toHaveURL('/reports');
+});</code></pre>
 
           <div class="callout">
-            <strong>Key Workflow Insights</strong>
-            <ul>
-              <li><b>Sequential Flow:</b> Each step builds upon the previous one, ensuring comprehensive project planning</li>
-              <li><strong>Validation Gate:</strong> The ANALYZE step includes a decision point to ensure quality before implementation</li>
-              <li><strong>Iterative Refinement:</strong> If analysis reveals issues, the workflow loops back to PLAN for adjustments</li>
-              <li><strong>Clear Deliverables:</strong> Each step has specific outputs that feed into subsequent stages</li>
-            </ul>
+            <strong>Best Practice:</strong> Use <code>test.beforeEach</code> for lightweight setup like navigation. Use custom fixtures for heavier shared setup like authenticated sessions or database seeding — fixtures are automatically torn down and compose cleanly.
           </div>
         </section>
 
-        <section id="artifacts" role="article">
-          <h1>Artifact Lifecycle</h1>
-          <span class="badge">files, structure</span>
-          <p>Understanding where SpecKit stores different types of project artifacts:</p>
-          <h2>Project Structure Diagram</h2>
+        <section id="locators" role="article">
+          <h1>🔍 Locators</h1>
+          <span class="badge">selectors</span> <span class="badge">finding-elements</span>
+          <p>Locators are Playwright's primary mechanism to find and interact with elements. Unlike CSS/XPath selectors, locators <strong>auto-retry</strong> the query until the element becomes actionable — making tests resilient to timing issues.</p>
+
+          <h2>Recommended: User-Facing Locators</h2>
+          <p>Prefer locators that mirror how users perceive the UI — they're more resilient to code changes:</p>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Locator</th><th>Example</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>getByRole()</code></td><td><code>getByRole('button', { name: 'Submit' })</code></td><td>Interactive elements — buttons, links, inputs, etc.</td></tr>
+              <tr><td><code>getByLabel()</code></td><td><code>getByLabel('Email address')</code></td><td>Form fields associated with a label</td></tr>
+              <tr><td><code>getByPlaceholder()</code></td><td><code>getByPlaceholder('Search…')</code></td><td>Inputs identified by placeholder text</td></tr>
+              <tr><td><code>getByText()</code></td><td><code>getByText('Welcome back!')</code></td><td>Non-interactive text content</td></tr>
+              <tr><td><code>getByAltText()</code></td><td><code>getByAltText('Company logo')</code></td><td>Images with alt attributes</td></tr>
+              <tr><td><code>getByTitle()</code></td><td><code>getByTitle('Close dialog')</code></td><td>Elements with title attributes</td></tr>
+              <tr><td><code>getByTestId()</code></td><td><code>getByTestId('submit-btn')</code></td><td>Elements with <code>data-testid</code> attribute</td></tr>
+            </tbody>
+          </table>
+
+          <h2>CSS and XPath Locators</h2>
+          <pre><code">// CSS selector
+await page.locator('.nav-item.active').click();
+await page.locator('input[type="email"]').fill('user@test.com');
+await page.locator('#submit-button').click();
+
+// XPath
+await page.locator('xpath=//button[contains(text(),"Save")]').click();
+
+// CSS :has() — find parent containing specific child
+await page.locator('article:has(h2:text("Featured"))').click();</code></pre>
+
+          <h2>Filtering Locators</h2>
+          <pre><code">// Filter by text content
+await page.getByRole('listitem').filter({ hasText: 'Product A' }).click();
+
+// Filter by another locator
+await page.getByRole('listitem')
+  .filter({ has: page.getByRole('button', { name: 'Delete' }) })
+  .first()
+  .click();
+
+// Combine filters (AND logic)
+await page.getByRole('row')
+  .filter({ hasText: 'Active' })
+  .filter({ has: page.getByRole('checkbox', { checked: true }) })
+  .count();</code></pre>
+
+          <h2>Chaining and Scoping</h2>
+          <pre><code">// Scope locator to a region
+const sidebar = page.getByRole('navigation', { name: 'Sidebar' });
+await sidebar.getByRole('link', { name: 'Dashboard' }).click();
+
+// nth element (0-indexed)
+await page.getByRole('listitem').nth(2).click();
+
+// first() / last()
+await page.getByRole('row').first().getByRole('button').click();</code></pre>
+
+          <h2>Working with Multiple Elements</h2>
+          <pre><code">// Count matching elements
+const count = await page.getByRole('listitem').count();
+
+// Get all text contents
+const items = await page.getByRole('listitem').allTextContents();
+// → ['Item 1', 'Item 2', 'Item 3']
+
+// Loop over all matching elements
+for (const row of await page.getByRole('row').all()) {
+  const cells = await row.getByRole('cell').allTextContents();
+  console.log(cells);
+}</code></pre>
+
+          <h2>Locator Priority Guide</h2>
+          <div class="callout">
+            <ol>
+              <li>🥇 <code>getByRole()</code> — mirrors ARIA; works with screen readers; most resilient</li>
+              <li>🥈 <code>getByLabel()</code> — clear semantic link to form fields</li>
+              <li>🥉 <code>getByTestId()</code> — stable if you own the code; add <code>data-testid</code> attributes</li>
+              <li>⚠️ <code>getByText()</code> — fine for static content; fragile if text changes frequently</li>
+              <li>🚫 CSS class selectors — avoid; class names change with refactors</li>
+              <li>🚫 XPath — verbose and brittle; last resort only</li>
+            </ol>
+          </div>
+        </section>
+
+        <section id="assertions" role="article">
+          <h1>🧪 Assertions</h1>
+          <span class="badge">expect</span> <span class="badge">verification</span> <span class="badge">checks</span>
+          <p>Playwright's <code>expect()</code> provides <strong>web-first assertions</strong> that automatically retry until the condition is true (or the timeout expires). This eliminates the need for manual waits before assertions.</p>
+
+          <h2>Page Assertions</h2>
+          <pre><code">import { expect } from '@playwright/test';
+
+// URL assertions
+await expect(page).toHaveURL('https://myapp.com/dashboard');
+await expect(page).toHaveURL(/\/dashboard$/);
+
+// Title assertions
+await expect(page).toHaveTitle('My App - Dashboard');
+await expect(page).toHaveTitle(/Dashboard/);</code></pre>
+
+          <h2>Element Assertions (Most Common)</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Assertion</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>toBeVisible()</code></td><td>Element is visible in the DOM</td></tr>
+              <tr><td><code>toBeHidden()</code></td><td>Element is not visible</td></tr>
+              <tr><td><code>toBeEnabled()</code></td><td>Form element is not disabled</td></tr>
+              <tr><td><code>toBeDisabled()</code></td><td>Form element is disabled</td></tr>
+              <tr><td><code>toBeChecked()</code></td><td>Checkbox/radio is checked</td></tr>
+              <tr><td><code>toBeEmpty()</code></td><td>Element or input has no content</td></tr>
+              <tr><td><code>toHaveText()</code></td><td>Element's text matches (supports regex)</td></tr>
+              <tr><td><code>toContainText()</code></td><td>Element's text contains the substring</td></tr>
+              <tr><td><code>toHaveValue()</code></td><td>Input/select has specific value</td></tr>
+              <tr><td><code>toHaveAttribute()</code></td><td>Element has attribute with value</td></tr>
+              <tr><td><code>toHaveClass()</code></td><td>Element has specific CSS class</td></tr>
+              <tr><td><code>toHaveCount()</code></td><td>Locator matches N elements</td></tr>
+              <tr><td><code>toHaveScreenshot()</code></td><td>Visual regression — pixel comparison</td></tr>
+              <tr><td><code>toBeInViewport()</code></td><td>Element is inside the visible viewport</td></tr>
+              <tr><td><code>toBeAttached()</code></td><td>Element is attached to DOM (may be hidden)</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Assertion Examples</h2>
+          <pre><code">// Visibility
+await expect(page.getByText('Success')).toBeVisible();
+await expect(page.getByRole('dialog')).toBeHidden();
+
+// Text content
+await expect(page.getByRole('heading')).toHaveText('Dashboard');
+await expect(page.getByRole('status')).toContainText('3 items');
+
+// Input values
+await expect(page.getByLabel('Email')).toHaveValue('user@example.com');
+
+// Counts
+await expect(page.getByRole('listitem')).toHaveCount(5);
+
+// Attributes
+await expect(page.getByRole('img')).toHaveAttribute('alt', 'Profile photo');
+
+// State
+await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled();
+await expect(page.getByRole('checkbox')).toBeChecked();
+
+// Negative assertions
+await expect(page.getByText('Error')).not.toBeVisible();</code></pre>
+
+          <h2>Soft Assertions</h2>
+          <p>Soft assertions do <strong>not stop the test</strong> on failure — they collect all failures and report them at the end:</p>
+          <pre><code">test('full page audit', async ({ page }) => {
+  await page.goto('/');
+
+  // These won't stop the test on failure
+  await expect.soft(page.getByText('Home')).toBeVisible();
+  await expect.soft(page.getByRole('link', { name: 'About' })).toBeVisible();
+  await expect.soft(page.getByRole('link', { name: 'Contact' })).toBeVisible();
+
+  // Hard assertion — stops test if fails
+  await expect(page).toHaveTitle(/My App/);
+});</code></pre>
+
+          <h2>API Response Assertions</h2>
+          <pre><code">const response = await page.request.get('/api/users');
+await expect(response).toBeOK();                    // status 200-299
+expect(response.status()).toBe(200);
+const body = await response.json();
+expect(body.users).toHaveLength(10);</code></pre>
+
+          <div class="callout">
+            <strong>Auto-Retry:</strong> Web-first assertions like <code>toBeVisible()</code> and <code>toHaveText()</code> automatically retry with a default 5-second timeout. This means you don't need to add manual waits before asserting on dynamic content — Playwright will poll until the condition is met or the timeout expires.
+          </div>
+        </section>
+
+        <section id="running-tests" role="article">
+          <h1>🏃 Running Tests</h1>
+          <span class="badge">execution</span> <span class="badge">cli</span> <span class="badge">ui-mode</span>
+
+          <h2>CLI Commands</h2>
+          <pre><code"># Run all tests
+npx playwright test
+
+# Run a specific file
+npx playwright test tests/login.spec.ts
+
+# Run tests matching a pattern
+npx playwright test --grep "checkout"
+
+# Run tests with a specific tag
+npx playwright test --grep "@smoke"
+
+# Run in a specific browser
+npx playwright test --project=firefox
+
+# Run in multiple browsers
+npx playwright test --project=chromium --project=firefox
+
+# Run in headed mode (see the browser)
+npx playwright test --headed
+
+# Run with specific number of workers
+npx playwright test --workers=4
+
+# Run in debug mode (pause on each action)
+npx playwright test --debug
+
+# Run and open HTML report
+npx playwright test --reporter=html; npx playwright show-report</code></pre>
+
+          <h2>UI Mode — Interactive Test Runner</h2>
+          <p>UI Mode is Playwright's built-in visual test runner — ideal for development and debugging:</p>
+          <pre><code"># Launch UI Mode
+npx playwright test --ui</code></pre>
+
+          <div class="callout">
+            <strong>UI Mode Features:</strong>
+            <ul>
+              <li>🎬 Watch mode — re-runs tests on file save</li>
+              <li>📸 Snapshot of DOM, network, and console at every step</li>
+              <li>⏱️ Time-travel debugging — scrub through test execution</li>
+              <li>🔍 Filter tests by file, title, tag, or status</li>
+              <li>📊 See test duration and retry history</li>
+            </ul>
+          </div>
+
+          <h2>Tagging and Filtering</h2>
+          <pre><code"># Tag tests in code
+test('@smoke user can login', async ({ page }) => { ... });
+test.skip('wip: payment flow', async ({ page }) => { ... });
+test.fixme('@flaky network timeout', async ({ page }) => { ... });
+
+// Annotations
+test('important', { tag: '@smoke' }, async ({ page }) => { ... });
+
+# CLI filter by tag
+npx playwright test --grep "@smoke"
+npx playwright test --grep-invert "@slow"</code></pre>
+
+          <h2>Parallel Execution</h2>
+          <pre><code"># playwright.config.ts
+export default defineConfig({
+  workers: process.env.CI ? 2 : 4,        // CPU count or explicit
+  fullyParallel: true,                     // run tests in file in parallel
+});
+
+// Disable parallelism for a single file
+test.describe.configure({ mode: 'serial' });
+
+// Sharding — split across multiple CI machines
+npx playwright test --shard=1/3   # machine 1 of 3
+npx playwright test --shard=2/3   # machine 2 of 3
+npx playwright test --shard=3/3   # machine 3 of 3</code></pre>
+
+          <h2>Reporters</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Reporter</th><th>Command / Config</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>html</code></td><td><code>--reporter=html</code></td><td>Rich interactive report, screenshots, traces</td></tr>
+              <tr><td><code>list</code></td><td><code>--reporter=list</code></td><td>Terminal output with live status</td></tr>
+              <tr><td><code>dot</code></td><td><code>--reporter=dot</code></td><td>Minimal CI output</td></tr>
+              <tr><td><code>json</code></td><td><code>--reporter=json</code></td><td>Machine-readable output for tooling</td></tr>
+              <tr><td><code>junit</code></td><td><code>--reporter=junit</code></td><td>Azure DevOps / Jenkins integration</td></tr>
+              <tr><td><code>github</code></td><td><code>--reporter=github</code></td><td>GitHub Actions annotations</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Retries</h2>
+          <pre><code"># playwright.config.ts
+export default defineConfig({
+  retries: process.env.CI ? 2 : 0,  // retry failed tests on CI
+});
+
+// Retry only specific test
+test('flaky test', { retries: 3 }, async ({ page }) => { ... });</code></pre>
+        </section>
+
+        <section id="debugging" role="article">
+          <h1>🐛 Debugging</h1>
+          <span class="badge">inspector</span> <span class="badge">troubleshooting</span>
+
+          <h2>Playwright Inspector</h2>
+          <p>The Playwright Inspector is a GUI tool that lets you step through test actions, inspect locators, and explore the DOM:</p>
+          <pre><code"># Launch inspector — pauses at every action
+npx playwright test --debug
+
+# Pause in a specific test
+test('debug this', async ({ page }) => {
+  await page.goto('/');
+  await page.pause();       // ← execution pauses here
+  await page.getByRole('button').click();
+});</code></pre>
+
+          <h2>VS Code Debugger</h2>
+          <div class="callout">
+            With the <strong>Playwright Test for VS Code</strong> extension:
+            <ul>
+              <li>Set breakpoints directly in test code</li>
+              <li>Click the <strong>▶ Debug</strong> button next to any test</li>
+              <li>Use <strong>Pick Locator</strong> to generate correct selectors by clicking elements</li>
+              <li>Use <strong>Highlight</strong> to see which elements a locator matches</li>
+            </ul>
+          </div>
+
+          <h2>Debug Modes</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Method</th><th>Command / Code</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Inspector</td><td><code>PWDEBUG=1 npx playwright test</code></td><td>Full inspector + step-through</td></tr>
+              <tr><td>Headed mode</td><td><code>npx playwright test --headed</code></td><td>See the browser during execution</td></tr>
+              <tr><td>Slow motion</td><td><code>--slow-mo=500</code> (ms)</td><td>Slow down each action by N milliseconds</td></tr>
+              <tr><td>page.pause()</td><td>In test code</td><td>Stop at a specific point, open inspector</td></tr>
+              <tr><td>Screenshots</td><td><code>await page.screenshot()</code></td><td>Capture current state to file</td></tr>
+              <tr><td>Console logs</td><td><code>page.on('console', msg => console.log(msg.text()))</code></td><td>Forward browser console to Node.js</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Capturing Screenshots and Videos</h2>
+          <pre><code"># playwright.config.ts
+export default defineConfig({
+  use: {
+    screenshot: 'only-on-failure',  // 'on', 'off', 'only-on-failure'
+    video: 'retain-on-failure',     // 'on', 'off', 'retain-on-failure'
+    trace: 'on-first-retry',        // see Trace Viewer section
+  },
+});
+
+// Manual screenshot in test
+await page.screenshot({ path: 'screenshot.png', fullPage: true });
+
+// Screenshot of a specific element
+await page.getByRole('dialog').screenshot({ path: 'dialog.png' });</code></pre>
+
+          <h2>Listening to Events</h2>
+          <pre><code">// Console messages
+page.on('console', msg => {
+  console.log(`[${msg.type()}] ${msg.text()}`);
+});
+
+// Network requests
+page.on('request', req => console.log('→', req.url()));
+page.on('response', res => console.log('←', res.status(), res.url()));
+
+// Dialogs (alert, confirm, prompt)
+page.on('dialog', async dialog => {
+  console.log(dialog.message());
+  await dialog.accept();  // or dialog.dismiss()
+});</code></pre>
+
+          <h2>Network Interception for Debugging</h2>
+          <pre><code">// Mock a failing API to test error handling
+await page.route('/api/users', route => {
+  route.fulfill({ status: 500, body: 'Internal Server Error' });
+});
+
+// Intercept and inspect request details
+await page.route('**/api/**', route => {
+  console.log('API call:', route.request().url());
+  route.continue(); // let it proceed normally
+});
+
+// Mock API response
+await page.route('/api/products', route => {
+  route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify([{ id: 1, name: 'Test Product' }]),
+  });
+});</code></pre>
+        </section>
+
+        <section id="configuration" role="article">
+          <h1>⚙️ Configuration</h1>
+          <span class="badge">config</span> <span class="badge">setup</span> <span class="badge">options</span>
+
+          <h2>playwright.config.ts — Full Example</h2>
+          <pre><code">import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  // Test directory
+  testDir: './tests',
+
+  // Max time per test (ms)
+  timeout: 30_000,
+
+  // Fail the build on CI if you accidentally left test.only
+  forbidOnly: !!process.env.CI,
+
+  // Retry on CI
+  retries: process.env.CI ? 2 : 0,
+
+  // Number of parallel workers
+  workers: process.env.CI ? 2 : undefined,
+
+  // Global reporter
+  reporter: [
+    ['html'],
+    ['github'],   // GitHub Actions annotations
+  ],
+
+  // Shared settings for all projects
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    actionTimeout: 10_000,
+    navigationTimeout: 30_000,
+  },
+
+  // Multi-browser projects
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox',  use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit',   use: { ...devices['Desktop Safari'] } },
+    { name: 'mobile-chrome', use: { ...devices['Pixel 5'] } },
+    { name: 'mobile-safari', use: { ...devices['iPhone 13'] } },
+  ],
+
+  // Start dev server before tests
+  webServer: {
+    command: 'npm run start',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
+});</code></pre>
+
+          <h2>Global Setup & Teardown</h2>
+          <pre><code">// playwright.config.ts
+export default defineConfig({
+  globalSetup: './global-setup.ts',
+  globalTeardown: './global-teardown.ts',
+});
+
+// global-setup.ts — runs once before all tests
+import { chromium } from '@playwright/test';
+
+export default async function globalSetup() {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.goto('http://localhost:3000/login');
+  await page.getByLabel('Email').fill('admin@test.com');
+  await page.getByLabel('Password').fill('password');
+  await page.getByRole('button', { name: 'Login' }).click();
+  // Save auth state for reuse in tests
+  await page.context().storageState({ path: 'auth.json' });
+  await browser.close();
+}
+
+// Use saved auth in tests
+export default defineConfig({
+  use: {
+    storageState: 'auth.json',  // reuse login session
+  },
+});</code></pre>
+
+          <h2>Environment Variables</h2>
+          <pre><code"># .env (use dotenv or process.env)
+BASE_URL=https://staging.myapp.com
+TEST_USER=qa@test.com
+TEST_PASS=securepass
+
+# playwright.config.ts
+import dotenv from 'dotenv';
+dotenv.config();
+
+export default defineConfig({
+  use: {
+    baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
+  },
+});</code></pre>
+
+          <h2>Key Configuration Options</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Option</th><th>Default</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>timeout</code></td><td>30 000 ms</td><td>Max time for a single test to finish</td></tr>
+              <tr><td><code>actionTimeout</code></td><td>0 (use test timeout)</td><td>Max time for a single action (click, fill…)</td></tr>
+              <tr><td><code>navigationTimeout</code></td><td>0 (use test timeout)</td><td>Max time for navigation (goto, waitForURL…)</td></tr>
+              <tr><td><code>retries</code></td><td>0</td><td>Number of retries for failing tests</td></tr>
+              <tr><td><code>workers</code></td><td>50% of CPUs</td><td>Number of parallel worker processes</td></tr>
+              <tr><td><code>fullyParallel</code></td><td>false</td><td>Run tests within a file in parallel</td></tr>
+              <tr><td><code>headless</code></td><td>true</td><td>Run browsers without visible UI</td></tr>
+              <tr><td><code>baseURL</code></td><td>—</td><td>Prepended to relative URLs in <code>goto()</code></td></tr>
+              <tr><td><code>storageState</code></td><td>—</td><td>Pre-load cookies/localStorage (e.g. auth)</td></tr>
+              <tr><td><code>trace</code></td><td><code>'off'</code></td><td>When to capture traces</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="trace-viewer" role="article">
+          <h1>📝 Trace Viewer</h1>
+          <span class="badge">debugging</span> <span class="badge">traces</span> <span class="badge">reports</span>
+          <p>The Playwright Trace Viewer is an interactive GUI tool for investigating test failures. It records a complete trace of the test — every action, network request, DOM snapshot, and console log — so you can replay and inspect what happened step-by-step.</p>
+
+          <h2>Enabling Trace Recording</h2>
+          <pre><code">// playwright.config.ts
+export default defineConfig({
+  use: {
+    trace: 'on-first-retry',   // only record on first retry (recommended for CI)
+    // trace: 'on',            // always record
+    // trace: 'retain-on-failure', // keep only if test fails
+    // trace: 'off',           // disable
+  },
+});
+
+// Enable per-test
+test('my test', async ({ page }) => {
+  // traces can also be started/stopped manually
+  await page.context().tracing.start({ screenshots: true, snapshots: true });
+  await page.goto('/');
+  // ... test actions
+  await page.context().tracing.stop({ path: 'trace.zip' });
+});</code></pre>
+
+          <h2>Opening the Trace Viewer</h2>
+          <pre><code"># Open from a saved trace file
+npx playwright show-trace trace.zip
+
+# Open from the HTML report
+npx playwright show-report
+# → Click any failed test → Click "Trace" tab
+
+# Open via VS Code extension
+# → Run test → click the failed test → "Open Trace" button</code></pre>
+
+          <h2>Trace Viewer Panels</h2>
           <div class="mermaid">
----
-title: SpecKit Project Structure
----
-flowchart LR
+flowchart TD
 %%{init: {'themeVariables': { 'fontFamily': 'Segoe UI'}}}%%
-    subgraph **project/**
-        GH[**.github/**]
-        SPECIFY[**.specify/**]
-        VSCODE[**.vscode/**]
-    end
+    TV["Trace Viewer"]
+    TV --> AL["Action List\n(Timeline of all steps)"]
+    TV --> DOM["DOM Snapshot\n(Before & After each action)"]
+    TV --> NET["Network Tab\n(All requests & responses)"]
+    TV --> CON["Console Tab\n(Browser console messages)"]
+    TV --> SRC["Source Tab\n(Test code with highlights)"]
+    TV --> SS["Screenshots\n(Visual state at each step)"]
 
-    GH --> AGENTS[**agents/**]
-    GH --> PROMPTS[**prompts/**]
-    AGENTS -->|Workflow Phase Agents| AGENT_FILES
-    PROMPTS -->|Prompt Templates| PROMPT_FILES
-
-    AGENT_FILES["speckit.constitution.agent.md
-    speckit.specify.agent.md
-    speckit.clarify.agent.md
-    speckit.plan.agent.md
-    speckit.tasks.agent.md
-    speckit.analyze.agent.md
-    speckit.implement.agent.md
-    speckit.checklist.agent.md
-    speckit.taskstoissues.agent.md"]
-    PROMPT_FILES["speckit.constitution.prompt.md <br> speckit.specify.prompt.md <br> speckit.clarify.prompt.md <br> speckit.plan.prompt.md <br> speckit.tasks.prompt.md <br>  speckit.analyze.prompt.md <br>  speckit.implement.prompt.md <br> speckit.checklist.prompt.md <br> speckit.taskstoissues.prompt.md"]
-
-    SPECIFY --> MEMORY[**memory/**]
-    SPECIFY --> SCRIPTS[**scripts/**]
-    SPECIFY --> TEMPLATES[**templates/**]
-
-    MEMORY --> CONSTITUTION[constitution.md]
-    SCRIPTS --> POWERSHELL[**powershell/**]
-    POWERSHELL --> PS_FILES["check-prerequisites.ps1
-    common.ps1
-    create-new-feature.ps1
-    setup-plan.ps1
-    update-agent-context.ps1"]
-    TEMPLATES --> TEMPLATE_FILES["agent-file-template.md
-    checklist-template.md
-    plan-template.md
-    spec-template.md
-    tasks-template.md"]
-
-    VSCODE --> SETTINGS[settings.json]
-
-    classDef folder fill:#e1f5ff,stroke:#0078d4,stroke-width:2px;
-    classDef file fill:#fff4e1,stroke:#d4a800,stroke-width:1px;
-    class GH,SPECIFY,VSCODE,AGENTS,PROMPTS,MEMORY,SCRIPTS,TEMPLATES,POWERSHELL folder;
-    class AGENT_FILES,PROMPT_FILES,CONSTITUTION,PS_FILES,TEMPLATE_FILES,SETTINGS file;
-          </div>
-            <table class="table table-striped">
-            <thead>
-              <tr>
-              <th>Artifact</th>
-              <th>Location</th>
-              <th>Source</th>
-              <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-              <td><strong>Constitution</strong></td>
-              <td><code>.specify/memory/constitution.md</code></td>
-              <td>Generated by <code>/speckit.constitution</code></td>
-              <td>Sets project vision, non-negotiables, coding standards, quality bars</td>
-              </tr>
-              <tr>
-              <td><strong>Specifications</strong></td>
-              <td><code>.specs/**/spec.md</code></td>
-              <td>Generated by <code>/speckit.specify</code></td>
-              <td>Describes <em>what</em> to build in natural language with detailed requirements</td>
-              </tr>
-              <tr>
-              <td><strong>Agent Definitions</strong></td>
-              <td><code>.github/agents/*.agent.md</code></td>
-              <td>Auto-generated by CLI</td>
-              <td>9 files defining AI assistant behavior for each workflow phase</td>
-              </tr>
-              <tr>
-              <td><strong>Prompts</strong></td>
-              <td><code>.github/prompts/*.prompt.md</code></td>
-              <td>Auto-generated by CLI</td>
-              <td>9 files containing instructions passed to AI assistants</td>
-              </tr>
-              <tr>
-              <td><strong>Templates</strong></td>
-              <td><code>.specify/templates/*.md</code></td>
-              <td>Auto-generated by CLI</td>
-              <td>5 templates ensuring consistent format across artifacts</td>
-              </tr>
-              <tr>
-              <td><strong>Clarifications</strong></td>
-              <td><code>.specs/**/clarifications/*.md</code></td>
-              <td>Generated by <code>/speckit.clarify</code></td>
-              <td>Captures Q&A between AI agents and stakeholders</td>
-              </tr>
-              <tr>
-              <td><strong>Plan</strong></td>
-              <td><code>.specs/**/plan.md</code></td>
-              <td>Generated by <code>/speckit.plan</code></td>
-              <td>Technical design: architecture, data models, APIs, implementation phases</td>
-              </tr>
-              <tr>
-              <td><strong>Tasks</strong></td>
-              <td><code>.specs/**/tasks.md</code></td>
-              <td>Generated by <code>/speckit.tasks</code></td>
-              <td>Granular implementation steps with acceptance criteria and estimates</td>
-              </tr>
-              <tr>
-              <td><strong>Code</strong></td>
-              <td><code>src/**</code></td>
-              <td>Generated by <code>/speckit.implement</code></td>
-              <td>Implementation tied back to specs via comments and traceability</td>
-              </tr>
-            </tbody>
-            </table>
-        </section>
-
-        <section id="live-demo" role="article">
-          <h1>Live Demo: Building a TODO Application</h1>
-          <span class="badge">todo, greenfield engineering, walkthrough</span>
-          <p>This comprehensive guide demonstrates the complete SpecKit workflow from initial concept to implementation, using a <strong>ToDo Application</strong> as our live demo project.</p>
-
-          <h2>Prerequisites for This Demo</h2>
-          <div class="callout">
-            <strong>Before starting, ensure you have:</strong>
-            <ul>
-              <li>✅ SpecKit CLI installed (<code>specify check</code>)</li>
-              <li>✅ Project initialized (<code>specify init todoapp --ai copilot</code>)</li>
-              <li>✅ AI coding assistant configured (GitHub Copilot, Claude, etc.)</li>
-              <li>✅ Git repository initialized</li>
-              <li>✅ .NET 8 SDK installed (for this demo)</li>
-              <li>✅ Azure account with Cosmos DB access (optional for local testing)</li>
-            </ul>
+    classDef panel fill:#dbeafe,stroke:#3b82f6,stroke-width:2px;
+    class AL,DOM,NET,CON,SRC,SS panel;
           </div>
 
-          <h2>SpecKit Commands</h2>
-          <p>SpecKit provides a structured approach to software development through seven key commands:</p>
-          <ol>
-            <li><strong>constitute</strong> - Define the initial project concept and goals</li>
-            <li><strong>specify</strong> - Create detailed specifications and requirements</li>
-            <li><strong>clarify</strong> - Ask questions and resolve ambiguities</li>
-            <li><strong>plan</strong> - Generate the overall project plan and architecture</li>
-            <li><strong>tasks</strong> - Break down the plan into actionable tasks</li>
-            <li><strong>analyze</strong> - Evaluate the plan for feasibility and completeness</li>
-            <li><strong>implement</strong> - Execute the tasks and build the solution</li>
-          </ol>          
-
-          <h2>Step 1: CONSTITUTE - Define the Project</h2>
-          <h3>Command: <code>/speckit.constitution</code></h3>
-          <p><strong>Purpose:</strong> Establish the foundational concept and high-level goals for the project.</p>
-          
-          <h4>Guidelines:</h4>
-          <ul>
-            <li>Focus on the core idea and objectives</li>
-            <li>Highlight key features and benefits</li>
-            <li>Define the target audience and success criteria</li>
-            <li>Optionally provide Technology Choices at this stage</li>
-            <li>Prepare for detailed specification in the next phase</li>
-            <li>Output a structured constitution document</li>
-          </ul>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            /speckit.constitution Create principles focused on 
-- 1. API-First Architecture
-- 2. Cloud-Native Design
-- 3. Test-Driven Development
-- 4. Security by Design
-- 5. Observability & Monitoring  
-and Technology Choices
-          </div>
-
-          <h4>SpecKit Output:</h4>
-          <pre><code>In todoapp
-
-.specify/memory/constitution.md</code></pre>
-
-          <h2>Step 2: SPECIFY - Create Detailed Specifications</h2>
-          <h3>Command: <code>/speckit.specify</code></h3>
-          <p><strong>Purpose:</strong> Transform the constitution into detailed, actionable specifications covering functional requirements, technical architecture, and constraints.</p>
-
-          <h4>Guidelines:</h4>
-          <ul>
-            <li>Break down high-level goals into specific features and requirements</li>
-            <li>Define data models, API endpoints, and interactions</li>
-            <li>Include non-functional requirements (performance, security, scalability)</li>
-            <li>Document constraints and assumptions</li>
-            <li>Prepare for clarification of ambiguities in the next phase</li>
-          </ul>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            /speckit.specify Build a feature for creating and managing todo items
-          </div>
-
-          <p><strong>Optional additions:</strong></p>
-          <ul>
-            <li>Functional requirements for task management (CRUD operations, filtering, sorting)</li>
-            <li>Data models for TaskItem, CreateTaskDto, UpdateTaskDto, and TaskPriority enum with validation rules</li>
-            <li>API endpoint definitions (routes, methods, request/response schemas)</li>
-            <li>Non-functional requirements: performance, scalability, security, testability (unit tests with xUnit, Moq, FluentAssertions, >80% coverage)</li>
-            <li>Constraints and assumptions (single user for MVP, no authentication, partition key strategy)</li>
-          </ul>
-
-          <h4>SpecKit Output:</h4>
-          <pre><code>In ToDoApp Project
-
-specs\001-todo-management\spec.md</code></pre>
-
-          <h2>Step 3: CLARIFY - Resolve Ambiguities</h2>
-          <h3>Command: <code>/speckit.clarify</code></h3>
-          <p><strong>Purpose:</strong> Identify unclear aspects and ask questions to ensure complete understanding before planning.</p>
-
-          <h4>Guidelines:</h4>
-          <ul>
-            <li>Review the specifications for ambiguities or missing information</li>
-            <li>Formulate specific questions to clarify requirements</li>
-            <li>Provide recommendations for decisions on unclear points</li>
-            <li>Prepare for finalizing specifications in the next phase</li>
-          </ul>
-
-          <h4>Input (Optional):</h4>
-          <div class="callout">
-            Review the detailed specifications for the ToDo Web API project. Identify any ambiguities, missing information, or areas requiring clarification. Formulate a list of specific questions that need to be answered to ensure a complete understanding of the requirements and constraints.
-          </div>
-
-          <h4>SpecKit Output:</h4>
-          <p><em>NA - We need to clarify any questions before proceeding to planning.</em></p>
-
-          <h2>Step 4: PLAN - Create Overall Project Plan</h2>
-          <h3>Command: <code>/speckit.plan</code></h3>
-          <p><strong>Purpose:</strong> Generate a comprehensive implementation plan with architecture, phases, and dependencies.</p>
-
-          <h4>Guidelines:</h4>
-          <ul>
-            <li>Focus on high-level architecture and development phases</li>
-            <li>Include timelines, milestones, and risk management strategies</li>
-            <li>Define technology setup and project structure</li>
-            <li>Ensure the plan is actionable and ready for task breakdown</li>
-            <li>Consider non-functional requirements and deployment strategies</li>
-            <li>Incorporate feedback from the CLARIFY phase</li>
-            <li>Output a structured project plan document</li>
-          </ul>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            /speckit.plan Create an implementation plan for the todo management app using .NET 8 ASP.NET Core Web API with Azure Cosmos DB for NoSQL. Include Architecture, Database, Implementation Details, Testing, Infrastructue etc along with plan.
-          </div>
-
-          <p><strong>Good to include Technical Details here:</strong></p>
-          <ul>
-            <li>An architecture overview diagram illustrating components and interactions</li>
-            <li>A breakdown of development phases with timelines and milestones</li>
-            <li>Technology setup requirements for local development and Azure resources - .NET 8 Web API, Cosmos DB</li>
-            <li>A proposed project structure with directories and key files</li>
-            <li>Risk management strategies and mitigation plans</li>
-            <li>A definition of done for each phase and overall project completion</li>
-          </ul>
-
-          <h4>SpecKit Output:</h4>
-          <pre><code>In ToDoApp Project
-
-specs\master\ARCHITECTURE.md
-specs\master\plan.md
-specs\master\contracts\openapi.yaml
-specs\master\data-model.md
-specs\master\quickstart.md</code></pre>
-          <h2>Step 5: TASKS - Break Down Into Actionable Items</h2>
-          <h3>Command: <code>/speckit.tasks</code></h3>
-          <p><strong>Purpose:</strong> Decompose the project plan into specific, manageable tasks with criteria and estimates.</p>
-
-          <h4>Guidelines:</h4>
-          <ul>
-            <li>Break down each phase of the plan into discrete tasks</li>
-            <li>Define clear acceptance criteria for each task</li>
-            <li>Estimate the time required for each task</li>
-            <li>Identify dependencies between tasks</li>
-          </ul>
-
-          <h4>Input (Optional):</h4>
-          <div class="callout">
-            Based on the implementation plan for the ToDo Web API project, break down the work into a comprehensive list of actionable tasks. Each task should include:
-            <ul>
-              <li>A clear title and description</li>
-              <li>Acceptance criteria defining when the task is considered complete</li>
-              <li>Estimated time to complete</li>
-              <li>Dependencies on other tasks</li>
-            </ul>
-          </div>
-
-          <h4>SpecKit Output:</h4>
-          <pre><code>In demo-project
-
-.specs\001-todo-api-core\tasks.md</code></pre>
-
-          <h2>Step 6: ANALYZE - Evaluate the Plan</h2>
-          <h3>Command: <code>/speckit.analyze</code></h3>
-          <p><strong>Purpose:</strong> Review the specifications, plan, and tasks for feasibility, completeness, risks, and potential improvements.</p>
-
-          <h4>Guidelines:</h4>
-          <ul>
-            <li>Assess technical, resource, and cost feasibility</li>
-            <li>Evaluate completeness against requirements</li>
-            <li>Identify risks and mitigation strategies</li>
-            <li>Analyze architecture for strengths and weaknesses</li>
-          </ul>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            Conduct a thorough analysis of the ToDo Web API project plan and tasks. Evaluate:
-            <ul>
-              <li><strong>Feasibility:</strong> technical, resource, cost</li>
-              <li><strong>Completeness:</strong> coverage of requirements, gaps</li>
-              <li><strong>Risks:</strong> identification, assessment, mitigation</li>
-              <li><strong>Architecture:</strong> strengths, weaknesses, improvements</li>
-            </ul>
-            Provide a comprehensive report with findings, recommendations, and a final verdict on whether to approve the plan for implementation or require revisions.
-          </div>
-
-          <h4>SpecKit Output:</h4>
-          <pre><code>In demo-project
-
-.specs\001-todo-api-core\ANALYSIS_REPORT.md</code></pre>
-
-          <h2>Step 7: IMPLEMENT - Execute the Tasks</h2>
-          <h3>Command: <code>/speckit.implement</code></h3>
-          <p><strong>Purpose:</strong> Execute the planned tasks, build the solution, and deliver the working application.</p>
-
-          <h4>Guidelines:</h4>
-          <ul>
-            <li>Follow the task list and acceptance criteria closely</li>
-            <li>Maintain code quality and best practices</li>
-            <li>Document progress and any deviations from the plan</li>
-            <li>Prepare for deployment and handoff</li>
-            <li>Output a completed project with all deliverables</li>
-            <li>Ensure testing and documentation are finalized</li>
-            <li>Prepare for production deployment</li>
-          </ul>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            Execute the implementation of the ToDo Application project based on the approved plan and task list. Follow the defined tasks, ensuring each is completed according to its acceptance criteria. Maintain high code quality and best practices throughout development. Document progress, challenges, and any deviations from the original plan. Prepare the final deliverables, including the working application, tests, and documentation, ready for deployment and handoff.
-          </div>
-
-          <h4>SpecKit Output:</h4>
-          <pre><code>In ToDoApp Project
-src/TodoManagement.Api/*
-src/tests/*
-</code></pre>
-
-          <h2>Key Takeaways</h2>
-          <div>
-            <ul>
-              <li>✅ <strong>SpecKit provides structure</strong> to complex software projects</li>
-              <li>✅ <strong>Each command builds upon the previous</strong> - constitution informs specification, specification informs planning, etc.</li>
-              <li>✅ <strong>Analysis before implementation</strong> prevents costly mistakes</li>
-              <li>✅ <strong>Clear tasks with acceptance criteria</strong> ensure quality and completeness</li>
-              <li>✅ <strong>Azure cloud services</strong> enable scalable, professional solutions</li>
-              <li>✅ <strong>.NET 8 and Cosmos DB</strong> provide a modern, performant tech stack</li>
-            </ul>
-          </div>
-
-          <h2>Next Steps</h2>
-          <ol>
-            <li>Follow this guide to implement your own ToDo API</li>
-            <li>Adapt the SpecKit workflow to other projects</li>
-            <li>Customize specifications based on unique requirements</li>
-            <li>Add authentication and multi-user support</li>
-            <li>Build frontend clients (React, Angular, mobile apps) to consume the API</li>
-            <li>Iterate and improve based on user feedback</li>
-          </ol>
-
-          <div class="callout">
-            <strong>This workflow ensures systematic, high-quality development from idea to production! 🚀</strong>
-          </div>
-        </section>
-
-        <section id="live-demo-enhancements" role="article">
-          <h1>Live Demo - TODO App - Enhancements</h1>
-          <span class="badge">enhancements, brownfield engineering, evolution</span>
-          
-          <p>Now that the TODO App has been built and deployed, let's explore how SpecKit handles brownfield engineering—enhancing and evolving existing applications with new features while maintaining quality and consistency.</p>
-          <strong>Scenario:</strong>
-          <div class="callout">
-             The TODO App is successful and users are requesting new features: priority levels, due dates, categories, and search functionality. We'll use SpecKit to systematically add these enhancements.
-          </div>
-
-          <h2>Brownfield vs. Greenfield Development</h2>
           <table class="table table-striped">
             <thead>
-              <tr>
-                <th>Aspect</th>
-                <th>Greenfield (Previous Demo)</th>
-                <th>Brownfield (This Demo)</th>
-              </tr>
+              <tr><th>Panel</th><th>What It Shows</th><th>Debugging Use</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td><strong>Starting Point</strong></td>
-                <td>Empty project, clean slate</td>
-                <td>Existing codebase with established patterns</td>
-              </tr>
-              <tr>
-                <td><strong>Constraints</strong></td>
-                <td>Technology choices, architecture design</td>
-                <td>Must integrate with existing code, maintain backward compatibility</td>
-              </tr>
-              <tr>
-                <td><strong>Risks</strong></td>
-                <td>Wrong architecture choices</td>
-                <td>Breaking existing functionality, technical debt accumulation</td>
-              </tr>
-              <tr>
-                <td><strong>Testing Focus</strong></td>
-                <td>New feature testing</td>
-                <td>Regression testing + new feature testing</td>
-              </tr>
-              <tr>
-                <td><strong>Documentation</strong></td>
-                <td>Create from scratch</td>
-                <td>Update existing docs, migration guides</td>
-              </tr>
+              <tr><td><strong>Actions</strong></td><td>Timeline of every test action with timestamps</td><td>See which step failed and how long each took</td></tr>
+              <tr><td><strong>DOM Snapshot</strong></td><td>Full DOM before and after each action</td><td>Inspect element state, attributes, visibility</td></tr>
+              <tr><td><strong>Network</strong></td><td>All HTTP requests with status, headers, body</td><td>Debug API failures, verify mocked responses</td></tr>
+              <tr><td><strong>Console</strong></td><td>Browser console.log / error / warn messages</td><td>Catch JS errors and application logs</td></tr>
+              <tr><td><strong>Source</strong></td><td>Test source code with highlighted current line</td><td>Correlate actions to code</td></tr>
+              <tr><td><strong>Screenshots</strong></td><td>Pixel-accurate screenshots at each step</td><td>Visual verification of UI state</td></tr>
             </tbody>
           </table>
 
-          <h2>Enhancement Feature: Priority and Due Dates</h2>
-          <p>Let's walk through adding priority levels and due dates to our TODO items using the SpecKit workflow for existing projects.</p>
+          <h2>HTML Report</h2>
+          <pre><code"># Generate and open HTML report after tests
+npx playwright test
+npx playwright show-report
 
-          <h3>Step 1: Analyze Existing Codebase</h3>
-          <h4>Command: <code>/speckit.analyze</code></h4>
-          <p><strong>Purpose:</strong> Understand the current architecture, data models, and API structure before making changes.</p>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            /speckit.analyze Analyze the existing TODO App codebase. Review the current TodoItem model, API endpoints, data access patterns, and Cosmos DB schema. Identify integration points for adding priority levels (High, Medium, Low) and due dates to TODO items. Consider backward compatibility and migration requirements for existing data.
-          </div>
-
-            <h4>SpecKit Output:</h4>
-            <p>The analysis command reviews your existing codebase and generates a detailed report identifying:</p>
-            <ul>
-            <li>Current data models and their properties</li>
-            <li>Existing API endpoints and their contracts</li>
-            <li>Integration points where changes need to be made</li>
-            <li>Migration considerations for backward compatibility</li>
-            </ul>
-            <div class="callout">
-            <strong>Example Analysis Report:</strong> The TodoItem model currently has Id, Title, IsCompleted, and CreatedAt properties. To add priority and due dates, we'll need to modify TodoItem.cs, update TodoService operations, adjust API DTOs, and add validation logic—all while maintaining backward compatibility with existing data.
-            </div>
-
-          <h3>Step 2: Create Enhancement Specification</h3>
-          <h4>Command: <code>/speckit.specify</code></h4>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            /speckit.specify Create a specification for enhancing the TODO App with priority levels and due dates. The feature should allow users to assign a priority (High, Medium, Low) and optional due date to each TODO item. Ensure backward compatibility with existing TODO items that don't have these fields. Include sorting and filtering capabilities by priority and due date.
-          </div>
-
-
-          <h4>SpecKit Output:</h4>
-          <p>The specification command generates a detailed requirements document that defines the enhancement:</p>
-          <ul>
-          <li>Functional requirements for priority levels and due dates</li>
-          <li>API endpoint modifications and new query parameters</li>
-          <li>Data model changes with validation rules</li>
-          <li>Backward compatibility requirements</li>
-          <li>Success criteria for the enhancement</li>
-          </ul>
-          
-          <pre><code>Generated file:
-    specs/002-priority-due-dates/spec.md
-
-    This specification document includes:
-    - Feature overview and objectives
-    - Detailed functional requirements for priority (High/Medium/Low)
-    - Optional due date field with validation
-    - API enhancements (filtering, sorting, overdue detection)
-    - Backward compatibility guarantees
-    - Non-functional requirements (performance, migration)
-    - Clear success criteria for implementation
-    </code></pre>
+# Custom report output directory
+npx playwright test --reporter=html --output=test-results</code></pre>
 
           <div class="callout">
-          <strong>Key Output:</strong> A comprehensive specification document that serves as the single source of truth for the enhancement. This document will guide all subsequent phases (clarification, planning, implementation) and ensure alignment between stakeholders and developers.
-          </div>
-
-          <h3>Step 3: Impact Analysis</h3>
-          <h4>Command: <code>/speckit.analyze</code></h4>
-          <p><strong>Purpose:</strong> Perform impact analysis to identify all affected components, potential breaking changes, database migration requirements, API versioning needs, and testing requirements.</p>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            /speckit.analyze Focus on impact analysis: Identify all affected components for adding priority and due dates. Assess potential breaking changes, database migration requirements, API versioning needs, testing scope, and deployment strategy. Consider backward compatibility with existing clients and impact on existing TodoItems without these fields.
-          </div>
-
-          <h4>SpecKit Output:</h4>
-            <p>The impact analysis command evaluates all affected components, potential breaking changes, and migration requirements:</p>
-            <ul>
-              <li>Component impact assessment (models, services, controllers, DTOs, tests)</li>
-              <li>Breaking change analysis (risk level and mitigation strategies)</li>
-              <li>Migration strategy for existing data (Cosmos DB schema handling)</li>
-              <li>Testing requirements (regression, integration, performance)</li>
-              <li>Deployment strategy (blue-green deployment approach)</li>
-              <li>Rollback plan for safe recovery if issues arise</li>
-            </ul>
-
-            <div class="callout">
-              <strong>Example Impact Analysis:</strong> Adding priority and due dates is LOW RISK because all changes are additive. Existing TodoItems without these fields will use default values (Medium priority, null due date). No schema migration required in Cosmos DB. Backward compatibility maintained with existing clients. Blue-green deployment ensures safe rollout with quick rollback capability.
-            </div>
-
-          <h3>Step 4: Create Implementation Plan</h3>
-          <h4>Command: <code>/speckit.plan</code></h4>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            Create a detailed implementation plan for adding priority and due dates to the TODO App. Break down the work into phases, identify dependencies, estimate effort, and define acceptance criteria for each task. Include testing strategy and rollback procedures.
-          </div>
-
-          <h4>SpecKit Output:</h4>
-          <p>The plan command generates a detailed, phased implementation approach with tasks, timelines, and dependencies:</p>
-          <ul>
-            <li>Phase 1: Data Model Updates (2-3 hours) - TodoItem enhancements, DTOs, validation</li>
-            <li>Phase 2: Service Layer Updates (3-4 hours) - Filtering, sorting, query optimization</li>
-            <li>Phase 3: API Controller Updates (2-3 hours) - Endpoints, parameters, documentation</li>
-            <li>Phase 4: Testing (3-4 hours) - Unit, integration, and regression tests</li>
-            <li>Phase 5: Documentation (1-2 hours) - API docs, user guides, migration notes</li>
-            <li>Phase 6: Deployment (1 hour) - Staging and production rollout</li>
-          </ul>
-
-          <div class="callout">
-            <strong>Total Estimated Effort:</strong> 12-17 hours with clear dependencies, acceptance criteria for each task, and risk mitigation strategies. The plan ensures backward compatibility, comprehensive testing, and safe deployment.
-          </div>
-
-          <h3>Step 5: Execute Implementation</h3>
-          <h4>Command: <code>/speckit.implement</code></h4>
-
-          <h4>Input:</h4>
-          <div class="callout">
-            Execute the implementation plan for adding priority and due dates to the TODO App. Follow the defined phases and tasks, ensuring each acceptance criterion is met. Update existing code carefully to maintain backward compatibility. Write comprehensive tests to verify both new features and existing functionality. Document all changes and prepare deployment artifacts.
-            </div>
-
-            <h4>SpecKit Output:</h4>
-            <p>The implement command executes the planned tasks in phases, generating code, tests, and documentation:</p>
-            <pre><code>Generated files in ToDoApp Project:
-
-      src/TodoManagement.Api/Models/Priority.cs
-      src/TodoManagement.Api/Models/TodoItem.cs (updated)
-      src/TodoManagement.Api/DTOs/CreateTodoDto.cs (updated)
-      src/TodoManagement.Api/DTOs/UpdateTodoDto.cs (updated)
-      src/TodoManagement.Api/Services/TodoService.cs (updated)
-      src/TodoManagement.Api/Controllers/TodoController.cs (updated)
-
-      tests/TodoManagement.Tests/Unit/PriorityTests.cs
-      tests/TodoManagement.Tests/Unit/TodoItemValidationTests.cs
-      tests/TodoManagement.Tests/Integration/PriorityFilteringTests.cs
-      tests/TodoManagement.Tests/Integration/DueDateTests.cs
-
-      docs/API.md (updated)
-      docs/MIGRATION.md (new)
-      docs/USER_GUIDE.md (updated)
-
-      ✅ All 127 unit tests passing (98% coverage)
-      ✅ All 34 integration tests passing
-      ✅ Zero regressions detected
-      ✅ API documentation updated
-      ✅ Ready for deployment
-      </code></pre>
-
-            <div class="callout">
-            <strong>Implementation Success:</strong> Priority and due date features fully implemented with comprehensive tests, updated documentation, and backward compatibility maintained. The enhancement is production-ready.
-            </div>
-
-          <h2>Key Brownfield Engineering Practices</h2>
-          <div>
-            <ul>
-              <li>🔍 <strong>Thorough Analysis:</strong> Understand existing architecture before making changes</li>
-              <li>🔄 <strong>Backward Compatibility:</strong> Ensure existing functionality continues to work</li>
-              <li>📊 <strong>Impact Assessment:</strong> Identify all affected components and potential risks</li>
-              <li>🧪 <strong>Regression Testing:</strong> Verify no existing features are broken</li>
-              <li>🎯 <strong>Incremental Changes:</strong> Add features gradually rather than large rewrites</li>
-              <li>📚 <strong>Documentation Updates:</strong> Keep docs in sync with code changes</li>
-              <li>🚀 <strong>Safe Deployment:</strong> Use strategies like blue-green for risk mitigation</li>
-              <li>🔙 <strong>Rollback Plans:</strong> Always have a way to revert changes quickly</li>
-            </ul>
-          </div>
-
-          <h2>Benefits of Using SpecKit for Enhancements</h2>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Benefit</th>
-                <th>Description</th>
-                <th>Impact</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Structured Analysis</strong></td>
-                <td>Forces thorough review of existing code before changes</td>
-                <td>Reduces risk of breaking changes</td>
-              </tr>
-              <tr>
-                <td><strong>Impact Visibility</strong></td>
-                <td>Identifies all affected components upfront</td>
-                <td>Better planning and resource allocation</td>
-              </tr>
-              <tr>
-                <td><strong>Consistent Process</strong></td>
-                <td>Same workflow for greenfield and brownfield projects</td>
-                <td>Team productivity and quality consistency</td>
-              </tr>
-              <tr>
-                <td><strong>Risk Management</strong></td>
-                <td>Early identification of potential issues</td>
-                <td>Fewer production incidents</td>
-              </tr>
-              <tr>
-                <td><strong>Documentation Trail</strong></td>
-                <td>Complete history of enhancement decisions</td>
-                <td>Better knowledge transfer and maintenance</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h2>Common Brownfield Challenges Addressed</h2>
-          <ol>
-            <li><strong>Technical Debt:</strong> SpecKit's analysis phase helps identify and document existing technical debt that needs addressing</li>
-            <li><strong>Hidden Dependencies:</strong> Impact analysis reveals unexpected component coupling</li>
-            <li><strong>Breaking Changes:</strong> Specification phase explicitly considers backward compatibility requirements</li>
-            <li><strong>Testing Gaps:</strong> Planning phase ensures comprehensive regression and new feature testing</li>
-            <li><strong>Deployment Risks:</strong> Implementation plan includes safe deployment strategies and rollback procedures</li>
-            <li><strong>Knowledge Loss:</strong> Complete documentation trail preserves enhancement rationale for future maintainers</li>
-          </ol>
-
-          <h2>Next Enhancement Ideas</h2>
-          <p>Continue evolving the TODO App using SpecKit for these brownfield scenarios:</p>
-          <ul>
-            <li>🏷️ <strong>Categories/Tags:</strong> Add tag system for organizing todos (multi-value fields)</li>
-            <li>🔔 <strong>Notifications:</strong> Integrate Azure Service Bus for due date reminders</li>
-            <li>👥 <strong>Collaboration:</strong> Add multi-user support with shared todos</li>
-            <li>📱 <strong>Mobile Sync:</strong> Add offline support with conflict resolution</li>
-            <li>🔍 <strong>Search:</strong> Implement full-text search using Azure Cognitive Search</li>
-            <li>📈 <strong>Analytics:</strong> Add Application Insights for usage tracking</li>
-            <li>🔐 <strong>Advanced Security:</strong> Implement row-level security and data encryption</li>
-          </ul>
-
-          <div class="callout">
-            <strong>SpecKit Excellence:</strong> Whether starting fresh (greenfield) or enhancing existing systems (brownfield), SpecKit provides a consistent, rigorous approach that ensures quality, maintainability, and successful delivery! 🎯
+            <strong>Pro Tip:</strong> In CI, attach the <code>playwright-report/</code> folder as a build artifact so your team can download and open the HTML report (including traces) locally — without needing to re-run tests.
           </div>
         </section>
 
-        <section id="upgrade" role="article">
-          <h1>SpecKit Upgrade</h1>
-          <span class="badge">maintenance, updates</span>
-          
-          <p>Keep your SpecKit installation up-to-date to access new features, bug fixes, and updated slash commands. This guide covers upgrading both the CLI tool and project files.</p>
+        <section id="best-practices" role="article">
+          <h1>💡 Best Practices</h1>
+          <span class="badge">tips</span> <span class="badge">patterns</span> <span class="badge">recommendations</span>
 
-          <h2>Quick Reference</h2>
+          <h2>Page Object Model (POM)</h2>
+          <p>Encapsulate page interactions in reusable classes to avoid duplication and improve maintainability:</p>
+          <pre><code>// pages/LoginPage.ts
+import { Page, Locator } from '@playwright/test';
+
+export class LoginPage {
+  readonly page: Page;
+  readonly emailInput: Locator;
+  readonly passwordInput: Locator;
+  readonly submitButton: Locator;
+  readonly errorMessage: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.emailInput = page.getByLabel('Email');
+    this.passwordInput = page.getByLabel('Password');
+    this.submitButton = page.getByRole('button', { name: 'Sign in' });
+    this.errorMessage = page.getByRole('alert');
+  }
+
+  async goto() {
+    await this.page.goto('/login');
+  }
+
+  async login(email: string, password: string) {
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.submitButton.click();
+  }
+}
+
+// tests/login.spec.ts
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+
+test('successful login', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login('user@example.com', 'password');
+  await expect(page).toHaveURL('/dashboard');
+});</code></pre>
+
+          <h2>Authentication Reuse (storageState)</h2>
+          <p>Avoid re-logging in before every test — save and reuse authentication state:</p>
+          <pre><code">// auth.setup.ts — run once, save auth state
+import { test as setup } from '@playwright/test';
+
+setup('authenticate', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByLabel('Email').fill('user@test.com');
+  await page.getByLabel('Password').fill('password');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.waitForURL('/dashboard');
+  await page.context().storageState({ path: '.auth/user.json' });
+});
+
+// playwright.config.ts — use saved state in all tests
+projects: [
+  { name: 'setup', testMatch: /auth\.setup\.ts/ },
+  {
+    name: 'authenticated',
+    use: { storageState: '.auth/user.json' },
+    dependencies: ['setup'],
+  },
+]</code></pre>
+
+          <h2>The Dos and Don'ts</h2>
           <table class="table table-striped">
             <thead>
-              <tr>
-                <th>What to Upgrade</th>
-                <th>Command</th>
-                <th>Purpose</th>
-              </tr>
+              <tr><th>✅ Do</th><th>❌ Don't</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td>CLI Tool Only</td>
-                <td><code>uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git</code></td>
-                <td>Get latest CLI features without touching project files</td>
-              </tr>
-              <tr>
-                <td>Project Files</td>
-                <td><code>specify init --here --force --ai &lt;your-agent&gt;</code></td>
-                <td>Update slash commands, templates, and scripts</td>
-              </tr>
-              <tr>
-                <td>Both</td>
-                <td>Run CLI upgrade, then project update</td>
-                <td>Recommended for major version updates</td>
-              </tr>
+              <tr><td>Use <code>getByRole()</code>, <code>getByLabel()</code>, <code>getByTestId()</code></td><td>Use brittle CSS classes like <code>.btn-primary-v2</code></td></tr>
+              <tr><td>Use web-first assertions with auto-retry</td><td>Add <code>await page.waitForTimeout(2000)</code> before assertions</td></tr>
+              <tr><td>Keep tests isolated — each test is independent</td><td>Share state between tests in the same file</td></tr>
+              <tr><td>Use <code>storageState</code> to reuse authentication</td><td>Log in via UI in every test's <code>beforeEach</code></td></tr>
+              <tr><td>Use mocks/intercepts for external APIs</td><td>Hit real external services in tests</td></tr>
+              <tr><td>Clean up test data in <code>afterEach</code> or use isolated test accounts</td><td>Depend on leftover data from previous tests</td></tr>
+              <tr><td>Use <code>test.describe</code> to group related tests</td><td>Put all tests in one giant spec file</td></tr>
+              <tr><td>Use <code>data-testid</code> for elements with no semantic role</td><td>Target inner implementation details like internal IDs</td></tr>
+              <tr><td>Enable <code>trace: 'on-first-retry'</code> on CI</td><td>Disable tracing and wonder why CI tests fail</td></tr>
             </tbody>
           </table>
 
-          <h2>Part 1: Upgrade the CLI Tool</h2>
-          <p>The CLI tool (<code>specify</code>) is separate from your project files. Upgrade it to get the latest features and bug fixes.</p>
+          <h2>Test Isolation</h2>
+          <pre><code">// Each test gets a fresh BrowserContext and Page automatically
+// No state leaks between tests
 
-          <h3>If you installed with <code>uv tool install</code></h3>
-          <pre><code>uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git</code></pre>
+// If you need shared auth — use storageState (read-only)
+// Never mutate shared state from within a test
 
-          <h3>If you use one-shot <code>uvx</code> commands</h3>
-          <p>No upgrade needed—<code>uvx</code> always fetches the latest version. Just run your commands as normal:</p>
-          <pre><code>uvx --from git+https://github.com/github/spec-kit.git specify init --here --ai copilot</code></pre>
+// Use unique data per test to avoid collisions
+test('create user', async ({ page }) => {
+  const email = `user-${Date.now()}@test.com`; // unique per run
+  await page.getByLabel('Email').fill(email);
+});</code></pre>
 
-          <h3>Verify the upgrade</h3>
-          <pre><code>specify check</code></pre>
-          <p>This shows installed tools and confirms the CLI is working.</p>
+          <h2>Handling Dynamic Content</h2>
+          <pre><code">// ✅ Let Playwright auto-wait — just interact
+await page.getByRole('button', { name: 'Load More' }).click();
+await expect(page.getByRole('listitem')).toHaveCount(20);
 
-          <h2>Part 2: Updating Project Files</h2>
-          
-          <h3>What gets updated?</h3>
-          <p>Running <code>specify init --here --force</code> will update:</p>
+// ✅ Wait for network idle after navigation
+await page.goto('/heavy-page', { waitUntil: 'networkidle' });
+
+// ✅ Wait for a specific response
+const [response] = await Promise.all([
+  page.waitForResponse('**/api/data'),
+  page.getByRole('button', { name: 'Refresh' }).click(),
+]);
+expect(response.status()).toBe(200);</code></pre>
+        </section>
+
+        <section id="ci-cd" role="article">
+          <h1>🚀 CI/CD Integration</h1>
+          <span class="badge">github-actions</span> <span class="badge">continuous-integration</span>
+
+          <h2>GitHub Actions</h2>
+          <pre><code"># .github/workflows/playwright.yml
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          BASE_URL: ${{ secrets.STAGING_URL }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()   # upload even if tests fail
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30</code></pre>
+
+          <h2>Sharding Across Multiple Machines</h2>
+          <pre><code"># Use matrix strategy to run shards in parallel
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]   # 4 parallel machines
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - run: npx playwright test --shard=${{ matrix.shard }}/4
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report/
+          retention-days: 1
+
+  merge-reports:
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+      - run: npx playwright merge-reports --reporter html ./all-blob-reports
+      - uses: actions/upload-artifact@v4
+        with:
+          name: html-report
+          path: playwright-report/</code></pre>
+
+          <h2>Azure DevOps Pipelines</h2>
+          <pre><code"># azure-pipelines.yml
+trigger:
+  branches:
+    include: [main, develop]
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+
+  - script: npm ci
+    displayName: 'Install dependencies'
+
+  - script: npx playwright install --with-deps
+    displayName: 'Install Playwright browsers'
+
+  - script: npx playwright test --reporter=junit,html
+    displayName: 'Run Playwright tests'
+    env:
+      BASE_URL: $(BASE_URL)
+
+  - task: PublishTestResults@2
+    condition: always()
+    inputs:
+      testResultsFiles: 'results.xml'
+      testResultsFormat: 'JUnit'
+
+  - task: PublishBuildArtifacts@1
+    condition: always()
+    inputs:
+      pathToPublish: playwright-report
+      artifactName: playwright-report</code></pre>
+
+          <h2>Docker Support</h2>
+          <pre><code"># Use the official Playwright Docker image (includes all browsers)
+FROM mcr.microsoft.com/playwright:v1.48.0-jammy
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npx playwright test</code></pre>
+
+          <h2>CI Best Practices</h2>
           <ul>
-            <li>✅ Slash command files (<code>.claude/commands/</code>, <code>.github/prompts/</code>, etc.)</li>
-            <li>✅ Script files (<code>.specify/scripts/</code>)</li>
-            <li>✅ Template files (<code>.specify/templates/</code>)</li>
-            <li>✅ Shared memory files (<code>.specify/memory/</code>) - ⚠️ See warnings below</li>
+            <li>🔁 Set <code>retries: 2</code> on CI to handle transient infrastructure flakiness</li>
+            <li>📸 Always upload <code>playwright-report/</code> as a build artifact (even on failure)</li>
+            <li>🔒 Use GitHub Secrets / Azure Key Vault for credentials; never hard-code them</li>
+            <li>⚡ Use sharding to distribute large test suites across parallel machines</li>
+            <li>🌐 Use <code>webServer</code> config to auto-start the app before tests run</li>
+            <li>🔍 Use <code>trace: 'on-first-retry'</code> to capture traces for failing tests</li>
+            <li>🏷️ Tag smoke tests with <code>@smoke</code> and run them on every PR; full suite on merge</li>
           </ul>
 
-          <h3>What stays safe?</h3>
-          <p>These files are never touched by the upgrade:</p>
-          <ul>
-            <li>✅ Your specifications (<code>specs/001-my-feature/spec.md</code>, etc.) - CONFIRMED SAFE</li>
-            <li>✅ Your implementation plans (<code>specs/001-my-feature/plan.md</code>, <code>tasks.md</code>, etc.) - CONFIRMED SAFE</li>
-            <li>✅ Your source code - CONFIRMED SAFE</li>
-            <li>✅ Your git history - CONFIRMED SAFE</li>
-          </ul>
-          <p>The <code>specs/</code> directory is completely excluded from template packages and will never be modified during upgrades.</p>
-
-          <h3>Update command</h3>
-          <p>Run this inside your project directory:</p>
-          <pre><code>specify init --here --force --ai &lt;your-agent&gt;</code></pre>
-          <p>Replace <code>&lt;your-agent&gt;</code> with your AI assistant (copilot, claude, cursor, etc.)</p>
-
-          <h3>Understanding the <code>--force</code> flag</h3>
-          <p>Without <code>--force</code>, the CLI warns you and asks for confirmation. With <code>--force</code>, it proceeds immediately.</p>
           <div class="callout">
-            <strong>Important:</strong> Your <code>specs/</code> directory is always safe. The <code>--force</code> flag only affects template files (commands, scripts, templates, memory). Your feature specifications, plans, and tasks in <code>specs/</code> are never included in upgrade packages.
+            <strong>Tip:</strong> Use <code>npx playwright test --reporter=github</code> in GitHub Actions to get inline annotations on your pull request diff showing exactly which line of test code failed.
           </div>
-
-          <h2>⚠️ Important Warnings</h2>
-
-          <h3>1. Constitution file will be overwritten</h3>
-          <p><strong>Known issue:</strong> <code>specify init --here --force</code> currently overwrites <code>.specify/memory/constitution.md</code> with the default template, erasing any customizations.</p>
-          <p><strong>Workaround:</strong></p>
-          <pre><code># 1. Back up your constitution before upgrading
-cp .specify/memory/constitution.md .specify/memory/constitution-backup.md
-
-# 2. Run the upgrade
-specify init --here --force --ai copilot
-
-# 3. Restore your customized constitution
-mv .specify/memory/constitution-backup.md .specify/memory/constitution.md</code></pre>
-          <p>Or use git to restore it:</p>
-          <pre><code># After upgrade, restore from git history
-git restore .specify/memory/constitution.md</code></pre>
-
-          <h3>2. Custom template modifications</h3>
-          <p>If you customized any templates in <code>.specify/templates/</code>, the upgrade will overwrite them. Back them up first:</p>
-          <pre><code># Back up custom templates
-cp -r .specify/templates .specify/templates-backup
-
-# After upgrade, merge your changes back manually</code></pre>
-
-          <h3>3. Duplicate commands warning</h3>
-          <p>If you previously initialized with a different agent (e.g., claude) and now run with a new agent (e.g., copilot), you may get duplicate command files in different directories. Clean up manually if needed:</p>
-          <pre><code># Check for duplicates
-ls .claude/commands/
-ls .github/prompts/
-
-# Remove old agent files if switching permanently
-rm -rf .claude/  # If switching from Claude to Copilot</code></pre>
-
-          <h2>Rolling Back an Upgrade</h2>
-          <p>If an upgrade causes issues, you can rollback to a previous version.</p>
-
-          <h3>Rollback CLI Tool</h3>
-          <pre><code># Install specific version
-uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git@v0.0.21
-
-# Or reinstall from a specific tag
-uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git@release-0.0.21</code></pre>
-
-          <h3>Rollback Project Files</h3>
-          <pre><code># Use git to restore previous version
-git restore .github/ .specify/
-
-# Or revert to a specific commit
-git log --oneline -- .github/ .specify/
-git checkout &lt;commit-hash&gt; -- .github/ .specify/</code></pre>
-
-          <div class="callout">
-            <strong>💡 Tip:</strong> Always commit your changes before upgrading so you can easily rollback if needed.
-          </div>
-
-          <h2>Version Compatibility</h2>
-          <p>SpecKit follows semantic versioning for major releases. The CLI and project files are designed to be compatible within the same major version.</p>
-          <div class="callout">
-            <strong>Best practice:</strong> Keep both CLI and project files in sync by upgrading both together during major version changes.
-          </div>
-
-          <h2>Next Steps After Upgrading</h2>
-          <ul>
-            <li><strong>Test new slash commands:</strong> Run <code>/speckit.constitution</code> or another command to verify everything works</li>
-            <li><strong>Review release notes:</strong> Check <a href="https://github.com/github/spec-kit/releases" target="_blank" rel="noopener">GitHub Releases</a> for new features and breaking changes</li>
-            <li><strong>Update workflows:</strong> If new commands were added, update your team's development workflows</li>
-            <li><strong>Check documentation:</strong> Visit <a href="https://github.github.io/spec-kit/" target="_blank" rel="noopener">github.io/spec-kit</a> for updated guides</li>
-          </ul>
         </section>
 
         <section id="resources" role="article">
-          <h1>Resources</h1>
-          <span class="badge">docs, community</span>
-          
+          <h1>📚 Resources</h1>
+          <span class="badge">docs</span> <span class="badge">links</span> <span class="badge">community</span>
+
           <h2>Official Resources</h2>
           <ul class="list-style-none">
-            <li>🌐 <a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Repository</a></li>
-            <li>🏠 <a href="https://speckit.org/" target="_blank" rel="noopener">Official Website</a></li>
-            <li>📺 <a href="https://www.youtube.com/watch?v=a9eR1xsfvHg" target="_blank" rel="noopener">Video Overview</a></li>
-            <li>📖 <a href="https://github.com/github/spec-kit/blob/main/spec-driven.md" target="_blank" rel="noopener">Complete Methodology</a></li>
-            <li>💬 <a href="https://github.com/github/spec-kit/discussions" target="_blank" rel="noopener">Community Discussions</a></li>
-            <li>📚 <a href="https://github.github.io/spec-kit/" target="_blank" rel="noopener">Documentation</a></li>
+            <li>📖 <a href="https://playwright.dev/docs/intro" target="_blank" rel="noopener">Official Documentation</a> — playwright.dev</li>
+            <li>🐙 <a href="https://github.com/microsoft/playwright" target="_blank" rel="noopener">GitHub Repository</a> — microsoft/playwright</li>
+            <li>📦 <a href="https://www.npmjs.com/package/@playwright/test" target="_blank" rel="noopener">npm Package</a> — @playwright/test</li>
+            <li>🗒️ <a href="https://playwright.dev/docs/release-notes" target="_blank" rel="noopener">Release Notes</a></li>
+            <li>🧪 <a href="https://playwright.dev/docs/api/class-playwright" target="_blank" rel="noopener">Full API Reference</a></li>
           </ul>
+
+          <h2>Key Documentation Pages</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Topic</th><th>Link</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Writing Tests</td><td><a href="https://playwright.dev/docs/writing-tests" target="_blank" rel="noopener">playwright.dev/docs/writing-tests</a></td></tr>
+              <tr><td>Locators</td><td><a href="https://playwright.dev/docs/locators" target="_blank" rel="noopener">playwright.dev/docs/locators</a></td></tr>
+              <tr><td>Assertions</td><td><a href="https://playwright.dev/docs/test-assertions" target="_blank" rel="noopener">playwright.dev/docs/test-assertions</a></td></tr>
+              <tr><td>Configuration</td><td><a href="https://playwright.dev/docs/test-configuration" target="_blank" rel="noopener">playwright.dev/docs/test-configuration</a></td></tr>
+              <tr><td>Page Object Model</td><td><a href="https://playwright.dev/docs/pom" target="_blank" rel="noopener">playwright.dev/docs/pom</a></td></tr>
+              <tr><td>Network Interception</td><td><a href="https://playwright.dev/docs/network" target="_blank" rel="noopener">playwright.dev/docs/network</a></td></tr>
+              <tr><td>Auth & storageState</td><td><a href="https://playwright.dev/docs/auth" target="_blank" rel="noopener">playwright.dev/docs/auth</a></td></tr>
+              <tr><td>CI / GitHub Actions</td><td><a href="https://playwright.dev/docs/ci-intro" target="_blank" rel="noopener">playwright.dev/docs/ci-intro</a></td></tr>
+              <tr><td>Trace Viewer</td><td><a href="https://playwright.dev/docs/trace-viewer" target="_blank" rel="noopener">playwright.dev/docs/trace-viewer</a></td></tr>
+              <tr><td>Visual Comparisons</td><td><a href="https://playwright.dev/docs/test-snapshots" target="_blank" rel="noopener">playwright.dev/docs/test-snapshots</a></td></tr>
+            </tbody>
+          </table>
 
           <h2>Learning Resources</h2>
           <ul class="list-style-none">
-            <li>📺 <a href="https://www.youtube.com/@githubspeckit" target="_blank" rel="noopener">Video Tutorials</a></li>
-            <li>📝 <a href="https://github.com/github/spec-kit/tree/main/examples" target="_blank" rel="noopener">Example Projects</a></li>
-            <li>🎓 <a href="https://github.com/github/spec-kit/wiki" target="_blank" rel="noopener">Best Practices Guide</a></li>
-            <li>🤝 <a href="https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing Guide</a></li>
+            <li>📺 <a href="https://www.youtube.com/playlist?list=PLQ6Buerc008dhme8Na0IJJK4lS6M3n5XH" target="_blank" rel="noopener">Playwright YouTube Playlist — Getting Started</a></li>
+            <li>📚 <a href="https://playwright.dev/docs/best-practices" target="_blank" rel="noopener">Official Best Practices Guide</a></li>
+            <li>🎮 <a href="https://playwright.dev/docs/codegen" target="_blank" rel="noopener">Test Generator (Codegen) Docs</a></li>
+            <li>💡 <a href="https://github.com/microsoft/playwright/tree/main/examples" target="_blank" rel="noopener">Official Example Projects</a></li>
           </ul>
 
           <h2>Community</h2>
           <ul class="list-style-none">
-            <li>💬 <a href="https://github.com/github/spec-kit/discussions" target="_blank" rel="noopener">GitHub Discussions</a></li>
-            <li>🐦 <a href="https://twitter.com/githubspeckit" target="_blank" rel="noopener">Twitter Updates</a></li>
-            <li>📧 <a href="mailto:speckit@github.com">Email Support</a></li>
+            <li>💬 <a href="https://aka.ms/playwright/discord" target="_blank" rel="noopener">Discord Community</a> — aka.ms/playwright/discord</li>
+            <li>🐛 <a href="https://github.com/microsoft/playwright/issues" target="_blank" rel="noopener">GitHub Issues</a></li>
+            <li>🗣️ <a href="https://stackoverflow.com/questions/tagged/playwright" target="_blank" rel="noopener">Stack Overflow — playwright tag</a></li>
+            <li>📰 <a href="https://playwright.dev/community/welcome" target="_blank" rel="noopener">Community Page</a></li>
           </ul>
 
           <h2>Common Issues & Solutions</h2>
           <table class="table table-striped">
             <thead>
-              <tr>
-                <th>Issue</th>
-                <th>Cause</th>
-                <th>Solution</th>
-              </tr>
+              <tr><th>Issue</th><th>Cause</th><th>Solution</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Command not found</td>
-                <td>Agent files not loaded</td>
-                <td>Run <code>specify init --here --force</code></td>
-              </tr>
-              <tr>
-                <td>AI returns generic response</td>
-                <td>Insufficient context</td>
-                <td>Update constitution, add more spec details</td>
-              </tr>
-              <tr>
-                <td>Plan/tasks incomplete</td>
-                <td>Ambiguous requirements</td>
-                <td>Run <code>/speckit.clarify</code> first</td>
-              </tr>
-              <tr>
-                <td>Implementation fails</td>
-                <td>Missing dependencies</td>
-                <td>Check <code>plan.md</code> prerequisites</td>
-              </tr>
-              <tr>
-                <td>Upgrade overwrites files</td>
-                <td>No backup before upgrade</td>
-                <td>Use git to restore, see rollback section</td>
-              </tr>
-              <tr>
-                <td>Duplicate command files</td>
-                <td>Switching between agents</td>
-                <td>Clean up old agent directories manually</td>
-              </tr>
+              <tr><td>Element not found / timeout</td><td>Element not yet rendered or has wrong selector</td><td>Use Trace Viewer to inspect DOM; switch to <code>getByRole()</code></td></tr>
+              <tr><td>Flaky tests on CI</td><td>Timing / infrastructure variance</td><td>Set <code>retries: 2</code>; check for missing <code>await</code>; add <code>waitForURL</code></td></tr>
+              <tr><td>Tests pass locally, fail on CI</td><td>Different screen resolution / fonts / env vars</td><td>Use <code>--headed</code> locally to match CI; set explicit viewport; check env vars</td></tr>
+              <tr><td>Screenshot comparison failures</td><td>Font rendering difference across OS</td><td>Generate baselines on CI machine; use <code>--update-snapshots</code></td></tr>
+              <tr><td>Browser binary not found</td><td><code>npx playwright install</code> not run</td><td>Run <code>npx playwright install --with-deps</code></td></tr>
+              <tr><td>Auth state not persisting</td><td>Missing <code>storageState</code> config</td><td>Use <code>page.context().storageState()</code> + <code>use.storageState</code> in config</td></tr>
+              <tr><td>Tests run slowly</td><td>Sequential execution / no parallelism</td><td>Set <code>fullyParallel: true</code>; increase <code>workers</code>; use sharding on CI</td></tr>
             </tbody>
           </table>
 
-          <h2>Key Takeaways</h2>
-          <div class="callout">
-            <ol>
-              <li><strong>Spec-Driven Development</strong> transforms specifications into executable artifacts</li>
-              <li><strong>SpecKit provides structured methodology</strong> and tooling for AI-assisted development</li>
-              <li><strong>Works with 18+ AI agents</strong> - use your preferred coding assistant</li>
-              <li><strong>Supports multiple development phases</strong> - greenfield, exploration, brownfield</li>
-              <li><strong>Technology independent</strong> - not tied to specific frameworks or languages</li>
-              <li><strong>Installation is straightforward</strong> using uv and specify CLI</li>
-              <li><strong>Always backup before upgrades</strong> - constitution and custom templates may be overwritten</li>
-              <li><strong>Use git for version control</strong> - makes rollbacks simple and safe</li>
-            </ol>
-          </div>
-
-          <h2>Getting Help</h2>
-          <ul class="list-style-none">
-            <li>🐛 <a href="https://github.com/github/spec-kit/issues/new" target="_blank" rel="noopener">Report Issues</a></li>
-            <li>💡 <a href="https://github.com/github/spec-kit/discussions" target="_blank" rel="noopener">Ask Questions</a></li>
-            <li>📧 <a href="https://github.com/github/spec-kit/blob/main/SUPPORT.md" target="_blank" rel="noopener">Support Guide</a></li>
-          </ul>
+          <h2>Quick Reference Cheat Sheet</h2>
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Task</th><th>Command</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Initialize project</td><td><code>npm init playwright@latest</code></td></tr>
+              <tr><td>Run all tests</td><td><code>npx playwright test</code></td></tr>
+              <tr><td>Run specific file</td><td><code>npx playwright test login.spec.ts</code></td></tr>
+              <tr><td>Run in UI Mode</td><td><code>npx playwright test --ui</code></td></tr>
+              <tr><td>Run headed</td><td><code>npx playwright test --headed</code></td></tr>
+              <tr><td>Debug test</td><td><code>npx playwright test --debug</code></td></tr>
+              <tr><td>Generate tests</td><td><code>npx playwright codegen https://example.com</code></td></tr>
+              <tr><td>Show HTML report</td><td><code>npx playwright show-report</code></td></tr>
+              <tr><td>Show trace</td><td><code>npx playwright show-trace trace.zip</code></td></tr>
+              <tr><td>Update browsers</td><td><code>npx playwright install</code></td></tr>
+              <tr><td>Update snapshots</td><td><code>npx playwright test --update-snapshots</code></td></tr>
+            </tbody>
+          </table>
 
           <hr />
           <div class="document-footer">
             <p>
-              <strong>Last Updated:</strong> January 2026 | 
+              <strong>Last Updated:</strong> May 2026 |
               <strong>Curated by:</strong> Murthy Vepa with ❤️ | <strong>Powered by:</strong> GitHub Copilot
             </p>
-          </div>  
+          </div>
         </section>
         </div>
+
       </main>
     </div>
     
@@ -2156,18 +2326,18 @@ git checkout &lt;commit-hash&gt; -- .github/ .specify/</code></pre>
 
     // ---- Configuration ----
     const sectionConfig = [
-      { id: "introduction", title: "Introduction", tags: ["overview", "intro", "what-is"] },
-      { id: "installation", title: "Installation", tags: ["setup", "getting-started"] },
-      { id: "writing-tests", title: "Writing Tests", tags: ["basics", "first-test", "actions"] },
-      { id: "locators", title: "Locators", tags: ["selectors", "finding-elements"] },
-      { id: "assertions", title: "Assertions", tags: ["expect", "verification", "checks"] },
-      { id: "running-tests", title: "Running Tests", tags: ["execution", "cli", "ui-mode"] },
-      { id: "debugging", title: "Debugging", tags: ["inspector", "troubleshooting"] },
-      { id: "configuration", title: "Configuration", tags: ["config", "setup", "options"] },
-      { id: "trace-viewer", title: "Trace Viewer", tags: ["debugging", "traces", "reports"] },
-      { id: "best-practices", title: "Best Practices", tags: ["tips", "patterns", "recommendations"] },
-      { id: "ci-cd", title: "CI/CD Integration", tags: ["github-actions", "continuous-integration"] },
-      { id: "resources", title: "Resources", tags: ["docs", "links", "community"] }
+      { id: "introduction", title: "📖 Introduction", tags: ["overview", "intro", "what-is"] },
+      { id: "installation", title: "💾 Installation", tags: ["setup", "getting-started"] },
+      { id: "writing-tests", title: "✍️ Writing Tests", tags: ["basics", "first-test", "actions"] },
+      { id: "locators", title: "🔍 Locators", tags: ["selectors", "finding-elements"] },
+      { id: "assertions", title: "✅ Assertions", tags: ["expect", "verification", "checks"] },
+      { id: "running-tests", title: "🏃‍♂️ Running Tests", tags: ["execution", "cli", "ui-mode"] },
+      { id: "debugging", title: "🐛 Debugging", tags: ["inspector", "troubleshooting"] },
+      { id: "configuration", title: "⚙️ Configuration", tags: ["config", "setup", "options"] },
+      { id: "trace-viewer", title: "📊 Trace Viewer", tags: ["debugging", "traces", "reports"] },
+      { id: "ci-cd", title: "🚀 CI/CD Integration", tags: ["github-actions", "continuous-integration"] },
+      { id: "best-practices", title: "🌟 Best Practices", tags: ["tips", "patterns", "recommendations"] },
+      { id: "resources", title: "📚 Resources", tags: ["docs", "links", "community"] }
     ];
 
     // ---- State & rendering ----
@@ -2300,6 +2470,9 @@ git checkout &lt;commit-hash&gt; -- .github/ .specify/</code></pre>
       els.toc.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
       // Highlight mobile offcanvas
       els.tocMobile.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${activeId}`));
+      // Scroll the active link into view within the sidebar
+      const activeLink = els.toc.querySelector('a.active');
+      if (activeLink) activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
     function openSidebar(){
