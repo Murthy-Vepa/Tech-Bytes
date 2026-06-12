@@ -374,6 +374,52 @@
     .design .category-header { border-left-color: #8b5cf6; background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); }
     .design .category-title { color: #7c3aed; }
 
+    .all-guides .category-header { border-left-color: #0f172a; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+    .all-guides .category-title { color: #0f172a; }
+    .menu-item.all-guides.active::before { background: linear-gradient(180deg, #0f172a 0%, #334155 100%); }
+
+    /* All-guides table */
+    #guidesTable {
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(15,23,42,0.12);
+      font-size: 0.88rem;
+      width: 100%;
+    }
+    #guidesTable thead tr th {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border: none;
+      padding: 0.7rem 0.9rem;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    #guidesTable thead tr th:hover { background: linear-gradient(135deg, #334155 0%, #1e293b 100%); }
+    #guidesTable tbody tr { border-bottom: 1px solid #e2e8f0; }
+    #guidesTable tbody tr:nth-child(even) td { background: #f8fafc; }
+    #guidesTable tbody tr:nth-child(odd) td { background: #ffffff; }
+    #guidesTable tbody tr:hover td { background: #dbeafe !important; }
+    #guidesTable td { border: none; padding: 0.5rem 0.85rem; color: #1e293b; vertical-align: middle; }
+    #guidesTable .cat-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    #guidesTable a.guide-link {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    #guidesTable a.guide-link:hover { text-decoration: underline; }
+
     .guide-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -575,8 +621,16 @@
       </div>
       <div class="category-menu">
 
+        <div class="menu-item all-guides active" onclick="showCategory('all-guides')">
+          <span class="menu-icon">📋</span>
+          <div class="menu-text">
+            <div class="menu-title">All Guides</div>
+            <div class="menu-count">85 guides (47 available + 38 coming soon)</div>
+          </div>
+        </div>
+
         <!-- Foundation -->
-        <div class="menu-item design active" onclick="showCategory('design')">
+        <div class="menu-item design" onclick="showCategory('design')">
           <span class="menu-icon">🏗️</span>
           <div class="menu-text">
             <div class="menu-title">Design & Arch</div>
@@ -646,7 +700,10 @@
         </div>
         
         <!-- Cloud & Advanced -->
-        <div class="menu-item azure" onclick="showCategory('azure')">
+          
+
+        <!-- Cloud & Advanced -->
+      <div class="menu-item azure" onclick="showCategory('azure')">
           <span class="menu-icon">☁️</span>
           <div class="menu-text">
             <div class="menu-title">Azure Services</div>
@@ -1065,8 +1122,180 @@
         </div>
       </div>
 
+      <!-- All Guides Table -->
+      <div id="all-guides-section" class="content-section active">
+        <div class="category-content all-guides" style="background:white;">
+          <div class="category-header">
+            <span class="category-icon">📋</span>
+            <h2 class="category-title">All Guides</h2>
+          </div>
+
+          <!-- Filter Bar -->
+          <div class="mb-3" style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
+            <div class="row g-2 align-items-end">
+              <div class="col-12 col-md-5">
+                <label class="form-label mb-1" style="font-size:.75rem;font-weight:600;color:#475569;">🔍 Search</label>
+                <input type="text" id="guidesSearch" class="form-control form-control-sm" placeholder="Title, category, description..." oninput="filterGuides()">
+              </div>
+              <div class="col-6 col-md-3">
+                <label class="form-label mb-1" style="font-size:.75rem;font-weight:600;color:#475569;">Category</label>
+                <select id="guidesCatFilter" class="form-select form-select-sm" onchange="filterGuides()">
+                  <option value="">All Categories</option>
+                  <option value="Azure">☁️ Azure</option>
+                  <option value="AI &amp; Copilot">🤖 AI &amp; Copilot</option>
+                  <option value="Frontend">🎨 Frontend</option>
+                  <option value="Backend">⚙️ Backend</option>
+                  <option value="Database">🗄️ Database</option>
+                  <option value="DevOps">🚀 DevOps</option>
+                  <option value="Testing">🧪 Testing</option>
+                  <option value="Security">🔐 Security</option>
+                  <option value="Data">📊 Data</option>
+                  <option value="Method">📚 Methods</option>
+                  <option value="Design">🏗️ Design</option>
+                  <option value="Security">🔐 Security</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label mb-1" style="font-size:.75rem;font-weight:600;color:#475569;">Status</label>
+                <select id="guidesStatusFilter" class="form-select form-select-sm" onchange="filterGuides()">
+                  <option value="">All</option>
+                  <option value="Available">✅ Available</option>
+                  <option value="Soon">⏳ Coming Soon</option>
+                </select>
+              </div>
+              <div class="col-auto">
+                <label class="form-label mb-1 d-block" style="font-size:.75rem;color:transparent;">x</label>
+                <button class="btn btn-sm" style="border:1px solid #475569;color:#475569;background:transparent;" onmouseover="this.style.background='#475569';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#475569'" onclick="resetGuidesFilters()">&#x2715; Clear</button>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:.8rem;color:#94a3b8;margin-bottom:.75rem;">Showing <span id="guidesCount">0</span> guides</p>
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-sm" id="guidesTable">
+              <thead>
+                <tr>
+                  <th onclick="sortGuidesTable(0)">#  <span id="gsort-0">⇅</span></th>
+                  <th onclick="sortGuidesTable(1)">Title <span id="gsort-1">⇅</span></th>
+                  <th onclick="sortGuidesTable(2)">Category <span id="gsort-2">⇅</span></th>
+                  <th onclick="sortGuidesTable(3)">Description <span id="gsort-3">⇅</span></th>
+                  <th onclick="sortGuidesTable(4)">Status <span id="gsort-4">⇅</span></th>
+                </tr>
+              </thead>
+              <tbody id="guidesTableBody">
+                <!-- Azure -->
+                <tr data-cat="Azure" data-status="Available"><td>1</td><td><a class="guide-link" href="Azure API Management - In a Nutshell.html" target="_blank">🔌 Azure API Management</a></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>API gateway, management, and developer portal for secure API publishing</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Azure" data-status="Available"><td>2</td><td><a class="guide-link" href="Azure App Services - In a Nutshell.html" target="_blank">🚀 Azure App Services</a></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>PaaS for building and hosting web apps, mobile backends, and RESTful APIs</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Azure" data-status="Available"><td>3</td><td><a class="guide-link" href="Azure Entra - In a Nutshell.html" target="_blank">🔐 Azure Entra</a></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Identity and access management with SSO and multi-factor authentication</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Azure" data-status="Available"><td>4</td><td><a class="guide-link" href="Azure Functions - In a Nutshell.html" target="_blank">⚡ Azure Functions</a></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Serverless compute for event-driven applications</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Azure" data-status="Available"><td>5</td><td><a class="guide-link" href="Azure Service Bus - In a Nutshell.html" target="_blank">📨 Azure Service Bus</a></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Enterprise messaging with queues, topics, and reliable delivery</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Azure" data-status="Available"><td>6</td><td><a class="guide-link" href="Azure Cosmos DB - In a Nutshell.html" target="_blank">🌍 Azure Cosmos DB</a></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Globally distributed, multi-model NoSQL database service</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Azure" data-status="Available"><td>7</td><td><a class="guide-link" href="Azure Databricks - In a Nutshell.html" target="_blank">🔥 Azure Databricks</a></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Unified analytics platform for big data and AI workloads</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- AI & Copilot -->
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>8</td><td><a class="guide-link" href="GitHub Copilot - In a Nutshell.html" target="_blank">🤖 GitHub Copilot</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>AI-powered coding assistant with completion, chat, and agent capabilities</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>9</td><td><a class="guide-link" href="GitHub Copilot CLI - In a Nutshell.html" target="_blank">⌨️ GitHub Copilot CLI</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>AI-powered command-line assistant for shell commands and scripts</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>10</td><td><a class="guide-link" href="GitHub Copilot SDK - In a Nutshell.html" target="_blank">🛠️ GitHub Copilot SDK</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>SDK for integrating Copilot into custom applications</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>11</td><td><a class="guide-link" href="GitHub Copliot Agents - In a Nutshell.html" target="_blank">🧠 GitHub Copilot Agents</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Autonomous AI agents for complex development workflows</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>12</td><td><a class="guide-link" href="GitHub Spec Kit - In a Nutshell.html" target="_blank">📋 GitHub Spec Kit</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Specification-driven development toolkit for building from requirements</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>13</td><td><a class="guide-link" href="Prompt Engineering - In a Nutshell.html" target="_blank">💡 Prompt Engineering</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Best practices for crafting effective prompts for AI models</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>14</td><td><a class="guide-link" href="Retrieval Augmented Generation - In a Nutshell.html" target="_blank">🔍 RAG</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Retrieval Augmented Generation — grounding LLMs in private knowledge</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>15</td><td><a class="guide-link" href="LangChain and LangGraph - In a Nutshell.html" target="_blank">🔗 LangChain &amp; LangGraph</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Framework for building LLM-powered applications and agentic workflows</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>16</td><td><a class="guide-link" href="Semantic Kernel - In a Nutshell.html" target="_blank">🧠 Semantic Kernel</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Microsoft's open-source SDK for integrating AI models into applications</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>17</td><td><a class="guide-link" href="Vector Databases - In a Nutshell.html" target="_blank">🧮 Vector Databases</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Specialized databases for storing and searching high-dimensional vectors</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>18</td><td><a class="guide-link" href="Model Context Protocol - In a Nutshell.html" target="_blank">🔌 Model Context Protocol</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Open standard for connecting AI assistants to data sources and tools</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Available"><td>19</td><td><a class="guide-link" href="Microsoft Copilot Studio - In a Nutshell.html" target="_blank">🤖 Microsoft Copilot Studio</a></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Low-code platform for building and deploying custom Copilot agents</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- Frontend -->
+                <tr data-cat="Frontend" data-status="Available"><td>20</td><td><a class="guide-link" href="ReactJs - In a Nutshell.html" target="_blank">⚛️ React.js</a></td><td><span class="cat-badge" style="background:#dbeafe;color:#2563eb;">🎨 Frontend</span></td><td>JavaScript library for building user interfaces with components</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Frontend" data-status="Available"><td>21</td><td><a class="guide-link" href="ASP.NET Core Blazor - In a Nutshell.html" target="_blank">🔵 ASP.NET Core Blazor</a></td><td><span class="cat-badge" style="background:#dbeafe;color:#2563eb;">🎨 Frontend</span></td><td>Build interactive web UIs using C# instead of JavaScript</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Frontend" data-status="Available"><td>22</td><td><a class="guide-link" href="Microsoft Power BI - In a Nutshell.html" target="_blank">📊 Microsoft Power BI</a></td><td><span class="cat-badge" style="background:#dbeafe;color:#2563eb;">🎨 Frontend</span></td><td>Business intelligence and data visualization platform</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- Backend -->
+                <tr data-cat="Backend" data-status="Available"><td>23</td><td><a class="guide-link" href="C Sharp - In a Nutshell.html" target="_blank">💎 C#</a></td><td><span class="cat-badge" style="background:#d1fae5;color:#059669;">⚙️ Backend</span></td><td>Modern, type-safe programming language for .NET development</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Backend" data-status="Available"><td>24</td><td><a class="guide-link" href="OOP - In a Nutshell.html" target="_blank">🧩 OOP</a></td><td><span class="cat-badge" style="background:#d1fae5;color:#059669;">⚙️ Backend</span></td><td>Object-oriented programming principles and patterns</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Backend" data-status="Available"><td>25</td><td><a class="guide-link" href="Data Structures - In a Nutshell.html" target="_blank">🏗️ Data Structures</a></td><td><span class="cat-badge" style="background:#d1fae5;color:#059669;">⚙️ Backend</span></td><td>Fundamental data structures for efficient algorithms and problem solving</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- Database -->
+                <tr data-cat="Database" data-status="Available"><td>26</td><td><a class="guide-link" href="Microsoft SQL Server - In a Nutshell.html" target="_blank">🗃️ Microsoft SQL Server</a></td><td><span class="cat-badge" style="background:#ccfbf1;color:#0d9488;">🗄️ Database</span></td><td>Enterprise relational database management system</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- DevOps -->
+                <tr data-cat="DevOps" data-status="Available"><td>27</td><td><a class="guide-link" href="GitHub - In a Nutshell.html" target="_blank">🐙 GitHub</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">🚀 DevOps</span></td><td>Version control, collaboration, Actions CI/CD, security, Copilot, and Enterprise</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="DevOps" data-status="Available"><td>28</td><td><a class="guide-link" href="Terraform - In a Nutshell.html" target="_blank">🏗️ Terraform</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">🚀 DevOps</span></td><td>Infrastructure as Code for provisioning cloud and on-premises resources</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="DevOps" data-status="Available"><td>29</td><td><a class="guide-link" href="Playwright - In a Nutshell.html" target="_blank">🎭 Playwright</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">🚀 DevOps</span></td><td>End-to-end browser testing automation for modern web apps</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- Testing -->
+                <tr data-cat="Testing" data-status="Available"><td>30</td><td><a class="guide-link" href="Playwright - In a Nutshell.html" target="_blank">🎭 Playwright (Testing)</a></td><td><span class="cat-badge" style="background:#ecfccb;color:#65a30d;">🧪 Testing</span></td><td>Reliable end-to-end testing for web applications</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- Methods -->
+                <tr data-cat="Method" data-status="Available"><td>31</td><td><a class="guide-link" href="Agile Scrum, Kanban &amp; SAFe - In a Nutshell.html" target="_blank">🏃 Agile Scrum, Kanban &amp; SAFe</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Agile methodologies for iterative development and delivery</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Method" data-status="Available"><td>32</td><td><a class="guide-link" href="SAFe - In a Nutshell.html" target="_blank">🔷 SAFe</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Scaled Agile Framework for enterprise agile transformation</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Method" data-status="Available"><td>33</td><td><a class="guide-link" href="Product Mindset - In a Nutshell.html" target="_blank">💡 Product Mindset</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Customer-centric thinking and product-led development practices</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Method" data-status="Available"><td>34</td><td><a class="guide-link" href="Engineering Excellence - In a Nutshell.html" target="_blank">⭐ Engineering Excellence</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Principles and practices for engineering quality and continuous improvement</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Method" data-status="Available"><td>35</td><td><a class="guide-link" href="BMad Method - In a Nutshell.html" target="_blank">🎯 BMad Method</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Breakthrough method for agile delivery with AI collaboration</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Method" data-status="Available"><td>36</td><td><a class="guide-link" href="Diversity and Inclusion - In a Nutshell.html" target="_blank">🌈 Diversity &amp; Inclusion</a></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Building diverse, equitable, and inclusive teams and workplaces</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- Design & Architecture -->
+                <tr data-cat="Design" data-status="Available"><td>37</td><td><a class="guide-link" href="Design Principles - In a Nutshell.html" target="_blank">📐 Design Principles</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>SOLID, DRY, KISS, and fundamental principles for clean code</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>38</td><td><a class="guide-link" href="Gang of Four Design Patterns - In a Nutshell.html" target="_blank">🔧 Gang of Four Design Patterns</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Classic software design patterns for object-oriented programming</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>39</td><td><a class="guide-link" href="Cloud Design Patterns - In a Nutshell.html" target="_blank">☁️ Cloud Design Patterns</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Architectural patterns for scalable cloud applications</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>40</td><td><a class="guide-link" href="Software Architecture Patterns - In a Nutshell.html" target="_blank">🏛️ Software Architecture Patterns</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Common architectural patterns for software system design</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>41</td><td><a class="guide-link" href="ArchiMate - In a Nutshell.html" target="_blank">📊 ArchiMate</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Enterprise architecture modeling language for business and IT alignment</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>42</td><td><a class="guide-link" href="System Design Concepts - In a Nutshell.html" target="_blank">⚙️ System Design Concepts</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Core principles and patterns for designing scalable distributed systems</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>43</td><td><a class="guide-link" href="UML - In a Nutshell.html" target="_blank">📐 UML</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Unified Modeling Language for visualizing software system design</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>44</td><td><a class="guide-link" href="Diagram as Code - In a Nutshell.html" target="_blank">🎨 Diagram as Code</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Create diagrams using code with Mermaid, PlantUML, Graphviz, and more</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>45</td><td><a class="guide-link" href="Markdown and Mermaid - In a Nutshell.html" target="_blank">📝 Markdown &amp; Mermaid</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Documentation and diagramming with Markdown and Mermaid diagrams</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <tr data-cat="Design" data-status="Available"><td>46</td><td><a class="guide-link" href="TwelveFactorApp - In a Nutshell.html" target="_blank">🏗️ Twelve-Factor App</a></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Methodology for building scalable, maintainable, cloud-native SaaS apps</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- Data -->
+                <tr data-cat="Data" data-status="Available"><td>47</td><td><a class="guide-link" href="Microsoft Power BI - In a Nutshell.html" target="_blank">📊 Microsoft Power BI</a></td><td><span class="cat-badge" style="background:#f3e8ff;color:#9333ea;">📊 Data</span></td><td>Business intelligence and data visualization platform</td><td><span class="badge bg-success" style="background:#16a34a!important;">Available</span></td></tr>
+                <!-- Coming Soon – Azure -->
+                <tr data-cat="Azure" data-status="Soon"><td>48</td><td><span style="color:#94a3b8;">🎯 Azure Kubernetes Service (AKS)</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Container orchestration with AKS for production-grade workloads</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>49</td><td><span style="color:#94a3b8;">📦 Azure Container Apps</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Serverless container hosting for microservices and APIs</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>50</td><td><span style="color:#94a3b8;">🧠 Azure OpenAI Service</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Enterprise-grade access to OpenAI models via Azure</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>51</td><td><span style="color:#94a3b8;">🔧 Azure DevOps</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Planning, pipelines, repos, and delivery for enterprise teams</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>52</td><td><span style="color:#94a3b8;">🔑 Azure Key Vault</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Secure secrets, keys, and certificates management</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>53</td><td><span style="color:#94a3b8;">⚡ Azure Event Grid</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Event routing at scale for reactive, event-driven applications</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>54</td><td><span style="color:#94a3b8;">📊 Azure Monitor</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Full-stack observability with metrics, logs, and traces</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>55</td><td><span style="color:#94a3b8;">💾 Azure Storage</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Blob, file, queue, and table storage for cloud applications</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>56</td><td><span style="color:#94a3b8;">🔄 Azure Logic Apps</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Low-code workflow automation and integration service</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Azure" data-status="Soon"><td>57</td><td><span style="color:#94a3b8;">🌐 Azure CDN</span></td><td><span class="cat-badge" style="background:#ecfeff;color:#0891b2;">☁️ Azure</span></td><td>Content delivery network for fast global content distribution</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="AI &amp; Copilot" data-status="Soon"><td>58</td><td><span style="color:#94a3b8;">🏭 Azure AI Foundry</span></td><td><span class="cat-badge" style="background:#fff7ed;color:#ea580c;">🤖 AI &amp; Copilot</span></td><td>Unified AI development platform for building and deploying AI apps</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – Frontend -->
+                <tr data-cat="Frontend" data-status="Soon"><td>59</td><td><span style="color:#94a3b8;">📘 TypeScript</span></td><td><span class="cat-badge" style="background:#dbeafe;color:#2563eb;">🎨 Frontend</span></td><td>Typed superset of JavaScript for large-scale application development</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Frontend" data-status="Soon"><td>60</td><td><span style="color:#94a3b8;">🅰️ Angular</span></td><td><span class="cat-badge" style="background:#dbeafe;color:#2563eb;">🎨 Frontend</span></td><td>Full-featured TypeScript framework for enterprise web applications</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – Backend -->
+                <tr data-cat="Backend" data-status="Soon"><td>61</td><td><span style="color:#94a3b8;">🌐 ASP.NET Core</span></td><td><span class="cat-badge" style="background:#d1fae5;color:#059669;">⚙️ Backend</span></td><td>Cross-platform framework for building modern web APIs</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Backend" data-status="Soon"><td>62</td><td><span style="color:#94a3b8;">🔌 REST API Design</span></td><td><span class="cat-badge" style="background:#d1fae5;color:#059669;">⚙️ Backend</span></td><td>Best practices for designing clean, consistent REST APIs</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Backend" data-status="Soon"><td>63</td><td><span style="color:#94a3b8;">📡 GraphQL</span></td><td><span class="cat-badge" style="background:#d1fae5;color:#059669;">⚙️ Backend</span></td><td>Query language for APIs with flexible data fetching</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – Database -->
+                <tr data-cat="Database" data-status="Soon"><td>64</td><td><span style="color:#94a3b8;">⚡ Redis</span></td><td><span class="cat-badge" style="background:#ccfbf1;color:#0d9488;">🗄️ Database</span></td><td>In-memory data store for caching, pub/sub, and session management</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Database" data-status="Soon"><td>65</td><td><span style="color:#94a3b8;">📐 Database Design &amp; Normalization</span></td><td><span class="cat-badge" style="background:#ccfbf1;color:#0d9488;">🗄️ Database</span></td><td>Schema design, normalization forms, and relational modeling</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Database" data-status="Soon"><td>66</td><td><span style="color:#94a3b8;">🔄 NoSQL Concepts</span></td><td><span class="cat-badge" style="background:#ccfbf1;color:#0d9488;">🗄️ Database</span></td><td>Document, key-value, column, and graph database patterns</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – DevOps -->
+                <tr data-cat="DevOps" data-status="Soon"><td>67</td><td><span style="color:#94a3b8;">🐳 Docker</span></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">🚀 DevOps</span></td><td>Containerization platform for consistent, portable application deployments</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="DevOps" data-status="Soon"><td>68</td><td><span style="color:#94a3b8;">☸️ Kubernetes</span></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">🚀 DevOps</span></td><td>Container orchestration for automated deployment and scaling</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="DevOps" data-status="Soon"><td>69</td><td><span style="color:#94a3b8;">🔄 CI/CD Pipelines</span></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">🚀 DevOps</span></td><td>Continuous integration and delivery pipelines for rapid delivery</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="DevOps" data-status="Soon"><td>70</td><td><span style="color:#94a3b8;">🌊 GitOps</span></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">🚀 DevOps</span></td><td>Infrastructure and application delivery using Git as source of truth</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – Testing -->
+                <tr data-cat="Testing" data-status="Soon"><td>71</td><td><span style="color:#94a3b8;">🔴 Test-Driven Development (TDD)</span></td><td><span class="cat-badge" style="background:#ecfccb;color:#65a30d;">🧪 Testing</span></td><td>Write tests first to drive clean, well-designed code</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Testing" data-status="Soon"><td>72</td><td><span style="color:#94a3b8;">✅ Unit Testing Best Practices</span></td><td><span class="cat-badge" style="background:#ecfccb;color:#65a30d;">🧪 Testing</span></td><td>Patterns and practices for writing maintainable unit tests</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Testing" data-status="Soon"><td>73</td><td><span style="color:#94a3b8;">⚡ Performance &amp; Load Testing</span></td><td><span class="cat-badge" style="background:#ecfccb;color:#65a30d;">🧪 Testing</span></td><td>Stress test your systems and identify bottlenecks under load</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – Security -->
+                <tr data-cat="Security" data-status="Soon"><td>74</td><td><span style="color:#94a3b8;">🔑 OAuth 2.0 &amp; OpenID Connect</span></td><td><span class="cat-badge" style="background:#fee2e2;color:#dc2626;">🔐 Security</span></td><td>Industry-standard protocols for authorization and authentication</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Security" data-status="Soon"><td>75</td><td><span style="color:#94a3b8;">🛡️ Zero Trust Architecture</span></td><td><span class="cat-badge" style="background:#fee2e2;color:#dc2626;">🔐 Security</span></td><td>Never trust, always verify security model for modern environments</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Security" data-status="Soon"><td>76</td><td><span style="color:#94a3b8;">🔒 API Security Best Practices</span></td><td><span class="cat-badge" style="background:#fee2e2;color:#dc2626;">🔐 Security</span></td><td>Authentication, rate limiting, and secure API design patterns</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Security" data-status="Soon"><td>77</td><td><span style="color:#94a3b8;">🚨 DevSecOps</span></td><td><span class="cat-badge" style="background:#fee2e2;color:#dc2626;">🔐 Security</span></td><td>Integrating security practices throughout the DevOps pipeline</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – Data -->
+                <tr data-cat="Data" data-status="Soon"><td>78</td><td><span style="color:#94a3b8;">⚙️ Data Engineering Fundamentals</span></td><td><span class="cat-badge" style="background:#f3e8ff;color:#9333ea;">📊 Data</span></td><td>Pipelines, lakes, and warehouses for modern data engineering</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Data" data-status="Soon"><td>79</td><td><span style="color:#94a3b8;">🔄 ETL vs ELT</span></td><td><span class="cat-badge" style="background:#f3e8ff;color:#9333ea;">📊 Data</span></td><td>Data transformation patterns and pipeline design trade-offs</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – Methods -->
+                <tr data-cat="Method" data-status="Soon"><td>80</td><td><span style="color:#94a3b8;">🔄 DevOps Practices</span></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Culture, practices, and tools for collaboration between Dev and Ops</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Method" data-status="Soon"><td>81</td><td><span style="color:#94a3b8;">📦 Domain-Driven Design (DDD)</span></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Strategic and tactical patterns for complex domain modeling</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Method" data-status="Soon"><td>82</td><td><span style="color:#94a3b8;">🎯 Site Reliability Engineering (SRE)</span></td><td><span class="cat-badge" style="background:#fef3c7;color:#d97706;">📚 Methods</span></td><td>Google's approach to IT operations and service reliability</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <!-- Coming Soon – Design -->
+                <tr data-cat="Design" data-status="Soon"><td>83</td><td><span style="color:#94a3b8;">🔷 Microservices Architecture</span></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Patterns and practices for building distributed microservices systems</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Design" data-status="Soon"><td>84</td><td><span style="color:#94a3b8;">⚡ Event-Driven Architecture</span></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Designing systems that react to events and messages asynchronously</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+                <tr data-cat="Design" data-status="Soon"><td>85</td><td><span style="color:#94a3b8;">🧊 Clean Architecture</span></td><td><span class="cat-badge" style="background:#ede9fe;color:#7c3aed;">🏗️ Design</span></td><td>Hexagonal architecture and dependency inversion principles</td><td><span class="badge" style="background:#f59e0b!important;color:#fff;">Soon</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- Design & Architecture -->
-      <div id="design-section" class="content-section active">
+      <div id="design-section" class="content-section">
         <div class="category-content design">
           <div class="category-header">
             <span class="category-icon">🏗️</span>
@@ -1134,24 +1363,73 @@
 
   <script>
     function showCategory(category) {
-      // Hide all content sections
-      document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      // Remove active class from all menu items
-      document.querySelectorAll('.menu-item').forEach(item => {
-        item.classList.remove('active');
-      });
-      
-      // Show selected content section
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
       document.getElementById(category + '-section').classList.add('active');
-      
-      // Add active class to selected menu item
       document.querySelector('.menu-item.' + category).classList.add('active');
-      
-      // Scroll to top of content
       document.querySelector('.main-content').scrollTop = 0;
+      if (category === 'all-guides') initGuidesTable();
+    }
+
+    // ── All Guides Table ──────────────────────────────────────────────
+    let _gSortCol = -1, _gSortAsc = true, _gInited = false;
+
+    function initGuidesTable() {
+      if (_gInited) { updateGuidesCount(); return; }
+      _gInited = true;
+      sortGuidesTable(1); // default sort: Title A-Z
+      updateGuidesCount();
+    }
+
+    function filterGuides() {
+      const q      = (document.getElementById('guidesSearch').value || '').toLowerCase();
+      const cat    = document.getElementById('guidesCatFilter').value;
+      const status = document.getElementById('guidesStatusFilter').value;
+      const rows   = document.querySelectorAll('#guidesTableBody tr');
+      let visible  = 0;
+      rows.forEach(r => {
+        const catOk    = !cat    || r.dataset.cat === cat;
+        const statOk   = !status || r.dataset.status === status;
+        const textOk   = !q     || r.textContent.toLowerCase().includes(q);
+        const show = catOk && statOk && textOk;
+        r.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      document.getElementById('guidesCount').textContent = visible;
+    }
+
+    function sortGuidesTable(col) {
+      if (_gSortCol === col) { _gSortAsc = !_gSortAsc; } else { _gSortCol = col; _gSortAsc = true; }
+      const tbody = document.getElementById('guidesTableBody');
+      const rows  = [...tbody.querySelectorAll('tr')];
+      rows.sort((a, b) => {
+        const aT = (a.querySelectorAll('td')[col]?.textContent || '').trim();
+        const bT = (b.querySelectorAll('td')[col]?.textContent || '').trim();
+        if (col === 0) {
+          const n = parseInt(aT) - parseInt(bT);
+          return _gSortAsc ? n : -n;
+        }
+        return _gSortAsc ? aT.localeCompare(bT, undefined, {sensitivity:'base'}) : bT.localeCompare(aT, undefined, {sensitivity:'base'});
+      });
+      rows.forEach(r => tbody.appendChild(r));
+      for (let i = 0; i <= 4; i++) {
+        const ic = document.getElementById('gsort-' + i);
+        if (ic) ic.textContent = i === col ? (_gSortAsc ? '▲' : '▼') : '⇅';
+      }
+      updateGuidesCount();
+    }
+
+    function resetGuidesFilters() {
+      document.getElementById('guidesSearch').value = '';
+      document.getElementById('guidesCatFilter').value = '';
+      document.getElementById('guidesStatusFilter').value = '';
+      filterGuides();
+    }
+
+    function updateGuidesCount() {
+      const visible = [...document.querySelectorAll('#guidesTableBody tr')].filter(r => r.style.display !== 'none').length;
+      const el = document.getElementById('guidesCount');
+      if (el) el.textContent = visible;
     }
   </script>
 
